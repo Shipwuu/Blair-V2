@@ -85,11 +85,4 @@ end
 -- Run the continuous track function
 spawn(continuousTrack)
 
--- Set up lighting and other environmental effects
-game:GetService("Lighting").Brightness = 2
-game:GetService("Lighting").ClockTime = 0
-game:GetService("Lighting").FogEnd = 100000
-game:GetService("Lighting").GlobalShadows = false
-game:GetService("Lighting").OutdoorAmbient = Color3.fromRGB(128, 128, 128)
-
 print("Script is running")
