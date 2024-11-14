@@ -27,7 +27,7 @@ local function createNewsScreen()
     ghostLabel.Size = UDim2.new(1, 0, 1, 0)
     ghostLabel.BackgroundTransparency = 1
     ghostLabel.Font = Enum.Font.SourceSansBold -- Bold font for visibility
-    ghostLabel.TextSize = 24 -- Increased text size for readability
+    ghostLabel.TextSize = 14 -- Increased text size for readability
     ghostLabel.Text = "Ghost: None" -- Default text
     ghostLabel.TextColor3 = textColorNone
     ghostLabel.TextTransparency = 0.3  -- Slight transparency for "None" text
