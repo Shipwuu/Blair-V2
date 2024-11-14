@@ -1,0 +1,13 @@
+-- Make sure you reference Roblox services properly
+local Lighting = game:GetService("Lighting")
+
+local function setFullBrightness()
+    Lighting.Brightness = 2
+    Lighting.ClockTime = 14
+    Lighting.FogEnd = 100000
+    Lighting.GlobalShadows = false
+    Lighting.OutdoorAmbient = Color3.fromRGB(128, 128, 128)
+end
+
+-- Call the function
+setFullBrightness()
