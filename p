@@ -1,49 +1,49 @@
-local function ESP(model)
-    task.spawn(function()
-        local playerName = model.Name
-        local existingESP = COREGUI:FindFirstChild(playerName .. '_ESP')
-        if existingESP then
-            existingESP:Destroy()
-        end
+local FillColor = Color3.fromRGB(175,25,255)
+local DepthMode = "AlwaysOnTop"
+local FillTransparency = 0.5
+local OutlineColor = Color3.fromRGB(255,255,255)
+local OutlineTransparency = 0
 
-        local ESPholder = Instance.new("Folder")
-        ESPholder.Name = playerName .. '_ESP'
-        ESPholder.Parent = COREGUI
+local CoreGui = game:FindService("CoreGui")
+local Players = game:FindService("Players")
+local lp = Players.LocalPlayer
+local connections = {}
 
-        local humanoidRootPart = model:FindFirstChild("HumanoidRootPart")
-        if humanoidRootPart and model:FindFirstChildOfClass("Humanoid") then
-            local BillboardGui = Instance.new("BillboardGui")
-            BillboardGui.Adornee = humanoidRootPart
-            BillboardGui.Name = playerName
-            BillboardGui.Parent = ESPholder
-            BillboardGui.Size = UDim2.new(0, 150, 0, 50)
-            BillboardGui.StudsOffset = Vector3.new(0, 1.5, 0)
-            BillboardGui.AlwaysOnTop = true
+local Storage = Instance.new("Folder")
+Storage.Parent = CoreGui
+Storage.Name = "Highlight_Storage"
 
-            local TextLabel = Instance.new("TextLabel")
-            TextLabel.Parent = BillboardGui
-            TextLabel.BackgroundTransparency = 1
-            TextLabel.Position = UDim2.new(0, 0, 0, 0)
-            TextLabel.Size = UDim2.new(0, 150, 0, 25)
-            TextLabel.Font = Enum.Font.GothamBold
-            TextLabel.TextSize = 18
-            TextLabel.TextColor3 = Color3.new(1, 0, 0) -- Red for real players (non-NPC)
-            TextLabel.TextStrokeTransparency = 0.5
-            TextLabel.TextStrokeColor3 = Color3.fromRGB(209, 216, 197)  -- Black outline
-            TextLabel.TextYAlignment = Enum.TextYAlignment.Top
-            TextLabel.Text = playerName
+local function Highlight(plr)
+    local Highlight = Instance.new("Highlight")
+    Highlight.Name = plr.Name
+    Highlight.FillColor = FillColor
+    Highlight.DepthMode = DepthMode
+    Highlight.FillTransparency = FillTransparency
+    Highlight.OutlineColor = OutlineColor
+    Highlight.OutlineTransparency = 0
+    Highlight.Parent = Storage
+    
+    local plrchar = plr.Character
+    if plrchar then
+        Highlight.Adornee = plrchar
+    end
 
-            local espLoopFunc
-            local function espLoop()
-                if COREGUI:FindFirstChild(playerName .. '_ESP') then
-                    if model and humanoidRootPart then
-                        local pos = math.floor((humanoidRootPart.Position - LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position).magnitude)
-                        TextLabel.Text = playerName .. " (" .. pos .. " studs)"
-                    end
-                else
-                    espLoopFunc:Disconnect()
-                end
-            end
-            espLoopFunc = RunService.RenderStepped:Connect(espLoop)
-        end
+    connections[plr] = plr.CharacterAdded:Connect(function(char)
+        Highlight.Adornee = char
     end)
+end
+
+Players.PlayerAdded:Connect(Highlight)
+for i,v in next, Players:GetPlayers() do
+    Highlight(v)
+end
+
+Players.PlayerRemoving:Connect(function(plr)
+    local plrname = plr.Name
+    if Storage[plrname] then
+        Storage[plrname]:Destroy()
+    end
+    if connections[plr] then
+        connections[plr]:Disconnect()
+    end
+end)
