@@ -38,3 +38,28 @@ fadeInTween.Completed:Connect(function()
         screenGui:Destroy()
     end)
 end)
+
+
+-- Make sure you reference Roblox services properly
+local Lighting = game:GetService("Lighting")
+
+local function setFullBrightness()
+    Lighting.Brightness = 2
+    Lighting.ClockTime = 14
+    Lighting.FogEnd = 100000
+    Lighting.GlobalShadows = false
+    Lighting.OutdoorAmbient = Color3.fromRGB(128, 128, 128)
+end
+
+local function removeAtmosphere()
+    Lighting.FogEnd = 100000
+    for _, v in pairs(Lighting:GetDescendants()) do
+        if v:IsA("Atmosphere") then
+            v:Destroy()
+        end
+    end
+end
+
+-- Call the functions
+setFullBrightness()
+removeAtmosphere()
