@@ -59,7 +59,7 @@ local function trackGhost()
                 ghostLabel.TextColor3 = textColorHunting  -- Yellow color when ghost is detected
                 ghostLabel.TextTransparency = 0  -- No transparency for "Hunting" text
 
-                -- Start fade effect
+                -- Start smoother fade effect between colors
                 spawn(function()
                     while isTracking do
                         -- Fade in to red
@@ -69,10 +69,22 @@ local function trackGhost()
                             wait(0.03)
                         end
 
-                        -- Fade out to black
+                        -- Fade out from red to transparent
+                        for i = 0, 1, 0.05 do
+                            displayFrame.BackgroundTransparency = i
+                            wait(0.03)
+                        end
+
+                        -- Fade in to black
                         for i = 0, 1, 0.05 do
                             displayFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
                             displayFrame.BackgroundTransparency = 1 - i
+                            wait(0.03)
+                        end
+
+                        -- Fade out from black to transparent
+                        for i = 0, 1, 0.05 do
+                            displayFrame.BackgroundTransparency = i
                             wait(0.03)
                         end
                     end
