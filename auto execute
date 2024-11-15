@@ -24,14 +24,24 @@ local function executeScript(url)
 
     if success then
         local scriptToExecute = response
+        -- Debug: check the content of the script fetched
+        print("Fetched script from URL: " .. url)
+
+        -- Try loading and executing the script
         local func, err = loadstring(scriptToExecute)  -- Convert the script into a function
 
         if func then
-            func()  -- Execute the script
-            print("Executed: " .. url)
-            return true
+            -- Execute the script safely
+            local executionSuccess, execErr = pcall(func)
+            if executionSuccess then
+                print("Successfully executed: " .. url)
+                return true
+            else
+                print("Error executing script: " .. execErr)
+                return false
+            end
         else
-            print("Error loading script: " .. err)
+            print("Error loading script from URL: " .. url .. " - " .. err)
             return false
         end
     else
