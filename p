@@ -1,35 +1,35 @@
--- Services needed for the script
+-- Create a ScreenGui for the button
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+local buttonGui = Instance.new("ScreenGui")
+buttonGui.Name = "NoclipDoorsButtonGui"
+buttonGui.Parent = playerGui
+buttonGui.ResetOnSpawn = false
+
+-- Create the noclip button
+local noclipButton = Instance.new("TextButton")
+noclipButton.Name = "NoclipDoorsButton"
+noclipButton.Parent = buttonGui
+noclipButton.Size = UDim2.new(0, 80, 0, 40) -- Button size (80x40 pixels)
+noclipButton.Position = UDim2.new(1, -370, 0, 80) -- Positioned below the specified position
+noclipButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- Black background color
+noclipButton.BackgroundTransparency = 0.8 -- Set transparency
+noclipButton.Text = "NOCLIP"
+noclipButton.TextColor3 = Color3.new(1, 0, 0) -- Red text color initially (off state)
+noclipButton.Font = Enum.Font.SourceSansBold
+noclipButton.TextScaled = true
+
+-- Add UICorner to the noclip button for rounded edges
+local cornerDelete = Instance.new("UICorner")
+cornerDelete.Parent = noclipButton
+
+-- Variables for Noclip Functionality
 local RunService = game:GetService("RunService")
 local Players = game:GetService("Players")
-local UserInputService = game:GetService("UserInputService")
-
--- Variables
 local Clip = true
 local Noclipping = nil
 local speaker = Players.LocalPlayer  -- Get the local player
-
--- GUI for Toggle Button
-local playerGui = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-
--- Create the ScreenGui to hold the button
-local toggleGui = Instance.new("ScreenGui")
-toggleGui.Name = "ToggleButtonGui"
-toggleGui.Parent = playerGui
-toggleGui.ResetOnSpawn = false  -- So the button persists across respawns
-
--- Create the Toggle Button
-local toggleButton = Instance.new("TextButton")
-toggleButton.Name = "ToggleButton"
-toggleButton.Size = UDim2.new(0, 30, 0, 30)  -- Set size to 30x30
-toggleButton.Position = UDim2.new(0.5, -15, 0.5, -15)  -- Start near the center of the screen
-toggleButton.Text = "Off"
-toggleButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)  -- Red for "Off" state
-toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)  -- White text color
-toggleButton.Parent = toggleGui
-
-local isToggled = false  -- Track toggle state
-local isDragging = false  -- Track dragging state
-local dragStart, startPos  -- Variables to keep track of drag positions
 
 -- Function to toggle noclip for parts under "workspace.Map.Doors"
 function toggleNoclip()
@@ -37,6 +37,9 @@ function toggleNoclip()
 
     if not Clip then
         print("Noclip activated for workspace.Map.Doors.")
+        
+        -- Change button text color to green for "On"
+        noclipButton.TextColor3 = Color3.fromRGB(0, 255, 0)  -- Green color
         
         -- Function to run the noclip logic
         local function NoclipLoop()
@@ -54,6 +57,9 @@ function toggleNoclip()
     else
         print("Noclip deactivated for workspace.Map.Doors.")
         
+        -- Change button text color to red for "Off"
+        noclipButton.TextColor3 = Color3.fromRGB(255, 0, 0)  -- Red color
+
         -- Disconnect the noclip connection to stop noclipping
         if Noclipping then
             Noclipping:Disconnect()
@@ -69,42 +75,36 @@ function toggleNoclip()
     end
 end
 
--- Function to toggle the button between "On" and "Off"
-local function toggleButtonState()
-    isToggled = not isToggled
-    if isToggled then
-        toggleButton.Text = "On"
-        toggleButton.BackgroundColor3 = Color3.fromRGB(0, 200, 0)  -- Green for "On" state
-    else
-        toggleButton.Text = "Off"
-        toggleButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)  -- Red for "Off" state
+-- Function to animate the button text with fade in and fade out effects
+local function animateButtonText()
+    local texts = {"NOCLIP", "DOORS"}
+    local currentTextIndex = 1
+    while noclipButton.Parent do
+        noclipButton.Text = texts[currentTextIndex]
+        
+        -- Fade in
+        for i = 0, 1, 0.05 do
+            noclipButton.TextTransparency = 1 - i
+            wait(0.05)
+        end
+        
+        wait(0.8) -- Wait for 0.8 seconds
+        
+        -- Fade out
+        for i = 0, 1, 0.05 do
+            noclipButton.TextTransparency = i
+            wait(0.05)
+        end
+        
+        wait(0.1)
+        
+        -- Switch to the next text
+        currentTextIndex = currentTextIndex % #texts + 1
     end
-
-    -- Toggle noclip whenever the button state is toggled
-    toggleNoclip()
 end
 
--- Connect button click to the toggle function
-toggleButton.MouseButton1Click:Connect(toggleButtonState)
+-- Start the text animation
+spawn(animateButtonText)
 
--- Dragging Logic for Toggle Button
-toggleButton.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isDragging = true
-        dragStart = input.Position
-        startPos = toggleButton.Position
-    end
-end)
-
-toggleButton.InputChanged:Connect(function(input)
-    if isDragging and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement) then
-        local delta = input.Position - dragStart
-        toggleButton.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-    end
-end)
-
-UserInputService.InputEnded:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
-        isDragging = false
-    end
-end)
+-- Connect the button click to toggleNoclip function
+noclipButton.MouseButton1Click:Connect(toggleNoclip)
