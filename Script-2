@@ -1,4 +1,3 @@
-
 -- Creating the Sanity Frame
 -- This script extracts the Sanity frame from the given script and manages its behavior
 
@@ -80,3 +79,48 @@ end
 
 -- Run the detection function
 detectNoSanityChallenge()
+
+-- end
+
+
+
+
+
+
+
+-- Create a new ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "TimerDisplayGui"
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Create a TextLabel to display the timer
+local timerLabel = Instance.new("TextLabel")
+timerLabel.Name = "TimerLabel"
+timerLabel.Parent = screenGui
+timerLabel.Size = UDim2.new(0, 150, 0, 40) -- Smaller size (150x40 pixels)
+timerLabel.Position = UDim2.new(0, 10, 1, -60) -- Position in the bottom-right corner
+timerLabel.BackgroundTransparency = 1 -- Fully transparent background
+timerLabel.TextColor3 = Color3.new(1, 1, 1) -- White text
+timerLabel.Font = Enum.Font.SourceSansBold
+timerLabel.TextScaled = true
+timerLabel.Text = "00:00" -- Initial text
+
+-- Define the path to the Timer TextLabel
+local timerTextPath = workspace:WaitForChild("Map"):WaitForChild("Van"):WaitForChild("Van")
+                        :WaitForChild("TimerModel"):WaitForChild("Monitor")
+                        :WaitForChild("SurfaceGui"):WaitForChild("Timer")
+
+-- Function to update the time on the screen
+local function updateTime()
+    while true do
+        if timerTextPath and timerTextPath:IsA("TextLabel") then
+            timerLabel.Text = timerTextPath.Text -- Update the ScreenGui label text with the timer's text
+        else
+            warn("Timer TextLabel not found or is not a TextLabel instance")
+        end
+        wait(1) -- Wait for 1 second before updating again
+    end
+end
+
+-- Start the time update loop without blocking the script
+spawn(updateTime)
