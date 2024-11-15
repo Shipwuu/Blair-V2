@@ -6,7 +6,9 @@ local function createESP(player)
     -- Exclude the local player
     if player == Players.LocalPlayer then return end
 
-    local character = player.Character
+    -- Ensure character exists
+    local character = player.Character or player.CharacterAdded:Wait()
+
     if not character or not character:FindFirstChild("HumanoidRootPart") then return end
 
     -- Create BillboardGui
@@ -31,7 +33,7 @@ local function createESP(player)
     usernameLabel.BackgroundTransparency = 1
     usernameLabel.Font = Enum.Font.GothamBold
     usernameLabel.Text = "@" .. player.Name
-    usernameLabel.TextColor3 = Color3.fromRGB(255, 215, 0)  -- Gold color for the username
+    usernameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)  -- White color for the username
     usernameLabel.TextSize = 14  -- Small text size
     usernameLabel.TextStrokeTransparency = 0.7  -- Slight text outline for visibility
     usernameLabel.TextXAlignment = Enum.TextXAlignment.Center
@@ -45,7 +47,7 @@ local function createESP(player)
     displayNameLabel.BackgroundTransparency = 1
     displayNameLabel.Font = Enum.Font.GothamBold
     displayNameLabel.Text = player.DisplayName
-    displayNameLabel.TextColor3 = Color3.fromRGB(255, 215, 0)  -- Gold color for the display name
+    displayNameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)  -- White color for the display name
     displayNameLabel.TextSize = 12  -- Small text size
     displayNameLabel.TextStrokeTransparency = 0.7  -- Slight text outline for visibility
     displayNameLabel.TextXAlignment = Enum.TextXAlignment.Center
@@ -78,8 +80,9 @@ local function createESP(player)
 
     -- Create a loop to animate the shiny gradient effect
     local function animateShinyEffect()
-        while true do
+        while billboard.Parent do
             for i = -1, 1, 0.02 do
+                if billboard.Parent == nil then return end  -- Stop animation if BillboardGui is removed
                 uiGradient.Offset = Vector2.new(i, 0)  -- Move the gradient smoothly
                 uiGradientBottom.Offset = Vector2.new(i, 0)
                 wait(0.05)  -- Slower speed for smooth animation
@@ -89,6 +92,13 @@ local function createESP(player)
 
     -- Start the animation loop for shiny effect
     spawn(animateShinyEffect)
+
+    -- Listen for character being removed to also remove the ESP
+    player.CharacterRemoving:Connect(function()
+        if billboard then
+            billboard:Destroy()
+        end
+    end)
 end
 
 -- Connect to new players joining and create ESP for them
@@ -104,3 +114,13 @@ for _, player in pairs(Players:GetPlayers()) do
         createESP(player)
     end
 end
+
+-- Listen for players leaving and remove ESP
+Players.PlayerRemoving:Connect(function(player)
+    if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+        local billboard = player.Character.HumanoidRootPart:FindFirstChild(player.Name .. "_ESP")
+        if billboard then
+            billboard:Destroy()
+        end
+    end
+end)
