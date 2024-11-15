@@ -30,7 +30,7 @@ fadeInTween:Play()
 
 -- After the fade-in completes, wait for a moment and then start the fade-out
 fadeInTween.Completed:Connect(function()
-    wait(1) -- Optional wait time after fade-in
+    wait(3) -- Optional wait time after fade-in
     fadeOutTween:Play()
     
     -- After fade-out completes, remove the loading screen
