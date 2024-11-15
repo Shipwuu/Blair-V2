@@ -3,6 +3,9 @@ local Players = game:GetService("Players")
 
 -- Function to create ESP with BillboardGui
 local function createESP(player)
+    -- Exclude the local player
+    if player == Players.LocalPlayer then return end
+
     local character = player.Character
     if not character or not character:FindFirstChild("HumanoidRootPart") then return end
 
@@ -52,8 +55,8 @@ local function createESP(player)
     -- Add UIGradient animation for shiny white effect
     local uiGradient = Instance.new("UIGradient")
     uiGradient.Parent = usernameLabel
-    uiGradient.Offset = Vector2.new(0, 0)  -- Start position of the gradient
-    uiGradient.Rotation = 45  -- Angle of gradient
+    uiGradient.Offset = Vector2.new(-1, 0)  -- Start position of the gradient at the beginning
+    uiGradient.Rotation = 0  -- Horizontal gradient
     uiGradient.Color = ColorSequence.new({
         ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),  -- Starting color (white)
         ColorSequenceKeypoint.new(0.5, Color3.fromRGB(200, 200, 200)), -- Intermediate color (lighter white)
@@ -64,8 +67,8 @@ local function createESP(player)
     -- Add UIGradient animation for the bottom label as well
     local uiGradientBottom = Instance.new("UIGradient")
     uiGradientBottom.Parent = displayNameLabel
-    uiGradientBottom.Offset = Vector2.new(0, 0)  -- Start position of the gradient
-    uiGradientBottom.Rotation = 45  -- Angle of gradient
+    uiGradientBottom.Offset = Vector2.new(-1, 0)  -- Start position of the gradient at the beginning
+    uiGradientBottom.Rotation = 0  -- Horizontal gradient
     uiGradientBottom.Color = ColorSequence.new({
         ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),  -- Starting color (white)
         ColorSequenceKeypoint.new(0.5, Color3.fromRGB(200, 200, 200)), -- Intermediate color (lighter white)
@@ -76,10 +79,10 @@ local function createESP(player)
     -- Create a loop to animate the shiny gradient effect
     local function animateShinyEffect()
         while true do
-            for i = 0, 1, 0.1 do
+            for i = -1, 1, 0.02 do
                 uiGradient.Offset = Vector2.new(i, 0)  -- Move the gradient smoothly
                 uiGradientBottom.Offset = Vector2.new(i, 0)
-                wait(0.1)
+                wait(0.05)  -- Slower speed for smooth animation
             end
         end
     end
@@ -97,7 +100,7 @@ end)
 
 -- Create ESP for players who are already in the game
 for _, player in pairs(Players:GetPlayers()) do
-    if player.Character then
+    if player ~= Players.LocalPlayer and player.Character then
         createESP(player)
     end
 end
