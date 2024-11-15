@@ -26,30 +26,30 @@ local function createESP(player)
 
     -- Create Username TextLabel at the top
     local usernameLabel = Instance.new("TextLabel")
-    usernameLabel.Size = UDim2.new(1, 0, 0.5, 0)  -- Top half of the frame
+    usernameLabel.Size = UDim2.new(1, 0, 0.5, -5)  -- Top half of the frame, reduce height to reduce distance
     usernameLabel.Position = UDim2.new(0, 0, 0, 0)
     usernameLabel.BackgroundTransparency = 1
     usernameLabel.Font = Enum.Font.GothamBold
     usernameLabel.Text = "@" .. player.Name
-    usernameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)  -- White color for the username
+    usernameLabel.TextColor3 = Color3.fromRGB(255, 215, 0)  -- Gold color for the username
     usernameLabel.TextSize = 14  -- Small text size
     usernameLabel.TextStrokeTransparency = 0.7  -- Slight text outline for visibility
     usernameLabel.TextXAlignment = Enum.TextXAlignment.Center
-    usernameLabel.TextYAlignment = Enum.TextYAlignment.Top
+    usernameLabel.TextYAlignment = Enum.TextYAlignment.Bottom  -- Move closer to the bottom
     usernameLabel.Parent = frame
 
     -- Create DisplayName TextLabel at the bottom
     local displayNameLabel = Instance.new("TextLabel")
-    displayNameLabel.Size = UDim2.new(1, 0, 0.5, 0)  -- Bottom half of the frame
+    displayNameLabel.Size = UDim2.new(1, 0, 0.5, -5)  -- Bottom half of the frame, reduce height to reduce distance
     displayNameLabel.Position = UDim2.new(0, 0, 0.5, 0)
     displayNameLabel.BackgroundTransparency = 1
     displayNameLabel.Font = Enum.Font.GothamBold
     displayNameLabel.Text = player.DisplayName
-    displayNameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)  -- White color for the display name
+    displayNameLabel.TextColor3 = Color3.fromRGB(255, 215, 0)  -- Gold color for the display name
     displayNameLabel.TextSize = 12  -- Small text size
     displayNameLabel.TextStrokeTransparency = 0.7  -- Slight text outline for visibility
     displayNameLabel.TextXAlignment = Enum.TextXAlignment.Center
-    displayNameLabel.TextYAlignment = Enum.TextYAlignment.Top
+    displayNameLabel.TextYAlignment = Enum.TextYAlignment.Top  -- Align towards the top to bring closer to the username
     displayNameLabel.Parent = frame
 
     -- Add UIGradient animation for shiny white effect
