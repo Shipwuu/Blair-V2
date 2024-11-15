@@ -101,26 +101,32 @@ local function createESP(player)
     end)
 end
 
--- Connect to new players joining and create ESP for them
-Players.PlayerAdded:Connect(function(player)
-    player.CharacterAdded:Connect(function(character)
-        createESP(player)
+-- Function to handle adding ESP for new players and removing ESP for leaving players
+local function handlePlayers()
+    -- Connect to new players joining and create ESP for them
+    Players.PlayerAdded:Connect(function(player)
+        player.CharacterAdded:Connect(function(character)
+            createESP(player)
+        end)
     end)
-end)
 
--- Create ESP for players who are already in the game
-for _, player in pairs(Players:GetPlayers()) do
-    if player ~= Players.LocalPlayer and player.Character then
-        createESP(player)
-    end
-end
-
--- Listen for players leaving and remove ESP
-Players.PlayerRemoving:Connect(function(player)
-    if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-        local billboard = player.Character.HumanoidRootPart:FindFirstChild(player.Name .. "_ESP")
-        if billboard then
-            billboard:Destroy()
+    -- Create ESP for players who are already in the game when the script runs
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= Players.LocalPlayer and player.Character then
+            createESP(player)
         end
     end
-end)
+
+    -- Listen for players leaving and remove their ESP
+    Players.PlayerRemoving:Connect(function(player)
+        if player.Character then
+            local billboard = player.Character.HumanoidRootPart:FindFirstChild(player.Name .. "_ESP")
+            if billboard then
+                billboard:Destroy()
+            end
+        end
+    end)
+end
+
+-- Start handling players
+handlePlayers()
