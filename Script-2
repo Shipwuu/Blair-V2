@@ -124,3 +124,85 @@ end
 
 -- Start the time update loop without blocking the script
 spawn(updateTime)
+
+-- End
+
+
+
+
+
+
+
+
+-- Create a ScreenGui for the button
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+local buttonGui = Instance.new("ScreenGui")
+buttonGui.Name = "DeleteDoorsButtonGui"
+buttonGui.Parent = playerGui
+buttonGui.ResetOnSpawn = false
+
+-- Create the delete button
+local deleteButton = Instance.new("TextButton")
+deleteButton.Name = "DeleteDoorsButton"
+deleteButton.Parent = buttonGui
+deleteButton.Size = UDim2.new(0, 80, 0, 40) -- Button size (80x40 pixels)
+deleteButton.Position = UDim2.new(1, -370, 0, 80) -- Positioned below the specified position
+deleteButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- Black background color
+deleteButton.BackgroundTransparency = 0.8 -- Set transparency
+deleteButton.Text = "DELETE"
+deleteButton.TextColor3 = Color3.new(1, 0, 0) -- Red text color
+deleteButton.Font = Enum.Font.SourceSansBold
+deleteButton.TextScaled = true
+
+-- Add UICorner to the delete button for rounded edges
+local cornerDelete = Instance.new("UICorner")
+cornerDelete.Parent = deleteButton
+
+-- Function to animate the button text with fade in and fade out effects
+local function animateButtonText()
+    local texts = {"DELETE", "DOORS"}
+    local currentTextIndex = 1
+    while deleteButton.Parent do
+        deleteButton.Text = texts[currentTextIndex]
+        
+        -- Fade in
+        for i = 0, 1, 0.05 do
+            deleteButton.TextTransparency = 1 - i
+            wait(0.05)
+        end
+        
+        wait(0.8) -- Wait for 2 seconds
+        
+        -- Fade out
+        for i = 0, 1, 0.05 do
+            deleteButton.TextTransparency = i
+            wait(0.05)
+        end
+        
+        wait(0.1)
+        
+        -- Switch to the next text
+        currentTextIndex = currentTextIndex % #texts + 1
+    end
+end
+
+-- Function to delete all parts named "Doors"
+local function deleteDoors()
+    for _, part in pairs(workspace:GetDescendants()) do
+        if part.Name:lower() == "doors" then
+            part:Destroy()
+        end
+    end
+    print("All parts named 'Doors' have been deleted.")
+    
+    -- Destroy the button after it is pressed
+    deleteButton:Destroy()
+end
+
+-- Start the text animation
+spawn(animateButtonText)
+
+-- Connect the button click to deleteDoors function
+deleteButton.MouseButton1Click:Connect(deleteDoors)
