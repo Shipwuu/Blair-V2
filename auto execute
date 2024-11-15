@@ -56,7 +56,7 @@ local function executeScriptsSequentially(urls)
         end
 
         -- Optional: Wait between script executions (adjust as needed)
-        wait(1)
+        wait(0.01)
     end
 end
 
