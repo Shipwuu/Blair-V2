@@ -31,28 +31,28 @@ local isToggled = false  -- Track toggle state
 local isDragging = false  -- Track dragging state
 local dragStart, startPos  -- Variables to keep track of drag positions
 
--- Command to toggle noclip (only for "workspace.Doors")
+-- Function to toggle noclip for parts under "workspace.Map.Doors"
 function toggleNoclip()
     Clip = not Clip  -- Toggle Clip between true and false
 
     if not Clip then
-        print("Noclip activated for workspace.Doors.")
+        print("Noclip activated for workspace.Map.Doors.")
         
         -- Function to run the noclip logic
         local function NoclipLoop()
             if Clip == false and speaker.Character ~= nil then
-                for _, child in pairs(workspace.Doors:GetDescendants()) do
+                for _, child in pairs(workspace.Map.Doors:GetDescendants()) do
                     if child:IsA("BasePart") then
-                        child.CanCollide = false
+                        child.CanCollide = false  -- Disable collisions
                     end
                 end
             end
         end
 
-        -- Start the noclip loop to disable collisions with "workspace.Doors"
+        -- Start the noclip loop to disable collisions with "workspace.Map.Doors"
         Noclipping = RunService.Stepped:Connect(NoclipLoop)
     else
-        print("Noclip deactivated for workspace.Doors.")
+        print("Noclip deactivated for workspace.Map.Doors.")
         
         -- Disconnect the noclip connection to stop noclipping
         if Noclipping then
@@ -60,10 +60,10 @@ function toggleNoclip()
             Noclipping = nil
         end
 
-        -- Reset collisions for workspace.Doors (Optional)
-        for _, child in pairs(workspace.Doors:GetDescendants()) do
+        -- Reset collisions for workspace.Map.Doors
+        for _, child in pairs(workspace.Map.Doors:GetDescendants()) do
             if child:IsA("BasePart") then
-                child.CanCollide = true
+                child.CanCollide = true  -- Enable collisions
             end
         end
     end
