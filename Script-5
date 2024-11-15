@@ -52,3 +52,51 @@ while true do
     -- Wait for a short interval before checking again
     wait(1)
 end
+
+-- End
+
+
+
+
+
+
+
+
+
+
+-- Automatically create ESP for "HumanoidRootPart" parts
+local espTransparency = 0.8 -- Change this for transparency level (0 = fully opaque, 1 = fully transparent)
+
+-- Function to create ESP adornment
+function createEsp(part)
+    -- Check if the part is a "HumanoidRootPart" and NOT under "workspace.Ghost"
+    if part:IsA("BasePart") and part.Name == "HumanoidRootPart" then
+        local parentModel = part:FindFirstAncestorOfClass("Model")
+        
+        -- Ensure that the HumanoidRootPart is NOT under "workspace.Ghost"
+        if not (parentModel and parentModel.Name == "Ghost" and parentModel.Parent == workspace) then
+            -- Create ESP for eligible HumanoidRootPart
+            local espBox = Instance.new("BoxHandleAdornment")
+            espBox.Name = part.Name .. "_ESP"
+            espBox.Parent = part
+            espBox.Adornee = part
+            espBox.AlwaysOnTop = true
+            espBox.ZIndex = 0
+            espBox.Size = part.Size
+            espBox.Transparency = espTransparency
+            espBox.Color = BrickColor.new("Lime green")
+        end
+    end
+end
+
+-- Loop through existing parts to add ESP on execution
+for _, part in pairs(workspace:GetDescendants()) do
+    createEsp(part)
+end
+
+-- Connect to new parts being added to the workspace
+workspace.DescendantAdded:Connect(function(part)
+    createEsp(part)
+end)
+
+-- End
