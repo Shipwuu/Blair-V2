@@ -1,0 +1,65 @@
+-- Auto Execute Script with URL Detection
+
+local urls = {
+    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20I",
+    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20II",
+    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20III",
+    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20IV", 
+    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20V",
+    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20VI",
+    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20VII",
+    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20VIII",
+    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20IX",
+    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20X"
+}
+
+local HttpService = game:GetService("HttpService")
+local completedScripts = {}  -- To keep track of which scripts have been executed
+
+-- Function to load and execute a script from the URL
+local function executeScript(url)
+    local success, response = pcall(function()
+        return HttpService:GetAsync(url)  -- Get the script content from the URL
+    end)
+
+    if success then
+        local scriptToExecute = response
+        local func, err = loadstring(scriptToExecute)  -- Convert the script into a function
+
+        if func then
+            func()  -- Execute the script
+            print("Executed: " .. url)
+            return true
+        else
+            print("Error loading script: " .. err)
+            return false
+        end
+    else
+        print("Failed to fetch script from URL: " .. url)
+        return false
+    end
+end
+
+-- Function to execute the scripts one by one
+local function executeScriptsSequentially()
+    for i, url in ipairs(urls) do
+        -- Check if the script at this URL has been executed
+        if not completedScripts[url] then
+            local success = executeScript(url)
+
+            if success then
+                -- Mark this script as executed
+                completedScripts[url] = true
+                -- Wait a short period before proceeding to the next script (optional)
+                wait(1)
+            else
+                print("Skipping script: " .. url)
+            end
+        else
+            print("Script already executed: " .. url)
+        end
+    end
+end
+
+-- Start executing the scripts sequentially
+executeScriptsSequentially()
