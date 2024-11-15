@@ -1,14 +1,8 @@
 local urls = {
-    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20I",
-    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20II",
-    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20III",
-    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20IV",
-    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20V",
-    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20VI",
-    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20VII",
-    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20VIII",
-    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20IX",
-    "https://raw.githubusercontent.com/Shipwuu/Blair/main/Script%20X"
+    "https://raw.githubusercontent.com/Shipwuu/Blair-V2/refs/heads/main/Script-1",
+    "https://raw.githubusercontent.com/Shipwuu/Blair-V2/refs/heads/main/Script-2",
+    "https://raw.githubusercontent.com/Shipwuu/Blair-V2/refs/heads/main/Script-3",
+    "https://raw.githubusercontent.com/Shipwuu/Blair-V2/refs/heads/main/Script-4",
 }
 
 local maxRetries = 10  -- Maximum number of retries for each URL
