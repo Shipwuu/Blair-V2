@@ -213,4 +213,85 @@ workspace.DescendantAdded:Connect(function(part)
     createEsp(part)
 end)
 
+-- End
+
+
+
+
+
+
+
+
+-- Create a Billboard GUI to display the WalkSpeed
+local function createBillboardGui(bot)
+    local billboardGui = Instance.new("BillboardGui")
+    billboardGui.Size = UDim2.new(6, 0, 3, 0) -- Adjust the size as needed
+    billboardGui.StudsOffset = Vector3.new(0, 2, 0) -- Position above the bot's feet
+    billboardGui.AlwaysOnTop = true
+
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Size = UDim2.new(1, 0, 1, 0)
+    textLabel.BackgroundTransparency = 1
+    textLabel.TextColor3 = Color3.new(1, 1, 1) -- White color
+    textLabel.TextScaled = true
+    textLabel.Font = Enum.Font.SourceSansBold -- Use a bold font
+
+    local uiStroke = Instance.new("UIStroke")
+    uiStroke.Color = Color3.new(0, 0, 0) -- Black color for better visibility
+    uiStroke.Thickness = 2
+    uiStroke.Parent = textLabel
+
+    textLabel.Parent = billboardGui
+    billboardGui.Parent = bot:FindFirstChild("LeftFoot") or bot:FindFirstChild("RightFoot") or bot:FindFirstChild("HumanoidRootPart") -- Parent to foot or root part if available
+    return textLabel
+end
+
+-- Function to update the WalkSpeed on the Billboard GUI
+local function updateWalkSpeed(humanoid, textLabel)
+    local previousSpeed = humanoid.WalkSpeed
+    while true do
+        if humanoid and textLabel then
+            local walkSpeed = math.floor(humanoid.WalkSpeed * 10) / 10 -- Round to one decimal place
+            textLabel.Text = tostring(walkSpeed)
+
+            if walkSpeed > previousSpeed then
+                textLabel.TextColor3 = Color3.fromRGB(255, 255, 0) -- Yellow color if speed increased
+            elseif walkSpeed < previousSpeed then
+                textLabel.TextColor3 = Color3.fromRGB(0, 0, 255) -- Blue color if speed decreased
+            end
+
+            previousSpeed = walkSpeed
+        end
+        wait(0.1) -- Update every 0.1 seconds
+    end
+end
+
+-- Main function to detect the bot and update the WalkSpeed
+local function monitorGhost()
+    if _G.monitoringGhost then
+        _G.monitoringGhost:Destroy() -- Destroy the old one if already running
+    end
+
+    local monitorPart = Instance.new("Folder")
+    monitorPart.Name = "MonitorGhostFolder"
+    monitorPart.Parent = workspace
+    _G.monitoringGhost = monitorPart
+
+    task.spawn(function()
+        while true do
+            if not monitorPart.Parent then return end -- Stop if the monitorPart is destroyed
+            local bot = workspace:FindFirstChild("Ghost")
+            if bot then
+                local humanoid = bot:FindFirstChildOfClass("Humanoid")
+                if humanoid then
+                    local textLabel = createBillboardGui(bot)
+                    task.spawn(updateWalkSpeed, humanoid, textLabel)
+                end
+            end
+            wait(1) -- Check every 1 second for the Ghost
+        end
+    end)
+end
+
+task.spawn(monitorGhost)
 
