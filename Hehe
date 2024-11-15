@@ -14,6 +14,7 @@ imageLabel.Position = UDim2.new(0.5, 0, 0.5, 0) -- Position in the center of the
 imageLabel.Size = UDim2.new(0, 400, 0, 400) -- Set size to 400x400
 imageLabel.Image = "rbxthumb://type=Asset&id=95436708584038&w=420&h=420" -- Set your image asset
 imageLabel.BackgroundTransparency = 1 -- Make the background transparent
+imageLabel.ImageTransparency = 1 -- Start as fully transparent
 
 -- Create the Fade In and Fade Out Tweening
 local tweenService = game:GetService("TweenService")
@@ -24,7 +25,7 @@ local fadeInTween = tweenService:Create(imageLabel, TweenInfo.new(1, Enum.Easing
 -- Define the fade-out tween
 local fadeOutTween = tweenService:Create(imageLabel, TweenInfo.new(1, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {ImageTransparency = 1})
 
--- Play the fade-in animation first
+-- Play the fade-in animation when the script starts
 fadeInTween:Play()
 
 -- After the fade-in completes, wait for a moment and then start the fade-out
