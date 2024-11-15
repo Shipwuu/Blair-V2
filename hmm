@@ -11,7 +11,14 @@ local function createESP(player)
 
     if not character or not character:FindFirstChild("HumanoidRootPart") then return end
 
-    -- Create BillboardGui
+    -- Check if the player already has a BillboardGui
+    local existingBillboard = character.HumanoidRootPart:FindFirstChild(player.Name .. "_ESP")
+    if existingBillboard then
+        -- If the BillboardGui already exists, remove the previous one
+        existingBillboard:Destroy()
+    end
+
+    -- Create a new BillboardGui
     local billboard = Instance.new("BillboardGui")
     billboard.Name = player.Name .. "_ESP"
     billboard.Adornee = character.HumanoidRootPart
