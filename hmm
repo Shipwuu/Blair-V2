@@ -11,6 +11,9 @@ local function createESP(player)
 
     if not character or not character:FindFirstChild("HumanoidRootPart") then return end
 
+    -- Check if the ESP already exists
+    if character:FindFirstChild(player.Name .. "_ESP") then return end
+
     -- Create BillboardGui
     local billboard = Instance.new("BillboardGui")
     billboard.Name = player.Name .. "_ESP"
@@ -101,19 +104,21 @@ local function createESP(player)
     end)
 end
 
--- Connect to new players joining and create ESP for them
-Players.PlayerAdded:Connect(function(player)
-    player.CharacterAdded:Connect(function(character)
-        createESP(player)
-    end)
-end)
-
--- Create ESP for players who are already in the game
-for _, player in pairs(Players:GetPlayers()) do
-    if player ~= Players.LocalPlayer and player.Character then
-        createESP(player)
+-- Function to manage ESP creation for all players
+local function manageESP()
+    while true do
+        -- Loop through all players
+        for _, player in pairs(Players:GetPlayers()) do
+            if player ~= Players.LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                createESP(player)
+            end
+        end
+        wait(1)  -- Wait a short time before checking again to avoid heavy usage of resources
     end
 end
+
+-- Start managing ESPs in a separate thread
+spawn(manageESP)
 
 -- Listen for players leaving and remove ESP
 Players.PlayerRemoving:Connect(function(player)
