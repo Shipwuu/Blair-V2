@@ -58,7 +58,7 @@ spawn(function()
 end)
 
 -- Function to create ImageButton and animate it
-local function createImageButton(parent, name, position, imageAssetId)
+local function createImageButton(parent, name, position, imageAssetId, cornerRadius)
     local imageButton = Instance.new("ImageButton")
     imageButton.Name = name
     imageButton.Parent = parent
@@ -70,7 +70,7 @@ local function createImageButton(parent, name, position, imageAssetId)
 
     -- Add UICorner for ImageButton rounded edges
     local buttonUICorner = Instance.new("UICorner")
-    buttonUICorner.CornerRadius = UDim.new(0, 8)
+    buttonUICorner.CornerRadius = UDim.new(cornerRadius, cornerRadius)
     buttonUICorner.Parent = imageButton
 
     -- Add UIStroke for ImageButton
@@ -101,7 +101,7 @@ end
 -- Assign each button a unique position, name, image asset ID, and script
 
 -- ImageButton 1
-local imageButton1 = createImageButton(frame, "ShortcutButton1", UDim2.new(0, 8, 0, 10), "rbxassetid://{YourAssetID1}")
+local imageButton1 = createImageButton(frame, "ShortcutButton1", UDim2.new(0, 8, 0, 10), "rbxassetid://{YourAssetID1}", 8)
 imageButton1.MouseButton1Click:Connect(function()
     -- Add your specific script for ImageButton 1 here
     print("Button 1 clicked")
@@ -119,7 +119,7 @@ imageButton1.MouseButton1Click:Connect(function()
 end)
 
 -- ImageButton 2
-local imageButton2 = createImageButton(frame, "ShortcutButton2", UDim2.new(0, 8, 0.2, 20), "rbxassetid://{YourAssetID2}")
+local imageButton2 = createImageButton(frame, "ShortcutButton2", UDim2.new(0, 8, 0.2, 20), "rbxassetid://{YourAssetID2}", 8)
 imageButton2.MouseButton1Click:Connect(function()
     -- Add your specific script for ImageButton 2 here
     print("Button 2 clicked")
@@ -128,7 +128,7 @@ imageButton2.MouseButton1Click:Connect(function()
 end)
 
 -- ImageButton 3
-local imageButton3 = createImageButton(frame, "ShortcutButton3", UDim2.new(0, 8, 0.4, 30), "rbxassetid://{YourAssetID3}")
+local imageButton3 = createImageButton(frame, "ShortcutButton3", UDim2.new(0, 8, 0.4, 30), "rbxassetid://{YourAssetID3}", 8)
 imageButton3.MouseButton1Click:Connect(function()
     -- Add your specific script for ImageButton 3 here
     print("Button 3 clicked")
@@ -138,5 +138,16 @@ imageButton3.MouseButton1Click:Connect(function()
         tool:Clone().Parent = player.Backpack
     else
         warn("Tool not found in ReplicatedStorage.")
+    end
+end)
+
+-- Create Toggle Button
+local toggleButton = createImageButton(frame, "ToggleShortcutButton", UDim2.new(0, 8, 0.6, 45), "rbxassetid://{YourToggleButtonAssetID}", 10)
+toggleButton.MouseButton1Click:Connect(function()
+    -- Toggle the visibility of the Shortcut Frame
+    if frame.Visible then
+        frame.Visible = false -- Hide the frame
+    else
+        frame.Visible = true -- Show the frame
     end
 end)
