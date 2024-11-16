@@ -1,5 +1,84 @@
-local args = {
-    [1] = "Capture a photo of the Ghost"
-}
+-- Create ScreenGui
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
 
-game:GetService("Players").LocalPlayer.Character:FindFirstChild("Photo Camera").Remote.CompleteObjective:FireServer(unpack(args))
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "ShortcutScreenGui"
+screenGui.Parent = playerGui
+screenGui.ResetOnSpawn = false
+
+-- Create Frame
+local frame = Instance.new("Frame")
+frame.Name = "ShortcutFrame"
+frame.Parent = screenGui
+frame.Position = UDim2.new(0.699, 0, 0.5, 30)
+frame.Size = UDim2.new(0, 75, 0, 300)
+frame.BackgroundTransparency = 0.8
+frame.BackgroundColor3 = Color3.fromRGB(127, 127, 127) -- Frame background color
+
+-- Add UICorner for rounded edges
+local uiCorner = Instance.new("UICorner")
+uiCorner.CornerRadius = UDim.new(0, 8)
+uiCorner.Parent = frame
+
+-- Add UIStroke for frame outline
+local uiStroke = Instance.new("UIStroke")
+uiStroke.Color = Color3.fromRGB(255, 255, 255) -- White color for the stroke
+uiStroke.Transparency = 0.5
+uiStroke.Thickness = 4 -- Set the thickness of the UIStroke
+uiStroke.Parent = frame
+
+-- Add UIGradient to the UIStroke
+local uiGradient = Instance.new("UIGradient")
+uiGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 153, 51)), -- Warn yellowish orange
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(233, 116, 81))  -- Burn Sienna
+})
+uiGradient.Parent = uiStroke
+
+-- Create ImageButton 1
+local imageButton = Instance.new("ImageButton")
+imageButton.Name = "ShortcutButton"
+imageButton.Parent = frame
+imageButton.Position = UDim2.new(0, 8, 0, 10)
+imageButton.Size = UDim2.new(0, 60, 0, 60)
+imageButton.BackgroundTransparency = 0.4
+imageButton.BackgroundColor3 = Color3.fromRGB(98, 97, 97) -- Button background color
+imageButton.Image = "rbxassetid://{YourAssetID}" -- Insert your image asset ID here
+
+-- Add UICorner for ImageButton rounded edges
+local buttonUICorner = Instance.new("UICorner")
+buttonUICorner.CornerRadius = UDim.new(0, 8)
+buttonUICorner.Parent = imageButton
+
+-- Add UIStroke for ImageButton
+local buttonUIStroke = Instance.new("UIStroke")
+buttonUIStroke.Color = Color3.fromRGB(255, 255, 255) -- White color for the stroke
+buttonUIStroke.Transparency = 0.5
+buttonUIStroke.Thickness = 4 -- Set the thickness of the UIStroke
+buttonUIStroke.Parent = imageButton
+
+-- Add UIGradient to the ImageButton's UIStroke
+local buttonUIGradient = Instance.new("UIGradient")
+buttonUIGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 153, 51)), -- Warn yellowish orange
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(233, 116, 81))  -- Burn Sienna
+})
+buttonUIGradient.Parent = buttonUIStroke
+
+-- Event to handle ImageButton click
+imageButton.MouseButton1Click:Connect(function()
+    -- Shortcut Script to Capture a Photo of the Ghost
+    local args = {
+        [1] = "Capture a photo of the Ghost"
+    }
+
+    local character = player.Character or player.CharacterAdded:Wait()
+    local photoCamera = character:FindFirstChild("Photo Camera")
+
+    if photoCamera and photoCamera:FindFirstChild("Remote") and photoCamera.Remote:FindFirstChild("CompleteObjective") then
+        photoCamera.Remote.CompleteObjective:FireServer(unpack(args))
+    else
+        warn("Photo Camera or Remote not found.")
+    end
+end)
