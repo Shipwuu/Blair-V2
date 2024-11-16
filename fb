@@ -32,22 +32,30 @@ uiStroke.Parent = frame
 local uiGradient = Instance.new("UIGradient")
 uiGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0, Color3.fromRGB(73, 54, 40)),  -- Main color (dark brown)
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(214, 192, 179)) -- Shiny color (light yellow)
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(214, 192, 179)), -- Shiny color (light yellow) at middle
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(73, 54, 40))   -- Main color again
 })
 uiGradient.Parent = uiStroke
 
--- Function to animate shiny effect for UIStroke (thin line of shiny color moving smoothly)
-local function animateShinyEffect()
+-- Function to animate shiny effect for UIStroke (dual-phase: main hold + shiny pass)
+local function animateShinyEffect(uiGradient)
     while frame.Parent do
+        -- Phase 1: Hold the main color for a moment
+        uiGradient.Offset = Vector2.new(-1, 0) -- Start with full main color
+        wait(1) -- Hold the main color for a second
+
+        -- Phase 2: Smooth shiny line pass
         for i = -1, 1, 0.02 do
-            uiGradient.Offset = Vector2.new(i, 0)  -- Move the gradient smoothly from left to right
-            wait(0.05)  -- Slower speed for smooth animation
+            uiGradient.Offset = Vector2.new(i, 0) -- Move the shiny line smoothly across
+            wait(0.05) -- Control the speed for a smooth animation
         end
     end
 end
 
--- Start the animation loop for shiny effect
-spawn(animateShinyEffect)
+-- Start the animation loop for shiny effect for the frame
+spawn(function()
+    animateShinyEffect(uiGradient)
+end)
 
 -- Create ImageButton 1
 local imageButton = Instance.new("ImageButton")
@@ -75,22 +83,15 @@ buttonUIStroke.Parent = imageButton
 local buttonUIGradient = Instance.new("UIGradient")
 buttonUIGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0, Color3.fromRGB(73, 54, 40)),  -- Main color (dark brown)
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(214, 192, 179)) -- Shiny color (light yellow)
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(214, 192, 179)), -- Shiny color (light yellow) at middle
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(73, 54, 40))   -- Main color again
 })
 buttonUIGradient.Parent = buttonUIStroke
 
--- Function to animate shiny effect for ImageButton UIStroke (thin line of shiny color moving smoothly)
-local function animateButtonShinyEffect()
-    while imageButton.Parent do
-        for i = -1, 1, 0.02 do
-            buttonUIGradient.Offset = Vector2.new(i, 0)  -- Move the gradient smoothly from left to right
-            wait(0.05)  -- Slower speed for smooth animation
-        end
-    end
-end
-
--- Start the animation loop for button shiny effect
-spawn(animateButtonShinyEffect)
+-- Function to animate shiny effect for ImageButton UIStroke (dual-phase: main hold + shiny pass)
+spawn(function()
+    animateShinyEffect(buttonUIGradient)
+end)
 
 -- Event to handle ImageButton click
 imageButton.MouseButton1Click:Connect(function()
