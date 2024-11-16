@@ -101,21 +101,18 @@ end
 -- Create Shortcut Buttons inside the Frame
 -- ImageButton 1
 local imageButton1 = createShortcutButton(frame, "ShortcutButton1", UDim2.new(0, 8, 0, 10), "rbxassetid://{YourAssetID1}")
--- Add functionality to ImageButton 1 (similar as before)
 imageButton1.MouseButton1Click:Connect(function()
     print("Button 1 clicked")
 end)
 
 -- ImageButton 2
 local imageButton2 = createShortcutButton(frame, "ShortcutButton2", UDim2.new(0, 8, 0.2, 20), "rbxassetid://{YourAssetID2}")
--- Add functionality to ImageButton 2
 imageButton2.MouseButton1Click:Connect(function()
     print("Button 2 clicked")
 end)
 
 -- ImageButton 3
 local imageButton3 = createShortcutButton(frame, "ShortcutButton3", UDim2.new(0, 8, 0.4, 30), "rbxassetid://{YourAssetID3}")
--- Add functionality to ImageButton 3
 imageButton3.MouseButton1Click:Connect(function()
     print("Button 3 clicked")
 end)
@@ -161,27 +158,48 @@ local function createToggleButton(parent, name, position, imageAssetId)
 end
 
 -- Create the Toggle Button (Open/Close Shortcut Frame)
--- This button is outside of the frame, so it doesn't disappear when the frame is hidden
 local toggleButton = createToggleButton(screenGui, "ToggleShortcutButton", UDim2.new(0.699, 8, 0.890, 0), "rbxassetid://{YourToggleButtonAssetID}")
+
+-- Function to handle fade in/out animations
+local function fadeIn(element, duration)
+    for i = 1, 0, -0.05 do
+        element.ImageTransparency = i
+        element.BackgroundTransparency = i
+        wait(duration)
+    end
+end
+
+local function fadeOut(element, duration)
+    for i = 0, 1, 0.05 do
+        element.ImageTransparency = i
+        element.BackgroundTransparency = i
+        wait(duration)
+    end
+end
+
+-- Connect the toggle button click event for sliding the frame
 toggleButton.MouseButton1Click:Connect(function()
-    -- Toggle the visibility of the Shortcut Frame with sliding animation
+    -- Fade out the toggle button before starting the animation
+    fadeOut(toggleButton, 0.05)
+
+    -- Toggle frame visibility with sliding animation
     if not frame.Visible then
         frame.Visible = true
-        -- Slide up animation (fast at first, slow at end)
-        for i = 1.5, 0.5, -0.1 do
+        -- Slide up animation (slow and smooth)
+        for i = 1.5, 0.5, -0.05 do
             frame.Position = UDim2.new(0.699, 0, i, 30)
-            wait(0.03) -- Faster initially
+            wait(0.05) -- Smooth and slow
         end
-        for i = 0.5, 0.5, -0.01 do
-            frame.Position = UDim2.new(0.699, 0, i, 30)
-            wait(0.05) -- Slow and smooth at the end
-        end
+        -- Fade in the toggle button after animation
+        fadeIn(toggleButton, 0.05)
     else
-        -- Slide down animation (fast at first, slow at end)
-        for i = 0.5, 1.5, 0.1 do
+        -- Slide down animation (slow and smooth)
+        for i = 0.5, 1.5, 0.05 do
             frame.Position = UDim2.new(0.699, 0, i, 30)
-            wait(0.03) -- Faster initially
+            wait(0.05) -- Smooth and slow
         end
-        frame.Visible = false -- Hide the frame once out of the screen
+        frame.Visible = false
+        -- Fade in the toggle button after frame is hidden
+        fadeIn(toggleButton, 0.05)
     end
 end)
