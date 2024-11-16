@@ -31,10 +31,24 @@ uiStroke.Parent = frame
 -- Add UIGradient to the UIStroke
 local uiGradient = Instance.new("UIGradient")
 uiGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 153, 51)), -- Warn yellowish orange
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(233, 116, 81))  -- Burn Sienna
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(214, 192, 179)), -- Shiny color (light yellow)
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(73, 54, 40))   -- Main color (dark brown)
 })
 uiGradient.Parent = uiStroke
+
+-- Function to animate shiny effect for UIStroke
+local function animateShinyEffect()
+    while frame.Parent do
+        -- Smoothly animate gradient from left to right
+        for i = -1, 1, 0.02 do
+            uiGradient.Offset = Vector2.new(i, 0)  -- Move the gradient smoothly
+            wait(0.05)  -- Slower speed for smooth animation
+        end
+    end
+end
+
+-- Start the animation loop for shiny effect
+spawn(animateShinyEffect)
 
 -- Create ImageButton 1
 local imageButton = Instance.new("ImageButton")
@@ -61,10 +75,24 @@ buttonUIStroke.Parent = imageButton
 -- Add UIGradient to the ImageButton's UIStroke
 local buttonUIGradient = Instance.new("UIGradient")
 buttonUIGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 153, 51)), -- Warn yellowish orange
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(233, 116, 81))  -- Burn Sienna
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(214, 192, 179)), -- Shiny color (light yellow)
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(73, 54, 40))   -- Main color (dark brown)
 })
 buttonUIGradient.Parent = buttonUIStroke
+
+-- Function to animate shiny effect for ImageButton UIStroke
+local function animateButtonShinyEffect()
+    while imageButton.Parent do
+        -- Smoothly animate gradient from left to right for button
+        for i = -1, 1, 0.02 do
+            buttonUIGradient.Offset = Vector2.new(i, 0)  -- Move the gradient smoothly
+            wait(0.05)  -- Slower speed for smooth animation
+        end
+    end
+end
+
+-- Start the animation loop for button shiny effect
+spawn(animateButtonShinyEffect)
 
 -- Event to handle ImageButton click
 imageButton.MouseButton1Click:Connect(function()
