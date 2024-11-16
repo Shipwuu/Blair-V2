@@ -57,8 +57,8 @@ spawn(function()
     animateShinyEffect(uiGradient)
 end)
 
--- Create ImageButton 1
-local function createImageButton(parent, name, position)
+-- Function to create ImageButton and animate it
+local function createImageButton(parent, name, position, imageAssetId)
     local imageButton = Instance.new("ImageButton")
     imageButton.Name = name
     imageButton.Parent = parent
@@ -66,7 +66,7 @@ local function createImageButton(parent, name, position)
     imageButton.Size = UDim2.new(0, 60, 0, 60)
     imageButton.BackgroundTransparency = 0.4
     imageButton.BackgroundColor3 = Color3.fromRGB(98, 97, 97) -- Button background color
-    imageButton.Image = "rbxassetid://{YourAssetID}" -- Insert your image asset ID here
+    imageButton.Image = imageAssetId -- Assign the ImageAsset ID
 
     -- Add UICorner for ImageButton rounded edges
     local buttonUICorner = Instance.new("UICorner")
@@ -97,35 +97,46 @@ local function createImageButton(parent, name, position)
     return imageButton
 end
 
--- Create ImageButton 1 (previous button)
-local imageButton1 = createImageButton(frame, "ShortcutButton1", UDim2.new(0, 8, 0, 10))
+-- Create ImageButtons
+-- Assign each button a unique position, name, image asset ID, and script
 
--- Create ImageButton 2
-local imageButton2 = createImageButton(frame, "ShortcutButton2", UDim2.new(0, 8, 0.2, 20))
+-- ImageButton 1
+local imageButton1 = createImageButton(frame, "ShortcutButton1", UDim2.new(0, 8, 0, 10), "rbxassetid://{YourAssetID1}")
+imageButton1.MouseButton1Click:Connect(function()
+    -- Add your specific script for ImageButton 1 here
+    print("Button 1 clicked")
+    -- Example script
+    local args = {
+        [1] = "Capture a photo of the Ghost"
+    }
+    local character = player.Character or player.CharacterAdded:Wait()
+    local photoCamera = character:FindFirstChild("Photo Camera")
+    if photoCamera and photoCamera:FindFirstChild("Remote") and photoCamera.Remote:FindFirstChild("CompleteObjective") then
+        photoCamera.Remote.CompleteObjective:FireServer(unpack(args))
+    else
+        warn("Photo Camera or Remote not found.")
+    end
+end)
 
--- Create ImageButton 3
-local imageButton3 = createImageButton(frame, "ShortcutButton3", UDim2.new(0, 8, 0.4, 30))
+-- ImageButton 2
+local imageButton2 = createImageButton(frame, "ShortcutButton2", UDim2.new(0, 8, 0.2, 20), "rbxassetid://{YourAssetID2}")
+imageButton2.MouseButton1Click:Connect(function()
+    -- Add your specific script for ImageButton 2 here
+    print("Button 2 clicked")
+    -- Example script: perform another task
+    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 100, 0) -- Teleport player to specific coordinates
+end)
 
--- Event to handle ImageButton click for each button
-local function setupButtonClick(button)
-    button.MouseButton1Click:Connect(function()
-        -- Shortcut Script to Capture a Photo of the Ghost
-        local args = {
-            [1] = "Capture a photo of the Ghost"
-        }
-
-        local character = player.Character or player.CharacterAdded:Wait()
-        local photoCamera = character:FindFirstChild("Photo Camera")
-
-        if photoCamera and photoCamera:FindFirstChild("Remote") and photoCamera.Remote:FindFirstChild("CompleteObjective") then
-            photoCamera.Remote.CompleteObjective:FireServer(unpack(args))
-        else
-            warn("Photo Camera or Remote not found.")
-        end
-    end)
-end
-
--- Setup click event for all buttons
-setupButtonClick(imageButton1)
-setupButtonClick(imageButton2)
-setupButtonClick(imageButton3)
+-- ImageButton 3
+local imageButton3 = createImageButton(frame, "ShortcutButton3", UDim2.new(0, 8, 0.4, 30), "rbxassetid://{YourAssetID3}")
+imageButton3.MouseButton1Click:Connect(function()
+    -- Add your specific script for ImageButton 3 here
+    print("Button 3 clicked")
+    -- Example script: give player some tool
+    local tool = game.ReplicatedStorage:FindFirstChild("CoolTool") -- Assuming a tool is in ReplicatedStorage
+    if tool then
+        tool:Clone().Parent = player.Backpack
+    else
+        warn("Tool not found in ReplicatedStorage.")
+    end
+end)
