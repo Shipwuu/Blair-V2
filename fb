@@ -58,54 +58,74 @@ spawn(function()
 end)
 
 -- Create ImageButton 1
-local imageButton = Instance.new("ImageButton")
-imageButton.Name = "ShortcutButton"
-imageButton.Parent = frame
-imageButton.Position = UDim2.new(0, 8, 0, 10)
-imageButton.Size = UDim2.new(0, 60, 0, 60)
-imageButton.BackgroundTransparency = 0.4
-imageButton.BackgroundColor3 = Color3.fromRGB(98, 97, 97) -- Button background color
-imageButton.Image = "rbxassetid://{YourAssetID}" -- Insert your image asset ID here
+local function createImageButton(parent, name, position)
+    local imageButton = Instance.new("ImageButton")
+    imageButton.Name = name
+    imageButton.Parent = parent
+    imageButton.Position = position
+    imageButton.Size = UDim2.new(0, 60, 0, 60)
+    imageButton.BackgroundTransparency = 0.4
+    imageButton.BackgroundColor3 = Color3.fromRGB(98, 97, 97) -- Button background color
+    imageButton.Image = "rbxassetid://{YourAssetID}" -- Insert your image asset ID here
 
--- Add UICorner for ImageButton rounded edges
-local buttonUICorner = Instance.new("UICorner")
-buttonUICorner.CornerRadius = UDim.new(0, 8)
-buttonUICorner.Parent = imageButton
+    -- Add UICorner for ImageButton rounded edges
+    local buttonUICorner = Instance.new("UICorner")
+    buttonUICorner.CornerRadius = UDim.new(0, 8)
+    buttonUICorner.Parent = imageButton
 
--- Add UIStroke for ImageButton
-local buttonUIStroke = Instance.new("UIStroke")
-buttonUIStroke.Color = Color3.fromRGB(255, 255, 255) -- White color for the stroke
-buttonUIStroke.Transparency = 0.5
-buttonUIStroke.Thickness = 4 -- Set the thickness of the UIStroke
-buttonUIStroke.Parent = imageButton
+    -- Add UIStroke for ImageButton
+    local buttonUIStroke = Instance.new("UIStroke")
+    buttonUIStroke.Color = Color3.fromRGB(255, 255, 255) -- White color for the stroke
+    buttonUIStroke.Transparency = 0.5
+    buttonUIStroke.Thickness = 4 -- Set the thickness of the UIStroke
+    buttonUIStroke.Parent = imageButton
 
--- Add UIGradient to the ImageButton's UIStroke
-local buttonUIGradient = Instance.new("UIGradient")
-buttonUIGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(73, 54, 40)),  -- Main color (dark brown)
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(214, 192, 179)), -- Shiny color (light yellow) at middle
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(73, 54, 40))   -- Main color again
-})
-buttonUIGradient.Parent = buttonUIStroke
+    -- Add UIGradient to the ImageButton's UIStroke
+    local buttonUIGradient = Instance.new("UIGradient")
+    buttonUIGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(73, 54, 40)),  -- Main color (dark brown)
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(214, 192, 179)), -- Shiny color (light yellow) at middle
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(73, 54, 40))   -- Main color again
+    })
+    buttonUIGradient.Parent = buttonUIStroke
 
--- Function to animate shiny effect for ImageButton UIStroke (dual-phase: main hold + shiny pass)
-spawn(function()
-    animateShinyEffect(buttonUIGradient)
-end)
+    -- Function to animate shiny effect for ImageButton UIStroke (dual-phase: main hold + shiny pass)
+    spawn(function()
+        animateShinyEffect(buttonUIGradient)
+    end)
 
--- Event to handle ImageButton click
-imageButton.MouseButton1Click:Connect(function()
-    -- Shortcut Script to Capture a Photo of the Ghost
-    local args = {
-        [1] = "Capture a photo of the Ghost"
-    }
+    return imageButton
+end
 
-    local character = player.Character or player.CharacterAdded:Wait()
-    local photoCamera = character:FindFirstChild("Photo Camera")
+-- Create ImageButton 1 (previous button)
+local imageButton1 = createImageButton(frame, "ShortcutButton1", UDim2.new(0, 8, 0, 10))
 
-    if photoCamera and photoCamera:FindFirstChild("Remote") and photoCamera.Remote:FindFirstChild("CompleteObjective") then
-        photoCamera.Remote.CompleteObjective:FireServer(unpack(args))
-    else
-        warn("Photo Camera or Remote not found.")
-    end
-end)
+-- Create ImageButton 2
+local imageButton2 = createImageButton(frame, "ShortcutButton2", UDim2.new(0, 8, 0.2, 20))
+
+-- Create ImageButton 3
+local imageButton3 = createImageButton(frame, "ShortcutButton3", UDim2.new(0, 8, 0.4, 30))
+
+-- Event to handle ImageButton click for each button
+local function setupButtonClick(button)
+    button.MouseButton1Click:Connect(function()
+        -- Shortcut Script to Capture a Photo of the Ghost
+        local args = {
+            [1] = "Capture a photo of the Ghost"
+        }
+
+        local character = player.Character or player.CharacterAdded:Wait()
+        local photoCamera = character:FindFirstChild("Photo Camera")
+
+        if photoCamera and photoCamera:FindFirstChild("Remote") and photoCamera.Remote:FindFirstChild("CompleteObjective") then
+            photoCamera.Remote.CompleteObjective:FireServer(unpack(args))
+        else
+            warn("Photo Camera or Remote not found.")
+        end
+    end)
+end
+
+-- Setup click event for all buttons
+setupButtonClick(imageButton1)
+setupButtonClick(imageButton2)
+setupButtonClick(imageButton3)
