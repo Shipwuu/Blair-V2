@@ -39,7 +39,7 @@ uiGradient.Parent = uiStroke
 
 -- Function to animate shiny effect for UIStroke (dual-phase: main hold + shiny pass)
 local function animateShinyEffect(uiGradient)
-    while frame.Parent do
+    while uiGradient.Parent do
         -- Phase 1: Hold the main color for a moment
         uiGradient.Offset = Vector2.new(-1, 0) -- Start with full main color
         wait(1) -- Hold the main color for a second
@@ -155,12 +155,33 @@ local function createToggleButton(parent, name, position, imageAssetId)
     buttonUICorner.CornerRadius = UDim.new(10, 10)  -- Set to 10, 10 for toggle button
     buttonUICorner.Parent = toggleButton
 
+    -- Add UIStroke for Toggle Button
+    local buttonUIStroke = Instance.new("UIStroke")
+    buttonUIStroke.Color = Color3.fromRGB(255, 255, 255) -- White color for the stroke
+    buttonUIStroke.Transparency = 0.5
+    buttonUIStroke.Thickness = 4 -- Set the thickness of the UIStroke
+    buttonUIStroke.Parent = toggleButton
+
+    -- Add UIGradient to the Toggle Button's UIStroke
+    local buttonUIGradient = Instance.new("UIGradient")
+    buttonUIGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(73, 54, 40)),  -- Main color (dark brown)
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(214, 192, 179)), -- Shiny color (light yellow) at middle
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(73, 54, 40))   -- Main color again
+    })
+    buttonUIGradient.Parent = buttonUIStroke
+
+    -- Function to animate shiny effect for Toggle Button UIStroke
+    spawn(function()
+        animateShinyEffect(buttonUIGradient)
+    end)
+
     return toggleButton
 end
 
 -- Create the Toggle Button (Open/Close Shortcut Frame)
 -- This button is outside of the frame, so it doesn't disappear when the frame is hidden
-local toggleButton = createToggleButton(screenGui, "ToggleShortcutButton", UDim2.new(0, 8, 0.6, 45), "rbxassetid://{YourToggleButtonAssetID}")
+local toggleButton = createToggleButton(screenGui, "ToggleShortcutButton", UDim2.new(0.699, 8, 0.898, 5), "rbxassetid://{YourToggleButtonAssetID}")
 toggleButton.MouseButton1Click:Connect(function()
     -- Toggle the visibility of the Shortcut Frame
     if frame.Visible then
