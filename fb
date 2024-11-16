@@ -57,8 +57,8 @@ spawn(function()
     animateShinyEffect(uiGradient)
 end)
 
--- Function to create ImageButton and animate it
-local function createImageButton(parent, name, position, imageAssetId, cornerRadius)
+-- Function to create shortcut ImageButtons (inside the frame)
+local function createShortcutButton(parent, name, position, imageAssetId)
     local imageButton = Instance.new("ImageButton")
     imageButton.Name = name
     imageButton.Parent = parent
@@ -68,9 +68,9 @@ local function createImageButton(parent, name, position, imageAssetId, cornerRad
     imageButton.BackgroundColor3 = Color3.fromRGB(98, 97, 97) -- Button background color
     imageButton.Image = imageAssetId -- Assign the ImageAsset ID
 
-    -- Add UICorner for ImageButton rounded edges
+    -- Add UICorner for ImageButton rounded edges (0, 8 for shortcut buttons)
     local buttonUICorner = Instance.new("UICorner")
-    buttonUICorner.CornerRadius = UDim.new(cornerRadius, cornerRadius)
+    buttonUICorner.CornerRadius = UDim.new(0, 8)
     buttonUICorner.Parent = imageButton
 
     -- Add UIStroke for ImageButton
@@ -97,11 +97,9 @@ local function createImageButton(parent, name, position, imageAssetId, cornerRad
     return imageButton
 end
 
--- Create ImageButtons
--- Assign each button a unique position, name, image asset ID, and script
-
+-- Create Shortcut Buttons inside the Frame
 -- ImageButton 1
-local imageButton1 = createImageButton(frame, "ShortcutButton1", UDim2.new(0, 8, 0, 10), "rbxassetid://{YourAssetID1}", 8)
+local imageButton1 = createShortcutButton(frame, "ShortcutButton1", UDim2.new(0, 8, 0, 10), "rbxassetid://{YourAssetID1}")
 imageButton1.MouseButton1Click:Connect(function()
     -- Add your specific script for ImageButton 1 here
     print("Button 1 clicked")
@@ -119,7 +117,7 @@ imageButton1.MouseButton1Click:Connect(function()
 end)
 
 -- ImageButton 2
-local imageButton2 = createImageButton(frame, "ShortcutButton2", UDim2.new(0, 8, 0.2, 20), "rbxassetid://{YourAssetID2}", 8)
+local imageButton2 = createShortcutButton(frame, "ShortcutButton2", UDim2.new(0, 8, 0.2, 20), "rbxassetid://{YourAssetID2}")
 imageButton2.MouseButton1Click:Connect(function()
     -- Add your specific script for ImageButton 2 here
     print("Button 2 clicked")
@@ -128,7 +126,7 @@ imageButton2.MouseButton1Click:Connect(function()
 end)
 
 -- ImageButton 3
-local imageButton3 = createImageButton(frame, "ShortcutButton3", UDim2.new(0, 8, 0.4, 30), "rbxassetid://{YourAssetID3}", 8)
+local imageButton3 = createShortcutButton(frame, "ShortcutButton3", UDim2.new(0, 8, 0.4, 30), "rbxassetid://{YourAssetID3}")
 imageButton3.MouseButton1Click:Connect(function()
     -- Add your specific script for ImageButton 3 here
     print("Button 3 clicked")
@@ -141,8 +139,28 @@ imageButton3.MouseButton1Click:Connect(function()
     end
 end)
 
--- Create Toggle Button
-local toggleButton = createImageButton(frame, "ToggleShortcutButton", UDim2.new(0, 8, 0.6, 45), "rbxassetid://{YourToggleButtonAssetID}", 10)
+-- Function to create the toggle button (separate from the shortcut buttons)
+local function createToggleButton(parent, name, position, imageAssetId)
+    local toggleButton = Instance.new("ImageButton")
+    toggleButton.Name = name
+    toggleButton.Parent = parent
+    toggleButton.Position = position
+    toggleButton.Size = UDim2.new(0, 60, 0, 60)
+    toggleButton.BackgroundTransparency = 0.4
+    toggleButton.BackgroundColor3 = Color3.fromRGB(98, 97, 97) -- Button background color
+    toggleButton.Image = imageAssetId -- Assign the ImageAsset ID
+
+    -- Add UICorner with larger rounded edges for toggle button
+    local buttonUICorner = Instance.new("UICorner")
+    buttonUICorner.CornerRadius = UDim.new(10, 10)  -- Set to 10, 10 for toggle button
+    buttonUICorner.Parent = toggleButton
+
+    return toggleButton
+end
+
+-- Create the Toggle Button (Open/Close Shortcut Frame)
+-- This button is outside of the frame, so it doesn't disappear when the frame is hidden
+local toggleButton = createToggleButton(screenGui, "ToggleShortcutButton", UDim2.new(0, 8, 0.6, 45), "rbxassetid://{YourToggleButtonAssetID}")
 toggleButton.MouseButton1Click:Connect(function()
     -- Toggle the visibility of the Shortcut Frame
     if frame.Visible then
