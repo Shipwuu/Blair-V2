@@ -11,10 +11,11 @@ screenGui.ResetOnSpawn = false
 local frame = Instance.new("Frame")
 frame.Name = "ShortcutFrame"
 frame.Parent = screenGui
-frame.Position = UDim2.new(0.699, 0, 0.5, 30)
+frame.Position = UDim2.new(0.699, 0, 1.5, 30) -- Start position is below the screen
 frame.Size = UDim2.new(0, 75, 0, 300)
 frame.BackgroundTransparency = 0.8
 frame.BackgroundColor3 = Color3.fromRGB(127, 127, 127) -- Frame background color
+frame.Visible = false -- Initially invisible
 
 -- Add UICorner for rounded edges
 local uiCorner = Instance.new("UICorner")
@@ -100,43 +101,23 @@ end
 -- Create Shortcut Buttons inside the Frame
 -- ImageButton 1
 local imageButton1 = createShortcutButton(frame, "ShortcutButton1", UDim2.new(0, 8, 0, 10), "rbxassetid://{YourAssetID1}")
+-- Add functionality to ImageButton 1 (similar as before)
 imageButton1.MouseButton1Click:Connect(function()
-    -- Add your specific script for ImageButton 1 here
     print("Button 1 clicked")
-    -- Example script
-    local args = {
-        [1] = "Capture a photo of the Ghost"
-    }
-    local character = player.Character or player.CharacterAdded:Wait()
-    local photoCamera = character:FindFirstChild("Photo Camera")
-    if photoCamera and photoCamera:FindFirstChild("Remote") and photoCamera.Remote:FindFirstChild("CompleteObjective") then
-        photoCamera.Remote.CompleteObjective:FireServer(unpack(args))
-    else
-        warn("Photo Camera or Remote not found.")
-    end
 end)
 
 -- ImageButton 2
 local imageButton2 = createShortcutButton(frame, "ShortcutButton2", UDim2.new(0, 8, 0.2, 20), "rbxassetid://{YourAssetID2}")
+-- Add functionality to ImageButton 2
 imageButton2.MouseButton1Click:Connect(function()
-    -- Add your specific script for ImageButton 2 here
     print("Button 2 clicked")
-    -- Example script: perform another task
-    game:GetService("Players").LocalPlayer.Character.HumanoidRootPart.CFrame = CFrame.new(0, 100, 0) -- Teleport player to specific coordinates
 end)
 
 -- ImageButton 3
 local imageButton3 = createShortcutButton(frame, "ShortcutButton3", UDim2.new(0, 8, 0.4, 30), "rbxassetid://{YourAssetID3}")
+-- Add functionality to ImageButton 3
 imageButton3.MouseButton1Click:Connect(function()
-    -- Add your specific script for ImageButton 3 here
     print("Button 3 clicked")
-    -- Example script: give player some tool
-    local tool = game.ReplicatedStorage:FindFirstChild("CoolTool") -- Assuming a tool is in ReplicatedStorage
-    if tool then
-        tool:Clone().Parent = player.Backpack
-    else
-        warn("Tool not found in ReplicatedStorage.")
-    end
 end)
 
 -- Function to create the toggle button (separate from the shortcut buttons)
@@ -181,12 +162,26 @@ end
 
 -- Create the Toggle Button (Open/Close Shortcut Frame)
 -- This button is outside of the frame, so it doesn't disappear when the frame is hidden
-local toggleButton = createToggleButton(screenGui, "ToggleShortcutButton", UDim2.new(0.699, 8, 0.898, 5), "rbxassetid://{YourToggleButtonAssetID}")
+local toggleButton = createToggleButton(screenGui, "ToggleShortcutButton", UDim2.new(0.699, 8, 0.890, 0), "rbxassetid://{YourToggleButtonAssetID}")
 toggleButton.MouseButton1Click:Connect(function()
-    -- Toggle the visibility of the Shortcut Frame
-    if frame.Visible then
-        frame.Visible = false -- Hide the frame
+    -- Toggle the visibility of the Shortcut Frame with sliding animation
+    if not frame.Visible then
+        frame.Visible = true
+        -- Slide up animation (fast at first, slow at end)
+        for i = 1.5, 0.5, -0.1 do
+            frame.Position = UDim2.new(0.699, 0, i, 30)
+            wait(0.03) -- Faster initially
+        end
+        for i = 0.5, 0.5, -0.01 do
+            frame.Position = UDim2.new(0.699, 0, i, 30)
+            wait(0.05) -- Slow and smooth at the end
+        end
     else
-        frame.Visible = true -- Show the frame
+        -- Slide down animation (fast at first, slow at end)
+        for i = 0.5, 1.5, 0.1 do
+            frame.Position = UDim2.new(0.699, 0, i, 30)
+            wait(0.03) -- Faster initially
+        end
+        frame.Visible = false -- Hide the frame once out of the screen
     end
 end)
