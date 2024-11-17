@@ -100,7 +100,7 @@ end
 
 -- Create Shortcut Buttons inside the Frame
 -- ImageButton 1
-local imageButton1 = createShortcutButton(frame, "ShortcutButton1", UDim2.new(0, 8, 0, 10), "rbxthumb://type=Asset&id=115490296909620&w=420&h=420")
+local imageButton1 = createShortcutButton(frame, "ShortcutButton1", UDim2.new(0, 8, 0, 10), "rbxassetid://122012192346825")
 -- Add functionality to ImageButton 1 (similar as before)
 imageButton1.MouseButton1Click:Connect(function()
     print("Button 1 clicked")
@@ -208,7 +208,7 @@ end)
 
 
 -- ImageButton 3
-local imageButton3 = createShortcutButton(frame, "ShortcutButton3", UDim2.new(0, 8, 0.4, 30), "rbxassetid://{YourAssetID3}")
+local imageButton3 = createShortcutButton(frame, "ShortcutButton3", UDim2.new(0, 8, 0.4, 30), "rbxassetid://113988655320004")
 -- Add functionality to ImageButton 3
 imageButton3.MouseButton1Click:Connect(function()
     print("Button 3 clicked")
