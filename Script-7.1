@@ -120,12 +120,129 @@ end)
 -- ImageButton 2
 local imageButton2 = createShortcutButton(frame, "ShortcutButton2", UDim2.new(0, 8, 0.2, 20), "rbxassetid://{YourAssetID2}")
 
--- (Functionality for ImageButton 2 - unchanged)
+-- Playlist and variables
+local playlist = {
+    "rbxassetid://1848354536",
+    "rbxassetid://1845341094"
+}
+local soundPlaying = nil
+local isButtonHeld = false
+local holdTime = 0
+local skipTime = 2  -- Time in seconds to skip song when button is held
+
+-- Add a TextLabel inside the ImageButton to show text (like "♫", "∎", "►")
+local textLabel = Instance.new("TextLabel")
+textLabel.Size = UDim2.new(1, 0, 1, 0)  -- Make the TextLabel take up the whole button
+textLabel.BackgroundTransparency = 1  -- No background
+textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)  -- White text
+textLabel.Font = Enum.Font.GothamBold
+textLabel.TextSize = 18  -- Adjust the text size to fit well
+textLabel.Text = "♫"  -- Set the initial text to "♫" (play icon)
+textLabel.Parent = imageButton2  -- Parent the TextLabel to the ImageButton
+
+-- Create Sound instance
+local function playMusic()
+    -- Stop any previous song if it's playing
+    if soundPlaying then
+        soundPlaying:Stop()
+    end
+
+    -- Choose a random song from the playlist
+    local randomSong = playlist[math.random(1, #playlist)]
+    
+    -- Create a new sound
+    soundPlaying = Instance.new("Sound")
+    soundPlaying.SoundId = randomSong
+    soundPlaying.Volume = 1
+    soundPlaying.Looped = true  -- Loop the music
+    soundPlaying.Parent = game.Workspace
+    
+    -- Play the song
+    soundPlaying:Play()
+    
+    -- Change the button text to stop
+    textLabel.Text = "∎"
+end
+
+-- Function to stop music
+local function stopMusic()
+    if soundPlaying then
+        soundPlaying:Stop()
+        textLabel.Text = "♫"  -- Change text back to play
+    end
+end
+
+-- Function to skip music (change song)
+local function skipMusic()
+    if soundPlaying then
+        soundPlaying:Stop()  -- Stop the current song
+        textLabel.Text = "►"  -- Show skip icon
+        wait(0.5)  -- Wait for a moment before playing next song
+        playMusic()  -- Play the next random song
+    end
+end
+
+-- Add functionality to ImageButton 2
+imageButton2.MouseButton1Click:Connect(function()
+    print("Button 2 clicked")
+    if soundPlaying and soundPlaying.IsPlaying then
+        stopMusic()  -- If music is playing, stop it
+    else
+        playMusic()  -- If no music is playing, start a new track
+    end
+end)
+
+-- Detect holding the button to skip music
+imageButton2.MouseButton1Down:Connect(function()
+    isButtonHeld = true
+    holdTime = 0  -- Reset hold time
+    while isButtonHeld and holdTime < skipTime do
+        wait(0.1)  -- Check every 0.1 seconds
+        holdTime = holdTime + 0.1  -- Increase hold time
+    end
+    if holdTime >= skipTime then
+        skipMusic()  -- Skip the song after holding for 2 seconds
+    end
+end)
+
+-- Reset when the mouse button is released
+imageButton2.MouseButton1Up:Connect(function()
+    isButtonHeld = false  -- Stop holding
+end)
 
 -- ImageButton 3
 local imageButton3 = createShortcutButton(frame, "ShortcutButton3", UDim2.new(0, 8, 0.4, 30), "rbxassetid://113988655320004")
-
--- (Functionality for ImageButton 3 - unchanged)
+-- Add functionality to ImageButton 3
+imageButton3.MouseButton1Click:Connect(function()
+    print("Button 3 clicked")
+    
+    -- Define the path to the temperature
+    local temperaturePath = workspace:FindFirstChild("Map")
+        and workspace.Map:FindFirstChild("Zones")
+        and workspace.Map.Zones:FindFirstChild("Outside")
+        and workspace.Map.Zones.Outside:FindFirstChild("_____Temperature")
+    
+    if temperaturePath and temperaturePath:IsA("NumberValue") then
+        -- Get the current value of temperature
+        local currentTemperature = temperaturePath.Value
+        
+        -- Print the detected value
+        print("Value Detected: _____Temperature = " .. tostring(currentTemperature))
+        
+        -- Update the value to 0.1 in a loop for 3 seconds
+        local startTime = tick()  -- Get the current time
+        while tick() - startTime < 3 do  -- Loop for 3 seconds
+            temperaturePath.Value = 0.1  -- Set value to 0.1
+            wait(0.01)  -- Wait for 0.01 seconds before updating again
+        end
+        
+        -- Print the final value to confirm the change
+        print("Value of _____Temperature has been maintained at 0.1 for 3 seconds")
+    else
+        -- Print if the path or value does not exist
+        print("Temperature path not found or value is not a NumberValue.")
+    end
+end)
 
 -- Function to create the toggle button (separate from the shortcut buttons)
 local function createToggleButton(parent, name, position, imageAssetId)
