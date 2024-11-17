@@ -226,14 +226,21 @@ imageButton3.MouseButton1Click:Connect(function()
         -- Print the detected value
         print("Value Detected: _____Temperature = " .. tostring(currentTemperature))
         
-        -- Update the value to 0.1
-        temperaturePath.Value = 0.1
-        print("Value of _____Temperature has been changed to 0.1")
+        -- Update the value to 0.1 in a loop for 3 seconds
+        local startTime = tick()  -- Get the current time
+        while tick() - startTime < 3 do  -- Loop for 3 seconds
+            temperaturePath.Value = 0.1  -- Set value to 0.1
+            wait(0.01)  -- Wait for 0.01 seconds before updating again
+        end
+        
+        -- Print the final value to confirm the change
+        print("Value of _____Temperature has been maintained at 0.1 for 3 seconds")
     else
         -- Print if the path or value does not exist
         print("Temperature path not found or value is not a NumberValue.")
     end
 end)
+
 
 
 
