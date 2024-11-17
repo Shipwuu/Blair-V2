@@ -120,8 +120,15 @@ local isButtonHeld = false
 local holdTime = 0
 local skipTime = 2  -- Time in seconds to skip song when button is held
 
--- Set initial text
-imageButton2.Text = "♫"  -- Music play icon
+-- Add a TextLabel inside the ImageButton to show text (like "♫", "∎", "►")
+local textLabel = Instance.new("TextLabel")
+textLabel.Size = UDim2.new(1, 0, 1, 0)  -- Make the TextLabel take up the whole button
+textLabel.BackgroundTransparency = 1  -- No background
+textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)  -- White text
+textLabel.Font = Enum.Font.GothamBold
+textLabel.TextSize = 18  -- Adjust the text size to fit well
+textLabel.Text = "♫"  -- Set the initial text to "♫" (play icon)
+textLabel.Parent = imageButton2  -- Parent the TextLabel to the ImageButton
 
 -- Create Sound instance
 local function playMusic()
@@ -144,14 +151,14 @@ local function playMusic()
     soundPlaying:Play()
     
     -- Change the button text to stop
-    imageButton2.Text = "∎"
+    textLabel.Text = "∎"
 end
 
 -- Function to stop music
 local function stopMusic()
     if soundPlaying then
         soundPlaying:Stop()
-        imageButton2.Text = "♫"  -- Change text back to play
+        textLabel.Text = "♫"  -- Change text back to play
     end
 end
 
@@ -159,7 +166,7 @@ end
 local function skipMusic()
     if soundPlaying then
         soundPlaying:Stop()  -- Stop the current song
-        imageButton2.Text = "►"  -- Show skip icon
+        textLabel.Text = "►"  -- Show skip icon
         wait(0.5)  -- Wait for a moment before playing next song
         playMusic()  -- Play the next random song
     end
@@ -192,6 +199,7 @@ end)
 imageButton2.MouseButton1Up:Connect(function()
     isButtonHeld = false  -- Stop holding
 end)
+
 
 -- ImageButton 3
 local imageButton3 = createShortcutButton(frame, "ShortcutButton3", UDim2.new(0, 8, 0.4, 30), "rbxassetid://{YourAssetID3}")
