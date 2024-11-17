@@ -206,12 +206,36 @@ imageButton2.MouseButton1Up:Connect(function()
     isButtonHeld = false  -- Stop holding
 end)
 
+
 -- ImageButton 3
 local imageButton3 = createShortcutButton(frame, "ShortcutButton3", UDim2.new(0, 8, 0.4, 30), "rbxassetid://{YourAssetID3}")
 -- Add functionality to ImageButton 3
 imageButton3.MouseButton1Click:Connect(function()
     print("Button 3 clicked")
+    
+    -- Define the path to the temperature
+    local temperaturePath = workspace:FindFirstChild("Map")
+        and workspace.Map:FindFirstChild("Zones")
+        and workspace.Map.Zones:FindFirstChild("Outside")
+        and workspace.Map.Zones.Outside:FindFirstChild("_____Temperature")
+    
+    if temperaturePath and temperaturePath:IsA("NumberValue") then
+        -- Get the current value of temperature
+        local currentTemperature = temperaturePath.Value
+        
+        -- Print the detected value
+        print("Value Detected: _____Temperature = " .. tostring(currentTemperature))
+        
+        -- Update the value to 0.1
+        temperaturePath.Value = 0.1
+        print("Value of _____Temperature has been changed to 0.1")
+    else
+        -- Print if the path or value does not exist
+        print("Temperature path not found or value is not a NumberValue.")
+    end
 end)
+
+
 
 -- Function to create the toggle button (separate from the shortcut buttons)
 local function createToggleButton(parent, name, position, imageAssetId)
