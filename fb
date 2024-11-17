@@ -108,9 +108,89 @@ end)
 
 -- ImageButton 2
 local imageButton2 = createShortcutButton(frame, "ShortcutButton2", UDim2.new(0, 8, 0.2, 20), "rbxassetid://{YourAssetID2}")
+
+-- Playlist and variables
+local playlist = {
+    "rbxassetid://1848354536",
+    "rbxassetid://121230760948145",
+    "rbxassetid://1845341094"
+}
+local soundPlaying = nil
+local isButtonHeld = false
+local holdTime = 0
+local skipTime = 2  -- Time in seconds to skip song when button is held
+
+-- Set initial text
+imageButton2.Text = "♫"  -- Music play icon
+
+-- Create Sound instance
+local function playMusic()
+    -- Stop any previous song if it's playing
+    if soundPlaying then
+        soundPlaying:Stop()
+    end
+
+    -- Choose a random song from the playlist
+    local randomSong = playlist[math.random(1, #playlist)]
+    
+    -- Create a new sound
+    soundPlaying = Instance.new("Sound")
+    soundPlaying.SoundId = randomSong
+    soundPlaying.Volume = 1
+    soundPlaying.Looped = true  -- Loop the music
+    soundPlaying.Parent = game.Workspace
+    
+    -- Play the song
+    soundPlaying:Play()
+    
+    -- Change the button text to stop
+    imageButton2.Text = "∎"
+end
+
+-- Function to stop music
+local function stopMusic()
+    if soundPlaying then
+        soundPlaying:Stop()
+        imageButton2.Text = "♫"  -- Change text back to play
+    end
+end
+
+-- Function to skip music (change song)
+local function skipMusic()
+    if soundPlaying then
+        soundPlaying:Stop()  -- Stop the current song
+        imageButton2.Text = "►"  -- Show skip icon
+        wait(0.5)  -- Wait for a moment before playing next song
+        playMusic()  -- Play the next random song
+    end
+end
+
 -- Add functionality to ImageButton 2
 imageButton2.MouseButton1Click:Connect(function()
     print("Button 2 clicked")
+    if soundPlaying and soundPlaying.IsPlaying then
+        stopMusic()  -- If music is playing, stop it
+    else
+        playMusic()  -- If no music is playing, start a new track
+    end
+end)
+
+-- Detect holding the button to skip music
+imageButton2.MouseButton1Down:Connect(function()
+    isButtonHeld = true
+    holdTime = 0  -- Reset hold time
+    while isButtonHeld and holdTime < skipTime do
+        wait(0.1)  -- Check every 0.1 seconds
+        holdTime = holdTime + 0.1  -- Increase hold time
+    end
+    if holdTime >= skipTime then
+        skipMusic()  -- Skip the song after holding for 2 seconds
+    end
+end)
+
+-- Reset when the mouse button is released
+imageButton2.MouseButton1Up:Connect(function()
+    isButtonHeld = false  -- Stop holding
 end)
 
 -- ImageButton 3
