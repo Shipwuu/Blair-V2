@@ -14,12 +14,7 @@ logUpdateFrame.Parent = screenGui
 logUpdateFrame.Position = UDim2.new(0.2, 0, 0.5, 30)
 logUpdateFrame.Size = UDim2.new(0, 200, 0, 300)
 logUpdateFrame.BackgroundTransparency = 0.8
-logUpdateFrame.BackgroundColor3 = Color3.fromRGB(127, 127, 127)
-
--- Add UIAspectRatioConstraint to the Frame
-local uiAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
-uiAspectRatioConstraint.AspectRatio = 0.25
-uiAspectRatioConstraint.Parent = logUpdateFrame
+logUpdateFrame.BackgroundColor3 = Color3.fromRGB(148, 73, 0)
 
 -- Add UICorner for rounded edges
 local uiCorner = Instance.new("UICorner")
@@ -60,4 +55,54 @@ end
 -- Start the animation loop for shiny effect for the frame
 spawn(function()
     animateShinyEffect(uiGradient)
+end)
+
+-- Create TextLabel inside the LogUpdate Frame
+local textLabel = Instance.new("TextLabel")
+textLabel.Name = "LogTextLabel"
+textLabel.Parent = logUpdateFrame
+textLabel.BackgroundTransparency = 0.8
+textLabel.BackgroundColor3 = Color3.fromRGB(255, 215, 177)  -- Light background color
+textLabel.BorderSizePixel = 0
+textLabel.Position = UDim2.new(0, 0, 0, 0)  -- Position at the top of the frame
+textLabel.Size = UDim2.new(0, 200, 0, 30)
+textLabel.Text = "Log Update"
+textLabel.TextColor3 = Color3.fromRGB(242, 220, 183)  -- Light text color
+textLabel.Font = Enum.Font.GothamBold
+textLabel.TextSize = 18
+
+-- Add UIStroke to TextLabel (same as frame)
+local textLabelUIStroke = Instance.new("UIStroke")
+textLabelUIStroke.Color = Color3.fromRGB(255, 255, 255) -- White color for the stroke
+textLabelUIStroke.Transparency = 0.5
+textLabelUIStroke.Thickness = 3
+textLabelUIStroke.Parent = textLabel
+
+-- Add UIGradient to TextLabel's UIStroke (same as frame)
+local textLabelUIGradient = Instance.new("UIGradient")
+textLabelUIGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(73, 54, 40)),  -- Main color (dark brown)
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(214, 192, 179)), -- Shiny color (light yellow) at middle
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(73, 54, 40))   -- Main color again
+})
+textLabelUIGradient.Parent = textLabelUIStroke
+
+-- Function to animate shiny effect for TextLabel UIStroke (dual-phase: main hold + shiny pass)
+local function animateShinyEffectForTextLabel(uiGradient)
+    while uiGradient.Parent do
+        -- Phase 1: Hold the main color for a moment
+        uiGradient.Offset = Vector2.new(-1, 0) -- Start with full main color
+        wait(1) -- Hold the main color for a second
+
+        -- Phase 2: Smooth shiny line pass
+        for i = -1, 1, 0.02 do
+            uiGradient.Offset = Vector2.new(i, 0) -- Move the shiny line smoothly across
+            wait(0.05) -- Control the speed for a smooth animation
+        end
+    end
+end
+
+-- Start the animation loop for shiny effect for the TextLabel
+spawn(function()
+    animateShinyEffectForTextLabel(textLabelUIGradient)
 end)
