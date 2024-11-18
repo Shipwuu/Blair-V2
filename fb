@@ -102,6 +102,12 @@ scrollingFrame.Position = UDim2.new(0, 0, 0.1, 0)
 scrollingFrame.Size = UDim2.new(0, 200, 0, 100)
 scrollingFrame.ClipsDescendants = true
 
+-- Add UIListLayout to the ScrollingFrame to arrange elements vertically
+local uiListLayout = Instance.new("UIListLayout")
+uiListLayout.Parent = scrollingFrame
+uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+uiListLayout.Padding = UDim.new(0, 5)  -- Space between each log update
+
 -- Function to create a new log update TextLabel
 local function createLogUpdateText(updateText, isLatest)
     local logUpdateText = Instance.new("TextLabel")
@@ -110,8 +116,7 @@ local function createLogUpdateText(updateText, isLatest)
     logUpdateText.BackgroundTransparency = 0.949
     logUpdateText.BackgroundColor3 = isLatest and Color3.fromRGB(0, 127, 0) or Color3.fromRGB(255, 0, 0)  -- Green for latest, Red for removed
     logUpdateText.BorderSizePixel = 0
-    logUpdateText.Position = UDim2.new(0, 0, 0, 0)
-    logUpdateText.Size = UDim2.new(0, 200, 0, 100)
+    logUpdateText.Size = UDim2.new(1, 0, 0, 50)  -- Full width of ScrollingFrame, height of 50
     logUpdateText.Text = updateText
     logUpdateText.TextFits = true
     logUpdateText.TextScaled = true
