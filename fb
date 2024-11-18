@@ -118,8 +118,7 @@ local function createLogUpdateText(updateText, isLatest)
     logUpdateText.BorderSizePixel = 0
     logUpdateText.Size = UDim2.new(1, 0, 0, 50)  -- Full width of ScrollingFrame, height of 50
     logUpdateText.Text = updateText
-    logUpdateText.TextFits = true
-    logUpdateText.TextScaled = true
+    logUpdateText.TextScaled = true  -- Automatically scale text to fit within the label
     logUpdateText.Font = Enum.Font.GothamBold
     logUpdateText.TextSize = 14
     logUpdateText.TextColor3 = Color3.fromRGB(0, 0, 0)  -- Black text color
@@ -147,4 +146,4 @@ end
 -- Test with some log updates
 createLogUpdateText("Hello", true)  -- Latest update, green
 wait(1)
-createLogUpdateText("Old Update", false)  -- Removed update, red
+createLogUpdateText("V-1\n- Emf Update\n- Part Update\n- Detector Update\n- etc.", false)  -- Removed update, red
