@@ -16,7 +16,7 @@ logUpdateFrame.Size = UDim2.new(0, 200, 0, 300)
 logUpdateFrame.BackgroundTransparency = 0.8
 logUpdateFrame.BackgroundColor3 = Color3.fromRGB(148, 73, 0)
 
--- Add UICorner for rounded edges
+-- Add UICorner for rounded edges to LogUpdateFrame
 local uiCorner = Instance.new("UICorner")
 uiCorner.CornerRadius = UDim.new(0, 8)
 uiCorner.Parent = logUpdateFrame
@@ -37,7 +37,7 @@ uiGradient.Color = ColorSequence.new({
 })
 uiGradient.Parent = uiStroke
 
--- Function to animate shiny effect for UIStroke (dual-phase: main hold + shiny pass)
+-- Function to animate shiny effect for UIStroke
 local function animateShinyEffect(uiGradient)
     while uiGradient.Parent do
         -- Phase 1: Hold the main color for a moment
@@ -71,14 +71,17 @@ textLabel.TextColor3 = Color3.fromRGB(242, 220, 183)  -- Light text color
 textLabel.Font = Enum.Font.GothamBold
 textLabel.TextSize = 18
 
--- Add UIStroke to TextLabel (same as frame)
+-- Add UICorner and UIStroke to TextLabel (same as frame)
+local textLabelUICorner = Instance.new("UICorner")
+textLabelUICorner.CornerRadius = UDim.new(0, 8)
+textLabelUICorner.Parent = textLabel
+
 local textLabelUIStroke = Instance.new("UIStroke")
 textLabelUIStroke.Color = Color3.fromRGB(255, 255, 255) -- White color for the stroke
 textLabelUIStroke.Transparency = 0.5
 textLabelUIStroke.Thickness = 3
 textLabelUIStroke.Parent = textLabel
 
--- Add UIGradient to TextLabel's UIStroke (same as frame)
 local textLabelUIGradient = Instance.new("UIGradient")
 textLabelUIGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0, Color3.fromRGB(73, 54, 40)),  -- Main color (dark brown)
@@ -87,22 +90,56 @@ textLabelUIGradient.Color = ColorSequence.new({
 })
 textLabelUIGradient.Parent = textLabelUIStroke
 
--- Function to animate shiny effect for TextLabel UIStroke (dual-phase: main hold + shiny pass)
-local function animateShinyEffectForTextLabel(uiGradient)
-    while uiGradient.Parent do
-        -- Phase 1: Hold the main color for a moment
-        uiGradient.Offset = Vector2.new(-1, 0) -- Start with full main color
-        wait(1) -- Hold the main color for a second
+-- Create the ScrollingFrame inside the LogUpdate Frame
+local scrollingFrame = Instance.new("ScrollingFrame")
+scrollingFrame.Name = "LogUpdatesScrollingFrame"
+scrollingFrame.Parent = logUpdateFrame
+scrollingFrame.BackgroundTransparency = 0.8
+scrollingFrame.BackgroundColor3 = Color3.fromRGB(127, 127, 127)
+scrollingFrame.BorderSizePixel = 0
+scrollingFrame.CanvasSize = UDim2.new(0, 0, 2, 0)  -- Makes the canvas scrollable vertically
+scrollingFrame.Position = UDim2.new(0, 0, 0.1, 0)
+scrollingFrame.Size = UDim2.new(0, 200, 0, 100)
+scrollingFrame.ClipsDescendants = true
 
-        -- Phase 2: Smooth shiny line pass
-        for i = -1, 1, 0.02 do
-            uiGradient.Offset = Vector2.new(i, 0) -- Move the shiny line smoothly across
-            wait(0.05) -- Control the speed for a smooth animation
-        end
-    end
+-- Function to create a new log update TextLabel
+local function createLogUpdateText(updateText, isLatest)
+    local logUpdateText = Instance.new("TextLabel")
+    logUpdateText.Name = "LogUpdateText"
+    logUpdateText.Parent = scrollingFrame
+    logUpdateText.BackgroundTransparency = 0.949
+    logUpdateText.BackgroundColor3 = isLatest and Color3.fromRGB(0, 127, 0) or Color3.fromRGB(255, 0, 0)  -- Green for latest, Red for removed
+    logUpdateText.BorderSizePixel = 0
+    logUpdateText.Position = UDim2.new(0, 0, 0, 0)
+    logUpdateText.Size = UDim2.new(0, 200, 0, 100)
+    logUpdateText.Text = updateText
+    logUpdateText.TextFits = true
+    logUpdateText.TextScaled = true
+    logUpdateText.Font = Enum.Font.GothamBold
+    logUpdateText.TextSize = 14
+    logUpdateText.TextColor3 = Color3.fromRGB(0, 0, 0)  -- Black text color
+
+    -- Add UICorner, UIStroke, and UIGradient to LogUpdateText
+    local logUpdateTextUICorner = Instance.new("UICorner")
+    logUpdateTextUICorner.CornerRadius = UDim.new(0, 8)
+    logUpdateTextUICorner.Parent = logUpdateText
+
+    local logUpdateTextUIStroke = Instance.new("UIStroke")
+    logUpdateTextUIStroke.Color = Color3.fromRGB(255, 255, 255)
+    logUpdateTextUIStroke.Transparency = 0.5
+    logUpdateTextUIStroke.Thickness = 3
+    logUpdateTextUIStroke.Parent = logUpdateText
+
+    local logUpdateTextUIGradient = Instance.new("UIGradient")
+    logUpdateTextUIGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(73, 54, 40)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(214, 192, 179)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(73, 54, 40))
+    })
+    logUpdateTextUIGradient.Parent = logUpdateTextUIStroke
 end
 
--- Start the animation loop for shiny effect for the TextLabel
-spawn(function()
-    animateShinyEffectForTextLabel(textLabelUIGradient)
-end)
+-- Test with some log updates
+createLogUpdateText("Hello", true)  -- Latest update, green
+wait(1)
+createLogUpdateText("Old Update", false)  -- Removed update, red
