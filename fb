@@ -168,29 +168,26 @@ dontShowLabel.Position = UDim2.new(0, 10, 0.4, 13)
 dontShowLabel.TextSize = 14
 dontShowLabel.Parent = logUpdateFrame
 
--- Add UICorner for rounded edges to LogTextLabel
-local uiCorner = Instance.new("UICorner")
-uiCorner.CornerRadius = UDim.new(0, 8)
-uiCorner.Parent = dontShowLabel
+-- Add UICorner, UIStroke, UIGradient, and shiny animation to DontShowLabel
+local dontShowLabelUICorner = Instance.new("UICorner")
+dontShowLabelUICorner.CornerRadius = UDim.new(0, 8)
+dontShowLabelUICorner.Parent = dontShowLabel
 
--- Add UIStroke to TextLabel (same as frame)
-local textLabelUIStroke = Instance.new("UIStroke")
-textLabelUIStroke.Color = Color3.fromRGB(255, 255, 255) -- White color for the stroke
-textLabelUIStroke.Transparency = 0.5
-textLabelUIStroke.Thickness = 1.50
-textLabelUIStroke.Parent = dontShowLabel
+local dontShowLabelUIStroke = Instance.new("UIStroke")
+dontShowLabelUIStroke.Color = Color3.fromRGB(255, 255, 255) -- White color for the stroke
+dontShowLabelUIStroke.Transparency = 0.5
+dontShowLabelUIStroke.Thickness = 1.50
+dontShowLabelUIStroke.Parent = dontShowLabel
 
--- Add UIGradient to TextLabel's UIStroke (same as frame)
-local textLabelUIGradient = Instance.new("UIGradient")
-textLabelUIGradient.Color = ColorSequence.new({
+local dontShowLabelUIGradient = Instance.new("UIGradient")
+dontShowLabelUIGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0, Color3.fromRGB(73, 54, 40)),  -- Main color (dark brown)
     ColorSequenceKeypoint.new(0.5, Color3.fromRGB(214, 192, 179)), -- Shiny color (light yellow) at middle
     ColorSequenceKeypoint.new(1, Color3.fromRGB(73, 54, 40))   -- Main color again
 })
-textLabelUIGradient.Parent = textLabelUIStroke
+dontShowLabelUIGradient.Parent = dontShowLabelUIStroke
 
--- Function to animate shiny effect for TextLabel UIStroke (dual-phase: main hold + shiny pass)
-local function animateShinyEffectForTextLabel(uiGradient)
+local function animateShinyEffectForDontShowLabel(uiGradient)
     while uiGradient.Parent do
         -- Phase 1: Hold the main color for a moment
         uiGradient.Offset = Vector2.new(-1, 0) -- Start with full main color
@@ -204,9 +201,38 @@ local function animateShinyEffectForTextLabel(uiGradient)
     end
 end
 
--- Start the animation loop for shiny effect for the TextLabel
+-- Start the animation loop for shiny effect for the DontShowLabel
 spawn(function()
-    animateShinyEffectForTextLabel(textLabelUIGradient)
+    animateShinyEffectForDontShowLabel(dontShowLabelUIGradient)
+end)
+
+-- Create an ImageButton inside LogUpdateFrame (Toggle Button)
+local toggleImageButton = Instance.new("ImageButton")
+toggleImageButton.Name = "ToggleImageButton"
+toggleImageButton.Parent = logUpdateFrame
+toggleImageButton.Position = UDim2.new(0, 10, 0.4, 12)  -- Position specified
+toggleImageButton.Size = UDim2.new(0, 30, 0, 30)  -- Size specified
+toggleImageButton.BackgroundTransparency = 1
+
+-- Toggle state variable
+local isToggled = false
+
+-- Update the ImageButton image based on the toggle state
+local function updateToggleImage()
+    if isToggled then
+        toggleImageButton.Image = "rbxthumb://type=Asset&id=130656342279402&w=420&h=420"
+    else
+        toggleImageButton.Image = "rbxthumb://type=Asset&id=84435465445746&w=420&h=420"
+    end
+end
+
+-- Initial state of the button
+updateToggleImage()
+
+-- Connect the click event to toggle the image
+toggleImageButton.MouseButton1Click:Connect(function()
+    isToggled = not isToggled
+    updateToggleImage()
 end)
 
 -- Create the ScrollingFrame inside the LogUpdate Frame
