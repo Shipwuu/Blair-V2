@@ -1,0 +1,238 @@
+-- Create ScreenGui
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "NewsScreenGui"
+screenGui.Parent = playerGui
+screenGui.ResetOnSpawn = false
+
+-- Create LogUpdate Frame
+local logUpdateFrame = Instance.new("Frame")
+logUpdateFrame.Name = "LogUpdateFrame"
+logUpdateFrame.Parent = screenGui
+logUpdateFrame.Position = UDim2.new(0.2, 0, 0.5, 30)
+logUpdateFrame.Size = UDim2.new(0, 200, 0, 300)
+logUpdateFrame.BackgroundTransparency = 0.8
+logUpdateFrame.BackgroundColor3 = Color3.fromRGB(148, 73, 0)
+
+-- Add UICorner for rounded edges to LogUpdateFrame
+local uiCorner = Instance.new("UICorner")
+uiCorner.CornerRadius = UDim.new(0, 8)
+uiCorner.Parent = logUpdateFrame
+
+-- Add UIStroke for frame outline
+local uiStroke = Instance.new("UIStroke")
+uiStroke.Color = Color3.fromRGB(255, 255, 255) -- White color for the stroke
+uiStroke.Transparency = 0.5
+uiStroke.Thickness = 3
+uiStroke.Parent = logUpdateFrame
+
+-- Add UIGradient to the UIStroke
+local uiGradient = Instance.new("UIGradient")
+uiGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(73, 54, 40)),  -- Main color (dark brown)
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(214, 192, 179)), -- Shiny color (light yellow) at middle
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(73, 54, 40))   -- Main color again
+})
+uiGradient.Parent = uiStroke
+
+-- Function to animate shiny effect for UIStroke
+local function animateShinyEffect(uiGradient)
+    while uiGradient.Parent do
+        -- Phase 1: Hold the main color for a moment
+        uiGradient.Offset = Vector2.new(-1, 0) -- Start with full main color
+        wait(1) -- Hold the main color for a second
+
+        -- Phase 2: Smooth shiny line pass
+        for i = -1, 1, 0.02 do
+            uiGradient.Offset = Vector2.new(i, 0) -- Move the shiny line smoothly across
+            wait(0.05) -- Control the speed for a smooth animation
+        end
+    end
+end
+
+-- Start the animation loop for shiny effect for the frame
+spawn(function()
+    animateShinyEffect(uiGradient)
+end)
+
+-- Create a folder for Log Updates inside ReplicatedStorage
+local replicatedStorage = game:GetService("ReplicatedStorage")
+local logUpdatesFolder = replicatedStorage:FindFirstChild("LogUpdates") or Instance.new("Folder")
+logUpdatesFolder.Name = "LogUpdates"
+logUpdatesFolder.Parent = replicatedStorage
+
+-- Create TextLabel inside the LogUpdate Frame
+local textLabel = Instance.new("TextLabel")
+textLabel.Name = "LogTextLabel"
+textLabel.Parent = logUpdateFrame
+textLabel.BackgroundTransparency = 0.8
+textLabel.BackgroundColor3 = Color3.fromRGB(255, 215, 177)  -- Light background color
+textLabel.BorderSizePixel = 0
+textLabel.Position = UDim2.new(0, 0, 0, 0)  -- Position at the top of the frame
+textLabel.Size = UDim2.new(0, 200, 0, 30)
+textLabel.Text = "Log Update"
+textLabel.TextColor3 = Color3.fromRGB(242, 220, 183)  -- Light text color
+textLabel.Font = Enum.Font.GothamBold
+textLabel.TextSize = 18
+
+-- Add UIStroke to TextLabel (same as frame)
+local textLabelUIStroke = Instance.new("UIStroke")
+textLabelUIStroke.Color = Color3.fromRGB(255, 255, 255) -- White color for the stroke
+textLabelUIStroke.Transparency = 0.5
+textLabelUIStroke.Thickness = 3
+textLabelUIStroke.Parent = textLabel
+
+-- Add UIGradient to TextLabel's UIStroke (same as frame)
+local textLabelUIGradient = Instance.new("UIGradient")
+textLabelUIGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(73, 54, 40)),  -- Main color (dark brown)
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(214, 192, 179)), -- Shiny color (light yellow) at middle
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(73, 54, 40))   -- Main color again
+})
+textLabelUIGradient.Parent = textLabelUIStroke
+
+-- Function to animate shiny effect for TextLabel UIStroke (dual-phase: main hold + shiny pass)
+local function animateShinyEffectForTextLabel(uiGradient)
+    while uiGradient.Parent do
+        -- Phase 1: Hold the main color for a moment
+        uiGradient.Offset = Vector2.new(-1, 0) -- Start with full main color
+        wait(1) -- Hold the main color for a second
+
+        -- Phase 2: Smooth shiny line pass
+        for i = -1, 1, 0.02 do
+            uiGradient.Offset = Vector2.new(i, 0) -- Move the shiny line smoothly across
+            wait(0.05) -- Control the speed for a smooth animation
+        end
+    end
+end
+
+-- Start the animation loop for shiny effect for the TextLabel
+spawn(function()
+    animateShinyEffectForTextLabel(textLabelUIGradient)
+end)
+
+-- Create the ScrollingFrame inside the LogUpdate Frame
+local scrollingFrame = Instance.new("ScrollingFrame")
+scrollingFrame.Name = "LogUpdatesScrollingFrame"
+scrollingFrame.Parent = logUpdateFrame
+scrollingFrame.BackgroundTransparency = 0.8
+scrollingFrame.BackgroundColor3 = Color3.fromRGB(127, 127, 127)
+scrollingFrame.BorderSizePixel = 0
+scrollingFrame.CanvasSize = UDim2.new(0, 0, 2, 0)  -- Makes the canvas scrollable vertically
+scrollingFrame.Position = UDim2.new(0, 0, 0.1, 0)
+scrollingFrame.Size = UDim2.new(0, 200, 0, 100)
+scrollingFrame.ClipsDescendants = true
+
+-- Add UIListLayout to the ScrollingFrame to arrange elements vertically
+local uiListLayout = Instance.new("UIListLayout")
+uiListLayout.Parent = scrollingFrame
+uiListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+uiListLayout.Padding = UDim.new(0, 5)  -- Space between each log update
+
+-- Function to create a new log update TextLabel
+local function createLogUpdateText(updateText, isLatest)
+    local logUpdateText = Instance.new("TextLabel")
+    logUpdateText.Name = "LogUpdateText"
+    logUpdateText.Parent = scrollingFrame
+    logUpdateText.BackgroundTransparency = 0.949
+    logUpdateText.BackgroundColor3 = isLatest and Color3.fromRGB(0, 127, 0) or Color3.fromRGB(255, 0, 0)  -- Green for latest, Red for removed
+    logUpdateText.BorderSizePixel = 0
+    logUpdateText.Size = UDim2.new(1, 0, 0, 50)  -- Full width of ScrollingFrame, height of 50
+    logUpdateText.Text = updateText
+    logUpdateText.TextScaled = true  -- Automatically scale text to fit within the label
+    logUpdateText.Font = Enum.Font.GothamBold
+    logUpdateText.TextSize = 14
+    logUpdateText.TextColor3 = Color3.fromRGB(0, 0, 0)  -- Black text color
+
+    -- Add UICorner, UIStroke, and UIGradient to LogUpdateText
+    local logUpdateTextUICorner = Instance.new("UICorner")
+    logUpdateTextUICorner.CornerRadius = UDim.new(0, 8)
+    logUpdateTextUICorner.Parent = logUpdateText
+
+    local logUpdateTextUIStroke = Instance.new("UIStroke")
+    logUpdateTextUIStroke.Color = Color3.fromRGB(255, 255, 255)
+    logUpdateTextUIStroke.Transparency = 0.5
+    logUpdateTextUIStroke.Thickness = 3
+    logUpdateTextUIStroke.Parent = logUpdateText
+
+    local logUpdateTextUIGradient = Instance.new("UIGradient")
+    logUpdateTextUIGradient.Color = ColorSequence.new({
+        ColorSequenceKeypoint.new(0, Color3.fromRGB(73, 54, 40)),
+        ColorSequenceKeypoint.new(0.5, Color3.fromRGB(214, 192, 179)),
+        ColorSequenceKeypoint.new(1, Color3.fromRGB(73, 54, 40))
+    })
+    logUpdateTextUIGradient.Parent = logUpdateTextUIStroke
+end
+
+-- Load existing log updates from the folder
+local function loadLogUpdates()
+    for _, logUpdate in pairs(logUpdatesFolder:GetChildren()) do
+        if logUpdate:IsA("StringValue") then
+            createLogUpdateText(logUpdate.Value, logUpdate:GetAttribute("IsLatest") == true)
+        end
+    end
+end
+
+loadLogUpdates()
+
+-- Create AddLog Button with UI Styling
+local addLogButton = Instance.new("TextButton")
+addLogButton.Name = "AddLogButton"
+addLogButton.Parent = screenGui
+addLogButton.Position = UDim2.new(0.2, 0, 0.8, 50)  -- Below the log update frame
+addLogButton.Size = UDim2.new(0, 200, 0, 50)
+addLogButton.BackgroundColor3 = Color3.fromRGB(100, 149, 237)  -- Cornflower Blue
+addLogButton.Text = "Add Log Update"
+addLogButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+addLogButton.Font = Enum.Font.GothamBold
+addLogButton.TextSize = 18
+
+-- Add UICorner, UIStroke, UIGradient to AddLog Button
+local addLogButtonUICorner = Instance.new("UICorner")
+addLogButtonUICorner.CornerRadius = UDim.new(0, 8)
+addLogButtonUICorner.Parent = addLogButton
+
+local addLogButtonUIStroke = Instance.new("UIStroke")
+addLogButtonUIStroke.Color = Color3.fromRGB(255, 255, 255)
+addLogButtonUIStroke.Transparency = 0.5
+addLogButtonUIStroke.Thickness = 3
+addLogButtonUIStroke.Parent = addLogButton
+
+local addLogButtonUIGradient = Instance.new("UIGradient")
+addLogButtonUIGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(73, 54, 40)),
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(214, 192, 179)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(73, 54, 40))
+})
+addLogButtonUIGradient.Parent = addLogButtonUIStroke
+
+-- Add click functionality to AddLog Button
+addLogButton.MouseButton1Click:Connect(function()
+    local newLogEntry = Instance.new("StringValue")
+    newLogEntry.Name = "LogUpdate_" .. tostring(#logUpdatesFolder:GetChildren() + 1)
+    newLogEntry.Value = "New Log Update Added!"
+    newLogEntry:SetAttribute("IsLatest", true)
+    newLogEntry.Parent = logUpdatesFolder
+    createLogUpdateText(newLogEntry.Value, true)
+    scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, #scrollingFrame:GetChildren() * 55)
+end)
+
+-- Listener for Child Added/Removed
+logUpdatesFolder.ChildAdded:Connect(function(newChild)
+    if newChild:IsA("StringValue") then
+        createLogUpdateText(newChild.Value, newChild:GetAttribute("IsLatest") == true)
+        scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, #scrollingFrame:GetChildren() * 55)
+    end
+end)
+
+logUpdatesFolder.ChildRemoved:Connect(function()
+    for _, child in pairs(scrollingFrame:GetChildren()) do
+        if child:IsA("TextLabel") and child.Name == "LogUpdateText" then
+            child:Destroy()
+        end
+    end
+    loadLogUpdates()
+    scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, #scrollingFrame:GetChildren() * 55)
+end)
