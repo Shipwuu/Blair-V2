@@ -57,11 +57,93 @@ spawn(function()
     animateShinyEffect(uiGradient)
 end)
 
--- Create a folder for Log Updates inside ReplicatedStorage
-local replicatedStorage = game:GetService("ReplicatedStorage")
-local logUpdatesFolder = replicatedStorage:FindFirstChild("LogUpdates") or Instance.new("Folder")
-logUpdatesFolder.Name = "LogUpdates"
-logUpdatesFolder.Parent = replicatedStorage
+-- Create CloseImageButton inside LogUpdateFrame
+local imageButton = Instance.new("ImageButton")
+imageButton.Name = "CloseImageButton"
+imageButton.Parent = logUpdateFrame
+imageButton.Position = UDim2.new(0.8, 15, 0, 5)  -- Position specified
+imageButton.Size = UDim2.new(0, 20, 0, 20)  -- Size specified
+imageButton.BackgroundTransparency = 1
+imageButton.Image = "rbxthumb://type=Asset&id=75307452820537&w=420&h=420"
+
+-- Function to fade between two images
+local image1 = "rbxthumb://type=Asset&id=75307452820537&w=420&h=420"
+local image2 = "rbxthumb://type=Asset&id=106327254270115&w=420&h=420"
+
+local function fadeImages(button)
+    while button.Parent do
+        -- Fade out current image
+        for transparency = 0, 1, 0.1 do
+            button.ImageTransparency = transparency
+            wait(0.05) -- Slightly fast animation tempo
+        end
+        -- Switch to the next image
+        button.Image = (button.Image == image1) and image2 or image1
+        -- Fade in the new image
+        for transparency = 1, 0, -0.1 do
+            button.ImageTransparency = transparency
+            wait(0.05) -- Slightly fast animation tempo
+        end
+    end
+end
+
+-- Start fade in/fade out animation for the ImageButton
+spawn(function()
+    fadeImages(imageButton)
+end)
+
+-- Function to destroy all frames
+local function destroyAllFrames()
+    for _, child in pairs(screenGui:GetChildren()) do
+        if child:IsA("Frame") then
+            child:Destroy()
+        end
+    end
+end
+
+-- Connect the click event to the destroy function
+imageButton.MouseButton1Click:Connect(destroyAllFrames)
+
+-- Folder to store system data
+local codeUpdate = "V-2" -- Current code version in the script
+local logSystemUpdate = game:GetService("ReplicatedStorage"):FindFirstChild("LogSystemUpdate")
+
+if not logSystemUpdate then
+    logSystemUpdate = Instance.new("Folder")
+    logSystemUpdate.Name = "LogSystemUpdate"
+    logSystemUpdate.Parent = game:GetService("ReplicatedStorage")
+end
+
+-- Create or get ToggleValue and CodeUpdate value in the LogSystemUpdate folder
+local toggleValue = logSystemUpdate:FindFirstChild("ToggleValue")
+local savedCodeUpdate = logSystemUpdate:FindFirstChild("CodeUpdate")
+
+if not toggleValue then
+    toggleValue = Instance.new("BoolValue")
+    toggleValue.Name = "ToggleValue"
+    toggleValue.Value = false  -- Default to showing the frame
+    toggleValue.Parent = logSystemUpdate
+end
+
+if not savedCodeUpdate then
+    savedCodeUpdate = Instance.new("StringValue")
+    savedCodeUpdate.Name = "CodeUpdate"
+    savedCodeUpdate.Value = codeUpdate -- Initialize with current code version
+    savedCodeUpdate.Parent = logSystemUpdate
+end
+
+-- Check if there's a new update version
+if savedCodeUpdate.Value ~= codeUpdate then
+    toggleValue.Value = false  -- Force showing the frame for new updates
+    savedCodeUpdate.Value = codeUpdate  -- Update to the latest code version
+end
+
+-- Determine if LogUpdateFrame should be displayed based on toggle value
+if toggleValue.Value then
+    logUpdateFrame.Visible = false
+else
+    logUpdateFrame.Visible = true
+end
 
 -- Create TextLabel inside the LogUpdate Frame
 local textLabel = Instance.new("TextLabel")
@@ -77,11 +159,16 @@ textLabel.TextColor3 = Color3.fromRGB(242, 220, 183)  -- Light text color
 textLabel.Font = Enum.Font.GothamBold
 textLabel.TextSize = 18
 
+-- Add UICorner for rounded edges to LogTextLabel
+local uiCorner = Instance.new("UICorner")
+uiCorner.CornerRadius = UDim.new(0, 8)
+uiCorner.Parent = textLabel
+
 -- Add UIStroke to TextLabel (same as frame)
 local textLabelUIStroke = Instance.new("UIStroke")
 textLabelUIStroke.Color = Color3.fromRGB(255, 255, 255) -- White color for the stroke
 textLabelUIStroke.Transparency = 0.5
-textLabelUIStroke.Thickness = 3
+textLabelUIStroke.Thickness = 1.50
 textLabelUIStroke.Parent = textLabel
 
 -- Add UIGradient to TextLabel's UIStroke (same as frame)
@@ -111,6 +198,79 @@ end
 -- Start the animation loop for shiny effect for the TextLabel
 spawn(function()
     animateShinyEffectForTextLabel(textLabelUIGradient)
+end)
+
+-- Duplicate the LogTextLabel and modify its properties
+local dontShowLabel = textLabel:Clone()
+dontShowLabel.Name = "DontShowLabel"
+dontShowLabel.Text = "Don't Show It's Again"
+dontShowLabel.BackgroundTransparency = 1
+dontShowLabel.Position = UDim2.new(0, 10, 0.4, 13)
+dontShowLabel.TextSize = 14
+dontShowLabel.Parent = logUpdateFrame
+
+-- Add UICorner, UIStroke, UIGradient, and shiny animation to DontShowLabel
+local dontShowLabelUICorner = Instance.new("UICorner")
+dontShowLabelUICorner.CornerRadius = UDim.new(0, 8)
+dontShowLabelUICorner.Parent = dontShowLabel
+
+local dontShowLabelUIStroke = Instance.new("UIStroke")
+dontShowLabelUIStroke.Color = Color3.fromRGB(255, 255, 255) -- White color for the stroke
+dontShowLabelUIStroke.Transparency = 0.5
+dontShowLabelUIStroke.Thickness = 1.50
+dontShowLabelUIStroke.Parent = dontShowLabel
+
+local dontShowLabelUIGradient = Instance.new("UIGradient")
+dontShowLabelUIGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(73, 54, 40)),  -- Main color (dark brown)
+    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(214, 192, 179)), -- Shiny color (light yellow) at middle
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(73, 54, 40))   -- Main color again
+})
+dontShowLabelUIGradient.Parent = dontShowLabelUIStroke
+
+local function animateShinyEffectForDontShowLabel(uiGradient)
+    while uiGradient.Parent do
+        -- Phase 1: Hold the main color for a moment
+        uiGradient.Offset = Vector2.new(-1, 0) -- Start with full main color
+        wait(1) -- Hold the main color for a second
+
+        -- Phase 2: Smooth shiny line pass
+        for i = -1, 1, 0.02 do
+            uiGradient.Offset = Vector2.new(i, 0) -- Move the shiny line smoothly across
+            wait(0.05) -- Control the speed for a smooth animation
+        end
+    end
+end
+
+-- Start the animation loop for shiny effect for the DontShowLabel
+spawn(function()
+    animateShinyEffectForDontShowLabel(dontShowLabelUIGradient)
+end)
+
+-- Create an ImageButton inside LogUpdateFrame (Toggle Button)
+local toggleImageButton = Instance.new("ImageButton")
+toggleImageButton.Name = "ToggleImageButton"
+toggleImageButton.Parent = logUpdateFrame
+toggleImageButton.Position = UDim2.new(0, 10, 0.4, 12)  -- Position specified
+toggleImageButton.Size = UDim2.new(0, 30, 0, 30)  -- Size specified
+toggleImageButton.BackgroundTransparency = 1
+
+-- Update toggle button state from stored value
+local function updateToggleImage()
+    if toggleValue.Value then
+        toggleImageButton.Image = "rbxthumb://type=Asset&id=130656342279402&w=420&h=420"
+    else
+        toggleImageButton.Image = "rbxthumb://type=Asset&id=84435465445746&w=420&h=420"
+    end
+end
+
+-- Initial state of the button
+updateToggleImage()
+
+-- Connect the click event to toggle the value and update the image
+toggleImageButton.MouseButton1Click:Connect(function()
+    toggleValue.Value = not toggleValue.Value
+    updateToggleImage()
 end)
 
 -- Create the ScrollingFrame inside the LogUpdate Frame
@@ -166,73 +326,7 @@ local function createLogUpdateText(updateText, isLatest)
     logUpdateTextUIGradient.Parent = logUpdateTextUIStroke
 end
 
--- Load existing log updates from the folder
-local function loadLogUpdates()
-    for _, logUpdate in pairs(logUpdatesFolder:GetChildren()) do
-        if logUpdate:IsA("StringValue") then
-            createLogUpdateText(logUpdate.Value, logUpdate:GetAttribute("IsLatest") == true)
-        end
-    end
-end
-
-loadLogUpdates()
-
--- Create AddLog Button with UI Styling
-local addLogButton = Instance.new("TextButton")
-addLogButton.Name = "AddLogButton"
-addLogButton.Parent = screenGui
-addLogButton.Position = UDim2.new(0.2, 0, 0.8, 50)  -- Below the log update frame
-addLogButton.Size = UDim2.new(0, 200, 0, 50)
-addLogButton.BackgroundColor3 = Color3.fromRGB(100, 149, 237)  -- Cornflower Blue
-addLogButton.Text = "Add Log Update"
-addLogButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-addLogButton.Font = Enum.Font.GothamBold
-addLogButton.TextSize = 18
-
--- Add UICorner, UIStroke, UIGradient to AddLog Button
-local addLogButtonUICorner = Instance.new("UICorner")
-addLogButtonUICorner.CornerRadius = UDim.new(0, 8)
-addLogButtonUICorner.Parent = addLogButton
-
-local addLogButtonUIStroke = Instance.new("UIStroke")
-addLogButtonUIStroke.Color = Color3.fromRGB(255, 255, 255)
-addLogButtonUIStroke.Transparency = 0.5
-addLogButtonUIStroke.Thickness = 3
-addLogButtonUIStroke.Parent = addLogButton
-
-local addLogButtonUIGradient = Instance.new("UIGradient")
-addLogButtonUIGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(73, 54, 40)),
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(214, 192, 179)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(73, 54, 40))
-})
-addLogButtonUIGradient.Parent = addLogButtonUIStroke
-
--- Add click functionality to AddLog Button
-addLogButton.MouseButton1Click:Connect(function()
-    local newLogEntry = Instance.new("StringValue")
-    newLogEntry.Name = "LogUpdate_" .. tostring(#logUpdatesFolder:GetChildren() + 1)
-    newLogEntry.Value = "New Log Update Added!"
-    newLogEntry:SetAttribute("IsLatest", true)
-    newLogEntry.Parent = logUpdatesFolder
-    createLogUpdateText(newLogEntry.Value, true)
-    scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, #scrollingFrame:GetChildren() * 55)
-end)
-
--- Listener for Child Added/Removed
-logUpdatesFolder.ChildAdded:Connect(function(newChild)
-    if newChild:IsA("StringValue") then
-        createLogUpdateText(newChild.Value, newChild:GetAttribute("IsLatest") == true)
-        scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, #scrollingFrame:GetChildren() * 55)
-    end
-end)
-
-logUpdatesFolder.ChildRemoved:Connect(function()
-    for _, child in pairs(scrollingFrame:GetChildren()) do
-        if child:IsA("TextLabel") and child.Name == "LogUpdateText" then
-            child:Destroy()
-        end
-    end
-    loadLogUpdates()
-    scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, #scrollingFrame:GetChildren() * 55)
-end)
+-- Test with some log updates
+createLogUpdateText("Hello", true)  -- Latest update, green
+wait(1)
+createLogUpdateText("V-1\n- Emf Update\n- Part Update\n- Detector Update\n- etc.", false)  -- Removed update, red
