@@ -57,62 +57,12 @@ spawn(function()
     animateShinyEffect(uiGradient)
 end)
 
--- Create CloseFrame
-local closeFrame = Instance.new("Frame")
-closeFrame.Name = "CloseFrame"
-closeFrame.Parent = screenGui
-closeFrame.Position = UDim2.new(0.3, 75, 0.5, 10)  -- Positioned at the top, away from LogUpdateFrame
-closeFrame.Size = UDim2.new(0, 50, 0, 50)
-closeFrame.BackgroundColor3 = Color3.fromRGB(212, 178, 142)  -- Background color as specified
-closeFrame.BackgroundTransparency = 0.5
-
--- Add UICorner to CloseFrame (customized)
-local closeFrameUICorner = Instance.new("UICorner")
-closeFrameUICorner.CornerRadius = UDim.new(0, 10)  -- Rounded corner with radius 10,10
-closeFrameUICorner.Parent = closeFrame
-
--- Add UIStroke to CloseFrame
-local closeFrameUIStroke = Instance.new("UIStroke")
-closeFrameUIStroke.Color = Color3.fromRGB(255, 255, 255) -- White color for the stroke
-closeFrameUIStroke.Transparency = 0.5
-closeFrameUIStroke.Thickness = 3
-closeFrameUIStroke.Parent = closeFrame
-
--- Add UIGradient to CloseFrame's UIStroke
-local closeFrameUIGradient = Instance.new("UIGradient")
-closeFrameUIGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(73, 54, 40)),  -- Main color (dark brown)
-    ColorSequenceKeypoint.new(0.5, Color3.fromRGB(214, 192, 179)), -- Shiny color (light yellow) at middle
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(73, 54, 40))   -- Main color again
-})
-closeFrameUIGradient.Parent = closeFrameUIStroke
-
--- Function to animate shiny effect for CloseFrame UIStroke
-local function animateShinyEffectForCloseFrame(uiGradient)
-    while uiGradient.Parent do
-        -- Phase 1: Hold the main color for a moment
-        uiGradient.Offset = Vector2.new(-1, 0) -- Start with full main color
-        wait(1) -- Hold the main color for a second
-
-        -- Phase 2: Smooth shiny line pass
-        for i = -1, 1, 0.02 do
-            uiGradient.Offset = Vector2.new(i, 0) -- Move the shiny line smoothly across
-            wait(0.05) -- Control the speed for a smooth animation
-        end
-    end
-end
-
--- Start the animation loop for shiny effect for CloseFrame
-spawn(function()
-    animateShinyEffectForCloseFrame(closeFrameUIGradient)
-end)
-
--- Create ImageButton inside CloseFrame
+-- Create CloseImageButton inside LogUpdateFrame
 local imageButton = Instance.new("ImageButton")
 imageButton.Name = "CloseImageButton"
-imageButton.Parent = closeFrame
-imageButton.Position = UDim2.new(0, 5, 0, 5)  -- Position specified
-imageButton.Size = UDim2.new(0, 40, 0, 40)  -- Size specified
+imageButton.Parent = logUpdateFrame
+imageButton.Position = UDim2.new(0.8, 15, 0, 5)  -- Position specified
+imageButton.Size = UDim2.new(0, 20, 0, 20)  -- Size specified
 imageButton.BackgroundTransparency = 1
 imageButton.Image = "rbxthumb://type=Asset&id=75307452820537&w=420&h=420"
 
