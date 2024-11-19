@@ -337,13 +337,13 @@ end
 -- Test with some log updates
 -- createLogUpdateText("", true/false)
 
-createLogUpdateText("V-3.1\n- Add New Log Update", true)  -- Latest update, green
+createLogUpdateText("V-3.1\n- Add New Log Update System", true)  -- Latest update, green
 
 createLogUpdateText("V-3\n- Open to Public\n (Exclusive for close friends)", true)  -- Removed update, red
 
-createLogUpdateText("V-2.1\n- Add Temperature Bypass", true)
+createLogUpdateText("V-2.1\n- Add Temperature Bypass\n- Musix\n- Fix Gui", true)
 
-createLogUpdateText("V-2\n- Add Picture Ghost Bypass\n- Upgrade Sanity Detector\n- Upgrade Temp Detector", true)
+createLogUpdateText("V-2\n- New GUI System \n- Add Picture Ghost Bypass\n- Upgrade Sanity Detector\n- Upgrade Temp Detector", true)
 
 createLogUpdateText("V-1.2\n- Remove Teleport To Rooms\n- Remove Teleport To Items\n- Remove Teleport To Van\n- Remove Noclip\n[DETECTED]", false)
 
