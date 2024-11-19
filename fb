@@ -104,6 +104,55 @@ end
 -- Connect the click event to the destroy function
 imageButton.MouseButton1Click:Connect(destroyAllFrames)
 
+-- Folder to store system data
+local codeUpdate = "V-2" -- Current code version in the script
+local logSystemUpdate = game:GetService("ReplicatedStorage"):FindFirstChild("LogSystemUpdate")
+
+if not logSystemUpdate then
+    logSystemUpdate = Instance.new("Folder")
+    logSystemUpdate.Name = "LogSystemUpdate"
+    logSystemUpdate.Parent = game:GetService("ReplicatedStorage")
+end
+
+-- Create or get ToggleValue and CodeUpdate value in the LogSystemUpdate folder
+local toggleValue = logSystemUpdate:FindFirstChild("ToggleValue")
+local savedCodeUpdate = logSystemUpdate:FindFirstChild("CodeUpdate")
+
+if not toggleValue then
+    toggleValue = Instance.new("BoolValue")
+    toggleValue.Name = "ToggleValue"
+    toggleValue.Value = false  -- Default to showing the frame
+    toggleValue.Parent = logSystemUpdate
+end
+
+if not savedCodeUpdate then
+    savedCodeUpdate = Instance.new("StringValue")
+    savedCodeUpdate.Name = "CodeUpdate"
+    savedCodeUpdate.Value = codeUpdate -- Initialize with current code version
+    savedCodeUpdate.Parent = logSystemUpdate
+end
+
+-- Check if there's a new update version
+if savedCodeUpdate.Value ~= codeUpdate then
+    toggleValue.Value = false  -- Force showing the frame for new updates
+    savedCodeUpdate.Value = codeUpdate  -- Update to the latest code version
+end
+
+-- Create and configure the audio element for popup
+local popupSound = Instance.new("Sound")
+popupSound.Name = "PopupSound"
+popupSound.SoundId = "rbxassetid://8486683243"
+popupSound.Volume = 1
+popupSound.Parent = logUpdateFrame
+
+-- Determine if LogUpdateFrame should be displayed based on toggle value
+if toggleValue.Value then
+    logUpdateFrame.Visible = false
+else
+    logUpdateFrame.Visible = true
+    popupSound:Play()  -- Play audio when frame becomes visible
+end
+
 -- Create TextLabel inside the LogUpdate Frame
 local textLabel = Instance.new("TextLabel")
 textLabel.Name = "LogTextLabel"
@@ -214,12 +263,9 @@ toggleImageButton.Position = UDim2.new(0, 10, 0.4, 12)  -- Position specified
 toggleImageButton.Size = UDim2.new(0, 30, 0, 30)  -- Size specified
 toggleImageButton.BackgroundTransparency = 1
 
--- Toggle state variable
-local isToggled = false
-
--- Update the ImageButton image based on the toggle state
+-- Update toggle button state from stored value
 local function updateToggleImage()
-    if isToggled then
+    if toggleValue.Value then
         toggleImageButton.Image = "rbxthumb://type=Asset&id=130656342279402&w=420&h=420"
     else
         toggleImageButton.Image = "rbxthumb://type=Asset&id=84435465445746&w=420&h=420"
@@ -229,9 +275,9 @@ end
 -- Initial state of the button
 updateToggleImage()
 
--- Connect the click event to toggle the image
+-- Connect the click event to toggle the value and update the image
 toggleImageButton.MouseButton1Click:Connect(function()
-    isToggled = not isToggled
+    toggleValue.Value = not toggleValue.Value
     updateToggleImage()
 end)
 
