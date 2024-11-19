@@ -107,6 +107,53 @@ spawn(function()
     animateShinyEffectForCloseFrame(closeFrameUIGradient)
 end)
 
+-- Create ImageButton inside CloseFrame
+local imageButton = Instance.new("ImageButton")
+imageButton.Name = "CloseImageButton"
+imageButton.Parent = closeFrame
+imageButton.Position = UDim2.new(0, 5, 0, 5)  -- Position specified
+imageButton.Size = UDim2.new(0, 40, 0, 40)  -- Size specified
+imageButton.BackgroundTransparency = 1
+imageButton.Image = "rbxthumb://type=Asset&id=75307452820537&w=420&h=420"
+
+-- Function to fade between two images
+local image1 = "rbxthumb://type=Asset&id=75307452820537&w=420&h=420"
+local image2 = "rbxthumb://type=Asset&id=106327254270115&w=420&h=420"
+
+local function fadeImages(button)
+    while button.Parent do
+        -- Fade out current image
+        for transparency = 0, 1, 0.1 do
+            button.ImageTransparency = transparency
+            wait(0.05) -- Slightly fast animation tempo
+        end
+        -- Switch to the next image
+        button.Image = (button.Image == image1) and image2 or image1
+        -- Fade in the new image
+        for transparency = 1, 0, -0.1 do
+            button.ImageTransparency = transparency
+            wait(0.05) -- Slightly fast animation tempo
+        end
+    end
+end
+
+-- Start fade in/fade out animation for the ImageButton
+spawn(function()
+    fadeImages(imageButton)
+end)
+
+-- Function to destroy all frames
+local function destroyAllFrames()
+    for _, child in pairs(screenGui:GetChildren()) do
+        if child:IsA("Frame") then
+            child:Destroy()
+        end
+    end
+end
+
+-- Connect the click event to the destroy function
+imageButton.MouseButton1Click:Connect(destroyAllFrames)
+
 -- Create TextLabel inside the LogUpdate Frame
 local textLabel = Instance.new("TextLabel")
 textLabel.Name = "LogTextLabel"
