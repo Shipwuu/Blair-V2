@@ -343,11 +343,11 @@ createLogUpdateText("V-3\n- Open to Public\n (Exclusive for close friends)", tru
 
 createLogUpdateText("V-2.1\n- Add Temperature Bypass", true)
 
-createLogUpdateText("V-2\n- Add Picture Ghost Bypass", true)
+createLogUpdateText("V-2\n- Add Picture Ghost Bypass\n- Upgrade Sanity Detector\n- Upgrade Temp Detector", true)
 
 createLogUpdateText("V-1.2\n- Remove Teleport To Rooms\n- Remove Teleport To Items\n- Remove Teleport To Van\n- Remove Noclip\n[DETECTED]", false)
 
-createLogUpdateText("V-1.1\n- Add Teleport To Rooms\n- Add Teleport To Items\n- Add Teleport To Van\n- Add Auto Collect Items", true)
+createLogUpdateText("V-1.1\n- Add Teleport To Rooms\n- Add Teleport To Items\n- Add Teleport To Van\n- Add Auto Collect Items\n- Insanity Detector", true)
 
 createLogUpdateText("V-1\n- Add Auto Detect Temp\n- Ghost Speed Detect\n- Ghost Hunt Billboard\n- Ghost Hunt Warn Sign\n- Ghost Room Detect\n- Halloween Update Items Detector\n- Mods in your Server Detector [U WILL GOT BAN WITHOUT EXCEPTION]\n- Speed Bypas", true)
 
