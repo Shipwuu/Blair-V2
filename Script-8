@@ -105,7 +105,7 @@ end
 imageButton.MouseButton1Click:Connect(destroyAllFrames)
 
 -- Folder to store system data
-local codeUpdate = "V-2" -- Current code version in the script
+local codeUpdate = "V-3.1" -- Current code version in the script
 local logSystemUpdate = game:GetService("ReplicatedStorage"):FindFirstChild("LogSystemUpdate")
 
 if not logSystemUpdate then
