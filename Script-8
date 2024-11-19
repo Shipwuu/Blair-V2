@@ -176,7 +176,7 @@ uiCorner.Parent = textLabel
 local textLabelUIStroke = Instance.new("UIStroke")
 textLabelUIStroke.Color = Color3.fromRGB(255, 255, 255) -- White color for the stroke
 textLabelUIStroke.Transparency = 0.5
-textLabelUIStroke.Thickness = 1.50
+textLabelUIStroke.Thickness = 2
 textLabelUIStroke.Parent = textLabel
 
 -- Add UIGradient to TextLabel's UIStroke (same as frame)
