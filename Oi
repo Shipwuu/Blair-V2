@@ -1,0 +1,6 @@
+game:GetService("Players").LocalPlayer.MaxSlots
+workspace.Map.Zones.Outside.TouchInterest
+workspace.Map.Zones.BasementHallway._____Temperature._____LocalBaseTemp
+game:GetService("ReplicatedStorage").GotTeleportData
+game:GetService("ReplicatedStorage").Disruption
+game:GetService("ReplicatedStorage").Activity
