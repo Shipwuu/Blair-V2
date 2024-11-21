@@ -17,15 +17,15 @@ uiAspectRatio.Parent = screenGui
 local mainFrame = Instance.new("Frame")
 mainFrame.Parent = screenGui
 mainFrame.BackgroundTransparency = 0.5
-mainFrame.Size = UDim2.new(1, 0, 1, 0) -- Full screen size to hold all other frames
+mainFrame.Size = UDim2.new(1, 0, 0.15, 0) -- Small but long frame across the top -- Full screen size to hold all other frames
 mainFrame.Position = UDim2.new(0, 0, 0, 0)
-mainFrame.BackgroundColor3 = Color3.new(1, 0, 0) -- Temporary red color for visibility, can be adjusted
+mainFrame.BackgroundColor3 = Color3.new(0, 0, 0) -- Change to black for better visibility -- Temporary red color for visibility, can be adjusted
 
 -- Frame 1 (Bar Frame)
 local frame1 = Instance.new("Frame")
 frame1.Parent = mainFrame
 frame1.Size = UDim2.new(0.6, 0, 0.1, 0) -- Adjusted size, can be modified
-frame1.Position = UDim2.new(0.5, -frame1.Size.X.Offset / 2, 0, 0) -- Centered at the top
+frame1.Position = UDim2.new(0.5, 0, 0, 0) -- Centered at the top without offset -- Centered at the top
 frame1.BackgroundColor3 = Color3.fromRGB(20, 41, 51)
 
 -- Add UICorner to Frame 1
@@ -37,7 +37,7 @@ uiCorner1.Parent = frame1
 local frame2 = Instance.new("Frame")
 frame2.Parent = mainFrame
 frame2.Size = UDim2.new(0.6, 0, 0.2, 0) -- Adjusted size, can be modified
-frame2.Position = UDim2.new(0.5, -frame2.Size.X.Offset / 2, 0, frame1.Size.Y.Offset) -- Positioned right under Frame 1 to look connected
+frame2.Position = UDim2.new(0.5, 0, 0, frame1.Size.Y.Offset) -- Positioned right under Frame 1 without offset -- Positioned right under Frame 1 to look connected
 frame2.BackgroundColor3 = Color3.fromRGB(20, 41, 51)
 
 -- Add UICorner to Frame 2
