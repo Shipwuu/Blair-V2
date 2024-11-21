@@ -32,3 +32,18 @@ ReplicatedStorage.ChildRemoved:Connect(function(child)
         print(child.Name .. " was removed.")
     end
 end)
+
+-- Continuously monitor and toggle if value becomes true again
+for _, path in ipairs(paths) do
+    local valueObject = ReplicatedStorage:FindFirstChild(path)
+    if valueObject and valueObject:IsA("BoolValue") then
+        valueObject:GetPropertyChangedSignal("Value"):Connect(function()
+            if valueObject.Value == true then
+                valueObject.Value = false
+                print(path .. " was turned off again.")
+            end
+        end)
+    end
+end
+
+print9"1")
