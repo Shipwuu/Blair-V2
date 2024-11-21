@@ -19,7 +19,6 @@ end
 
 
 
-
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
@@ -39,23 +38,35 @@ textLabel.BackgroundTransparency = 1
 textLabel.Size = UDim2.new(0, 100, 0, 50) -- Small size for the label
 textLabel.Position = UDim2.new(0, 10, 0, 10) -- Position in the left corner, slightly down
 
--- Function to update the TextLabel with the current value count
-debugging
-local function updateActivityCount()
-    local activityFolder = ReplicatedStorage:FindFirstChild("Activity")
-    if activityFolder then
-        local valueCount = #activityFolder:GetChildren()
-        textLabel.Text = "Activity\n" .. tostring(valueCount)
+-- Function to update the TextLabel with the current value
+local function updateActivityValue()
+    local activity = ReplicatedStorage:FindFirstChild("Activity")
+    if activity and activity:IsA("ValueBase") then
+        textLabel.Text = "Activity\n" .. tostring(activity.Value)
     else
         textLabel.Text = "Activity\nNot Found"
     end
 end
 
 -- Initial update
-updateActivityCount()
+updateActivityValue()
 
--- Connect to the ChildAdded and ChildRemoved events to update the count dynamically
-if ReplicatedStorage:FindFirstChild("Activity") then
-    activityFolder.ChildAdded:Connect(updateActivityCount)
-    activityFolder.ChildRemoved:Connect(updateActivityCount)
+-- Connect to the Changed event to update the value dynamically
+local activity = ReplicatedStorage:FindFirstChild("Activity")
+if activity and activity:IsA("ValueBase") then
+    activity:GetPropertyChangedSignal("Value"):Connect(updateActivityValue)
 end
+
+-- Monitor for changes in ReplicatedStorage to detect when "Activity" is added or removed
+ReplicatedStorage.ChildAdded:Connect(function(child)
+    if child.Name == "Activity" and child:IsA("ValueBase") then
+        updateActivityValue()
+        child:GetPropertyChangedSignal("Value"):Connect(updateActivityValue)
+    end
+end)
+
+ReplicatedStorage.ChildRemoved:Connect(function(child)
+    if child.Name == "Activity" then
+        updateActivityValue()
+    end
+end)
