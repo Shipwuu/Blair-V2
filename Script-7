@@ -242,18 +242,40 @@ imageButton3.MouseButton1Click:Connect(function()
 end)
 
 -- ImageButton 4
-local imageButton1 = createShortcutButton(frame, "ShortcutButton4", UDim2.new(0.5, 5, 0, 10), "rbxthumb://type=Asset&id=71625940511015&w=420&h=420")
--- Add functionality to ImageButton 1 (similar as before)
-imageButton1.MouseButton1Click:Connect(function()
-    print("Button 1 clicked")
+local workspace = game:GetService("Workspace")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
 
-local args = {
-    [1] = "Capture a photo of the Ghost"
-}
+-- Detect if the TouchInterest exists
+local touchInterestPath = workspace:FindFirstChild("Map")
+if touchInterestPath then
+    local zones = touchInterestPath:FindFirstChild("Zones")
+    if zones then
+        local outside = zones:FindFirstChild("Outside")
+        if outside and outside:FindFirstChild("TouchInterest") then
+            local touchInterest = outside.TouchInterest
 
-game:GetService("Players").LocalPlayer.Character:FindFirstChild("Photo Camera").Remote.CompleteObjective:FireServer(unpack(args))
+            -- Create the button as per the original code
+            local imageButton1 = createShortcutButton(frame, "ShortcutButton4", UDim2.new(0.5, 5, 0, 10), "rbxthumb://type=Asset&id=71625940511015&w=420&h=420")
 
-end)
+            -- Add functionality to ImageButton 1
+            imageButton1.MouseButton1Click:Connect(function()
+                print("Button 1 clicked")
+
+                -- Fire the TouchInterest event
+                firetouchinterest(LocalPlayer.Character.HumanoidRootPart, outside, 0)
+                firetouchinterest(LocalPlayer.Character.HumanoidRootPart, outside, 1)
+            end)
+        else
+            print("TouchInterest not found in Outside.")
+        end
+    else
+        print("Zones not found in Map.")
+    end
+else
+    print("Map not found in workspace.")
+end
+
 
 
 -- ImageButton 5
