@@ -12,7 +12,7 @@ local frame = Instance.new("Frame")
 frame.Name = "ShortcutFrame"
 frame.Parent = screenGui
 frame.Position = UDim2.new(0.699, 0, 1.5, 30) -- Start position is below the screen
-frame.Size = UDim2.new(0, 75, 0, 300)
+frame.Size = UDim2.new(0.1, 0, 0, 300)
 frame.BackgroundTransparency = 0.8
 frame.BackgroundColor3 = Color3.fromRGB(127, 127, 127) -- Frame background color
 frame.Visible = false -- Initially invisible
@@ -240,6 +240,52 @@ imageButton3.MouseButton1Click:Connect(function()
         print("Temperature path not found or value is not a NumberValue.")
     end
 end)
+
+-- ImageButton 4
+local imageButton1 = createShortcutButton(frame, "ShortcutButton4", UDim2.new(0.5, 5, 0, 10), "rbxassetid://122012192346825")
+-- Add functionality to ImageButton 1 (similar as before)
+imageButton1.MouseButton1Click:Connect(function()
+    print("Button 1 clicked")
+
+local args = {
+    [1] = "Capture a photo of the Ghost"
+}
+
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("Photo Camera").Remote.CompleteObjective:FireServer(unpack(args))
+
+end)
+
+
+-- ImageButton 5
+local imageButton1 = createShortcutButton(frame, "ShortcutButton5", UDim2.new(0.5, 5, 0.2, 20), "rbxassetid://122012192346825")
+-- Add functionality to ImageButton 1 (similar as before)
+imageButton1.MouseButton1Click:Connect(function()
+    print("Button 1 clicked")
+
+local args = {
+    [1] = "Capture a photo of the Ghost"
+}
+
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("Photo Camera").Remote.CompleteObjective:FireServer(unpack(args))
+
+end)
+
+
+-- ImageButton 5
+local imageButton1 = createShortcutButton(frame, "ShortcutButton5", UDim2.new(0.5, 5, 0.2, 20), "rbxassetid://122012192346825")
+-- Add functionality to ImageButton 1 (similar as before)
+imageButton1.MouseButton1Click:Connect(function()
+    print("Button 1 clicked")
+
+local args = {
+    [1] = "Capture a photo of the Ghost"
+}
+
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("Photo Camera").Remote.CompleteObjective:FireServer(unpack(args))
+
+end)
+
+
 
 
 
