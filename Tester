@@ -12,3 +12,38 @@ if success and maxSlots then
 else
     print("MaxSlots property not found for LocalPlayer.")
 end
+
+-- End
+
+
+
+
+
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+-- Check if "Activity" exists in ReplicatedStorage
+local activityFolder = ReplicatedStorage:FindFirstChild("Activity")
+
+if activityFolder then
+    -- Get the number of values in "Activity"
+    local valueCount = #activityFolder:GetChildren()
+
+    -- Create a new ScreenGui
+    local screenGui = Instance.new("ScreenGui")
+    screenGui.Parent = PlayerGui
+
+    -- Create a new TextLabel
+    local textLabel = Instance.new("TextLabel")
+    textLabel.Parent = screenGui
+    textLabel.Text = "Activity\n" .. tostring(valueCount)
+    textLabel.TextSize = 12
+    textLabel.Font = Enum.Font.GothamBold
+    textLabel.TextColor3 = Color3.new(1, 1, 1) -- White color
+    textLabel.BackgroundTransparency = 1
+    textLabel.Size = UDim2.new(0, 100, 0, 50) -- Small size for the label
+    textLabel.Position = UDim2.new(0, 10, 0, 10) -- Position in the left corner, slightly down
+end
