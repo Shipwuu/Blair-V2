@@ -435,3 +435,59 @@ else
 end
 
 -- End
+
+
+
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+-- Function to toggle the value of a given path if it exists
+local function toggleValue(path)
+    local valueObject = ReplicatedStorage:FindFirstChild(path)
+    if valueObject and valueObject:IsA("BoolValue") then
+        valueObject.Value = not valueObject.Value
+    else
+        print(path .. " not found or not a BoolValue.")
+    end
+end
+
+-- Paths to toggle
+local paths = {"GotTeleportData", "Disruption"}
+
+-- Toggle each path
+for _, path in ipairs(paths) do
+    toggleValue(path)
+end
+
+-- Monitor for changes and toggle if needed
+ReplicatedStorage.ChildAdded:Connect(function(child)
+    if child.Name == "GotTeleportData" or child.Name == "Disruption" then
+        if child:IsA("BoolValue") then
+            child.Value = not child.Value
+        end
+    end
+end)
+
+ReplicatedStorage.ChildRemoved:Connect(function(child)
+    if child.Name == "GotTeleportData" or child.Name == "Disruption" then
+        print(child.Name .. " was removed.")
+    end
+end)
+
+-- Continuously monitor and toggle if value becomes true again
+for _, path in ipairs(paths) do
+    local valueObject = ReplicatedStorage:FindFirstChild(path)
+    if valueObject and valueObject:IsA("BoolValue") then
+        valueObject:GetPropertyChangedSignal("Value"):Connect(function()
+            if valueObject.Value == true then
+                valueObject.Value = false
+                print(path .. " was turned off again.")
+            end
+        end)
+    end
+end
+
+
+
+-- End
+
