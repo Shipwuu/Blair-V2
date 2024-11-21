@@ -287,6 +287,20 @@ end)
 
 
 
+-- ImageButton 6
+local imageButton1 = createShortcutButton(frame, "ShortcutButton5", UDim2.new(0.5, 5, 0.7, 10), "rbxassetid://122012192346825")
+-- Add functionality to ImageButton 1 (similar as before)
+imageButton1.MouseButton1Click:Connect(function()
+    print("Button 1 clicked")
+
+local args = {
+    [1] = "Capture a photo of the Ghost"
+}
+
+game:GetService("Players").LocalPlayer.Character:FindFirstChild("Photo Camera").Remote.CompleteObjective:FireServer(unpack(args))
+
+end)
+
 
 
 
