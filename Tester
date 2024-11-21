@@ -1,78 +1,34 @@
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-
--- Wait for the MaxSlots property to be added if it doesn't exist yet
-local success, maxSlots = pcall(function()
-    return LocalPlayer:FindFirstChild("MaxSlots")
-end)
-
-if success and maxSlots then
-    -- If MaxSlots exists, change its value to 6
-    maxSlots.Value = 6
-else
-    print("MaxSlots property not found for LocalPlayer.")
-end
-
--- End
-
-
-
-
-
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
--- Create a new ScreenGui
-local screenGui = Instance.new("ScreenGui")
-screenGui.Parent = PlayerGui
-
--- Create a new TextLabel
-local textLabel = Instance.new("TextLabel")
-textLabel.Parent = screenGui
-textLabel.TextSize = 18
-textLabel.Font = Enum.Font.GothamBold
-textLabel.TextColor3 = Color3.new(1, 1, 1) -- White color
-textLabel.BackgroundTransparency = 1
-textLabel.Size = UDim2.new(0, 200, 0, 50) -- Adjusted size for better visibility
-textLabel.Position = UDim2.new(0.5, -100, 0, 10) -- Position in the top middle corner of the screen
-
--- Add UIStroke to the TextLabel
-local uiStroke = Instance.new("UIStroke")
-uiStroke.Thickness = 2
-uiStroke.Color = Color3.fromRGB(101, 67, 33) -- Dark brown color
-uiStroke.Parent = textLabel
-
--- Function to update the TextLabel with the current value
-local function updateActivityValue()
-    local activity = ReplicatedStorage:FindFirstChild("Activity")
-    if activity and activity:IsA("ValueBase") then
-        textLabel.Text = "Activity\n" .. tostring(activity.Value)
+-- Function to toggle the value of a given path if it exists
+local function toggleValue(path)
+    local valueObject = ReplicatedStorage:FindFirstChild(path)
+    if valueObject and valueObject:IsA("BoolValue") then
+        valueObject.Value = not valueObject.Value
     else
-        textLabel.Text = "Activity\nNot Found"
+        print(path .. " not found or not a BoolValue.")
     end
 end
 
--- Initial update
-updateActivityValue()
+-- Paths to toggle
+local paths = {"GotTeleportData", "Disruption"}
 
--- Connect to the Changed event to update the value dynamically
-local activity = ReplicatedStorage:FindFirstChild("Activity")
-if activity and activity:IsA("ValueBase") then
-    activity:GetPropertyChangedSignal("Value"):Connect(updateActivityValue)
+-- Toggle each path
+for _, path in ipairs(paths) do
+    toggleValue(path)
 end
 
--- Monitor for changes in ReplicatedStorage to detect when "Activity" is added or removed
+-- Monitor for changes and toggle if needed
 ReplicatedStorage.ChildAdded:Connect(function(child)
-    if child.Name == "Activity" and child:IsA("ValueBase") then
-        updateActivityValue()
-        child:GetPropertyChangedSignal("Value"):Connect(updateActivityValue)
+    if child.Name == "GotTeleportData" or child.Name == "Disruption" then
+        if child:IsA("BoolValue") then
+            child.Value = not child.Value
+        end
     end
 end)
 
 ReplicatedStorage.ChildRemoved:Connect(function(child)
-    if child.Name == "Activity" then
-        updateActivityValue()
+    if child.Name == "GotTeleportData" or child.Name == "Disruption" then
+        print(child.Name .. " was removed.")
     end
 end)
