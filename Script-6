@@ -369,7 +369,7 @@ textLabel.Font = Enum.Font.GothamBold
 textLabel.TextColor3 = Color3.new(1, 1, 1) -- White color
 textLabel.BackgroundTransparency = 1
 textLabel.Size = UDim2.new(0, 200, 0, 50) -- Adjusted size for better visibility
-textLabel.Position = UDim2.new(0.5, -100, 0, 10) -- Position in the top middle corner of the screen
+textLabel.Position = UDim2.new(0.5, -100, 0, 40) -- Position in the top middle corner of the screen
 
 -- Add UIStroke to the TextLabel
 local uiStroke = Instance.new("UIStroke")
