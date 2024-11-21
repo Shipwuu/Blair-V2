@@ -242,7 +242,7 @@ imageButton3.MouseButton1Click:Connect(function()
 end)
 
 -- ImageButton 4
-local imageButton1 = createShortcutButton(frame, "ShortcutButton4", UDim2.new(0.5, 5, 0, 10), "rbxassetid://122012192346825")
+local imageButton1 = createShortcutButton(frame, "ShortcutButton4", UDim2.new(0.5, 5, 0, 10), "rbxthumb://type=Asset&id=124315576905388&w=420&h=420")
 -- Add functionality to ImageButton 1 (similar as before)
 imageButton1.MouseButton1Click:Connect(function()
     print("Button 1 clicked")
