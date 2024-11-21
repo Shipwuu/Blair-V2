@@ -1,0 +1,14 @@
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+
+-- Wait for the MaxSlots property to be added if it doesn't exist yet
+local success, maxSlots = pcall(function()
+    return LocalPlayer:FindFirstChild("MaxSlots")
+end)
+
+if success and maxSlots then
+    -- If MaxSlots exists, change its value to 6
+    maxSlots.Value = 6
+else
+    print("MaxSlots property not found for LocalPlayer.")
+end
