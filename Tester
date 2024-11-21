@@ -44,6 +44,6 @@ if activityFolder then
     textLabel.Font = Enum.Font.GothamBold
     textLabel.TextColor3 = Color3.new(1, 1, 1) -- White color
     textLabel.BackgroundTransparency = 1
-    textLabel.Size = UDim2.new(0, 100, 0, 50) -- Small size for the label
-    textLabel.Position = UDim2.new(0, 10, 0, 10) -- Position in the left corner, slightly down
+    textLabel.Size = UDim2.new(0, 100, 0, 100) -- Small size for the label
+    textLabel.Position = UDim2.new(0, 10, 0, 30) -- Position in the left corner, slightly down
 end
