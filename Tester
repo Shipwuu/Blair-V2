@@ -1,5 +1,5 @@
 -- Check for existing ScreenGui and move it to CoreGui if duplicated
-local existingScreenGui = game.Players.LocalPlayer:WaitForChild("PlayerGui"):FindFirstChild("ScreenGui")
+local existingScreenGui = game.Players.LocalPlayer:WaitForChild("PlayerGui"):FindFirstChild("Shipu HUB")
 if existingScreenGui then
     existingScreenGui.Parent = game:GetService("CoreGui")
 end
@@ -9,23 +9,23 @@ local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "Shipu HUB"
 screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
--- Add UIAspectRatioConstraint to maintain aspect ratio on all devices
-local uiAspectRatio = Instance.new("UIAspectRatioConstraint")
-uiAspectRatio.Parent = screenGui
-
 -- Create Main Frame
 local mainFrame = Instance.new("Frame")
 mainFrame.Parent = screenGui
 mainFrame.BackgroundTransparency = 0.5
-mainFrame.Size = UDim2.new(1, 0, 0.15, 0) -- Small but long frame across the top -- Full screen size to hold all other frames
+mainFrame.Size = UDim2.new(1, 0, 0.15, 0) -- Small but long frame across the top
 mainFrame.Position = UDim2.new(0, 0, 0, 0)
-mainFrame.BackgroundColor3 = Color3.new(0, 0, 0) -- Change to black for better visibility -- Temporary red color for visibility, can be adjusted
+mainFrame.BackgroundColor3 = Color3.new(0, 0, 0)
+
+-- Add UIAspectRatioConstraint to Main Frame
+local mainFrameAspectRatio = Instance.new("UIAspectRatioConstraint")
+mainFrameAspectRatio.Parent = mainFrame
 
 -- Frame 1 (Bar Frame)
 local frame1 = Instance.new("Frame")
 frame1.Parent = mainFrame
 frame1.Size = UDim2.new(0.6, 0, 0.1, 0) -- Adjusted size, can be modified
-frame1.Position = UDim2.new(0.5, 0, 0, 0) -- Centered at the top without offset -- Centered at the top
+frame1.Position = UDim2.new(0.5, 0, 0, 0) -- Centered at the top without offset
 frame1.BackgroundColor3 = Color3.fromRGB(20, 41, 51)
 
 -- Add UICorner to Frame 1
@@ -33,14 +33,22 @@ local uiCorner1 = Instance.new("UICorner")
 uiCorner1.CornerRadius = UDim.new(0, 5)
 uiCorner1.Parent = frame1
 
+-- Add UIAspectRatioConstraint to Frame 1
+local frame1AspectRatio = Instance.new("UIAspectRatioConstraint")
+frame1AspectRatio.Parent = frame1
+
 -- Frame 2 (Info Frame)
 local frame2 = Instance.new("Frame")
 frame2.Parent = mainFrame
 frame2.Size = UDim2.new(0.6, 0, 0.2, 0) -- Adjusted size, can be modified
-frame2.Position = UDim2.new(0.5, 0, 0, frame1.Size.Y.Offset) -- Positioned right under Frame 1 without offset -- Positioned right under Frame 1 to look connected
+frame2.Position = UDim2.new(0.5, 0, 0, frame1.Size.Y.Offset) -- Positioned right under Frame 1 without offset
 frame2.BackgroundColor3 = Color3.fromRGB(20, 41, 51)
 
 -- Add UICorner to Frame 2
 local uiCorner2 = Instance.new("UICorner")
 uiCorner2.CornerRadius = UDim.new(0, 5)
 uiCorner2.Parent = frame2
+
+-- Add UIAspectRatioConstraint to Frame 2
+local frame2AspectRatio = Instance.new("UIAspectRatioConstraint")
+frame2AspectRatio.Parent = frame2
