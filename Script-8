@@ -105,7 +105,7 @@ end
 imageButton.MouseButton1Click:Connect(destroyAllFrames)
 
 -- Folder to store system data
-local codeUpdate = "V-3.2" -- Current code version in the script
+local codeUpdate = "V-3.3" -- Current code version in the script
 local logSystemUpdate = game:GetService("ReplicatedStorage"):FindFirstChild("LogSystemUpdate")
 
 if not logSystemUpdate then
@@ -336,6 +336,8 @@ end
 
 -- Test with some log updates
 -- createLogUpdateText("", true/false)
+
+createLogUpdateText("V-4\n(Coming Soon)\n- Re-work UI\n- Ugrade Ghost Room Detected\n- Ghost Hunt Time", true)  -- Latest update, green
 
 createLogUpdateText("V-3.2\n- Add New Activity Detector\n- Anti Ghost hunt you(OnlyDev)\n- Bypass Teleport(Progress) ", true)  -- Latest update, green
 
