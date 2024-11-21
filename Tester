@@ -31,12 +31,18 @@ screenGui.Parent = PlayerGui
 -- Create a new TextLabel
 local textLabel = Instance.new("TextLabel")
 textLabel.Parent = screenGui
-textLabel.TextSize = 12
+textLabel.TextSize = 18
 textLabel.Font = Enum.Font.GothamBold
 textLabel.TextColor3 = Color3.new(1, 1, 1) -- White color
 textLabel.BackgroundTransparency = 1
-textLabel.Size = UDim2.new(0, 100, 0, 50) -- Small size for the label
-textLabel.Position = UDim2.new(0, 10, 0, 10) -- Position in the left corner, slightly down
+textLabel.Size = UDim2.new(0, 200, 0, 50) -- Adjusted size for better visibility
+textLabel.Position = UDim2.new(0.5, -100, 0, 10) -- Position in the top middle corner of the screen
+
+-- Add UIStroke to the TextLabel
+local uiStroke = Instance.new("UIStroke")
+uiStroke.Thickness = 2
+uiStroke.Color = Color3.fromRGB(101, 67, 33) -- Dark brown color
+uiStroke.Parent = textLabel
 
 -- Function to update the TextLabel with the current value
 local function updateActivityValue()
