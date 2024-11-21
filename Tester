@@ -1,49 +1,46 @@
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-
--- Function to toggle the value of a given path if it exists
-local function toggleValue(path)
-    local valueObject = ReplicatedStorage:FindFirstChild(path)
-    if valueObject and valueObject:IsA("BoolValue") then
-        valueObject.Value = not valueObject.Value
-    else
-        print(path .. " not found or not a BoolValue.")
-    end
+-- Check for existing ScreenGui and move it to CoreGui if duplicated
+local existingScreenGui = game.Players.LocalPlayer:WaitForChild("PlayerGui"):FindFirstChild("ScreenGui")
+if existingScreenGui then
+    existingScreenGui.Parent = game:GetService("CoreGui")
 end
 
--- Paths to toggle
-local paths = {"GotTeleportData", "Disruption"}
+-- Create a new ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "Shipu HUB"
+screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
--- Toggle each path
-for _, path in ipairs(paths) do
-    toggleValue(path)
-end
+-- Add UIAspectRatioConstraint to maintain aspect ratio on all devices
+local uiAspectRatio = Instance.new("UIAspectRatioConstraint")
+uiAspectRatio.Parent = screenGui
 
--- Monitor for changes and toggle if needed
-ReplicatedStorage.ChildAdded:Connect(function(child)
-    if child.Name == "GotTeleportData" or child.Name == "Disruption" then
-        if child:IsA("BoolValue") then
-            child.Value = not child.Value
-        end
-    end
-end)
+-- Create Main Frame
+local mainFrame = Instance.new("Frame")
+mainFrame.Parent = screenGui
+mainFrame.BackgroundTransparency = 0.5
+mainFrame.Size = UDim2.new(1, 0, 1, 0) -- Full screen size to hold all other frames
+mainFrame.Position = UDim2.new(0, 0, 0, 0)
+mainFrame.BackgroundColor3 = Color3.new(1, 0, 0) -- Temporary red color for visibility, can be adjusted
 
-ReplicatedStorage.ChildRemoved:Connect(function(child)
-    if child.Name == "GotTeleportData" or child.Name == "Disruption" then
-        print(child.Name .. " was removed.")
-    end
-end)
+-- Frame 1 (Bar Frame)
+local frame1 = Instance.new("Frame")
+frame1.Parent = mainFrame
+frame1.Size = UDim2.new(0.6, 0, 0.1, 0) -- Adjusted size, can be modified
+frame1.Position = UDim2.new(0.5, -frame1.Size.X.Offset / 2, 0, 0) -- Centered at the top
+frame1.BackgroundColor3 = Color3.fromRGB(20, 41, 51)
 
--- Continuously monitor and toggle if value becomes true again
-for _, path in ipairs(paths) do
-    local valueObject = ReplicatedStorage:FindFirstChild(path)
-    if valueObject and valueObject:IsA("BoolValue") then
-        valueObject:GetPropertyChangedSignal("Value"):Connect(function()
-            if valueObject.Value == true then
-                valueObject.Value = false
-                print(path .. " was turned off again.")
-            end
-        end)
-    end
-end
+-- Add UICorner to Frame 1
+local uiCorner1 = Instance.new("UICorner")
+uiCorner1.CornerRadius = UDim.new(0, 5)
+uiCorner1.Parent = frame1
 
-print9"1")
+-- Frame 2 (Info Frame)
+local frame2 = Instance.new("Frame")
+frame2.Parent = mainFrame
+frame2.Size = UDim2.new(0.6, 0, 0.2, 0) -- Adjusted size, can be modified
+frame2.Position = UDim2.new(0.5, -frame2.Size.X.Offset / 2, 0, frame1.Size.Y.Offset) -- Positioned right under Frame 1 to look connected
+frame2.BackgroundColor3 = Color3.fromRGB(20, 41, 51)
+
+-- Add UICorner to Frame 2
+local uiCorner2 = Instance.new("UICorner")
+uiCorner2.CornerRadius = UDim.new(0, 5)
+uiCorner2.Parent = frame2
