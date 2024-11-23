@@ -86,8 +86,12 @@ local function animateHuntDuration()
             end
             HuntBar.Size = UDim2.new(0, 0, 1, 0)
         end)
+    else
+        HuntBar.Visible = false -- Hide HuntBar if HuntDuration is not found
     end
 end
 
 -- Connect to property changes for detecting Ghost and Hunt status
-game:GetService("RunService").RenderStepped:Connect(updateGhostStatus)
+if game:GetService("RunService").RenderStepped then
+    game:GetService("RunService").RenderStepped:Connect(updateGhostStatus)
+end
