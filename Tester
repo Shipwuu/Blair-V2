@@ -74,10 +74,10 @@ local function createGhostUI()
                 if huntDuration then
                     local initialDuration = huntDuration.Value
                     huntDurationBar.Visible = true
+                    huntDurationBar:TweenSize(UDim2.new(1, 0, 1, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.5, true)
                     huntDurationBar.BackgroundTransparency = 1
-%1huntDurationBar.Visible = true
-%1huntDurationBar:TweenSize(UDim2.new(0, 0, 1, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.5, true)
-%1huntDurationBar.Visible = false
+                    huntDurationBar.Visible = true
+
             end
         end
     end
