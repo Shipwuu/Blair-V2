@@ -39,7 +39,7 @@ local function createGhostUI()
     ghostTimeBarUIStroke.Color = Color3.fromRGB(105, 105, 105)
     ghostTimeBarUIStroke.Parent = ghostTimeBar
 
-    -- Create Ghost Detection TextLabel inside Ghost Bar Frame
+    -- Create Ghost Detection TextLabel inside Ghost Time Bar
     local ghostDetectionLabel = Instance.new("TextLabel")
     ghostDetectionLabel.Name = "Ghost Detection"
     ghostDetectionLabel.Text = "Ghost: None"
@@ -47,16 +47,15 @@ local function createGhostUI()
     ghostDetectionLabel.TextSize = 14
     ghostDetectionLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     ghostDetectionLabel.BackgroundTransparency = 1
-    ghostDetectionLabel.Position = UDim2.new(0, 0, -1, 0)
+    ghostDetectionLabel.Position = UDim2.new(0, 0, 0, 0)
     ghostDetectionLabel.Size = UDim2.new(0.898, 38, 0, 20)
-    ghostDetectionLabel.Parent = ghostBarFrame
+    ghostDetectionLabel.Parent = ghostTimeBar
 
-    -- Create Hunt Bar Duration (initially not visible)
+    -- Create Hunt Bar Duration
     local huntDurationBar = Instance.new("Frame")
     huntDurationBar.Name = "Hunt Duration Bar"
     huntDurationBar.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
     huntDurationBar.Size = UDim2.new(1, 0, 1, 0)
-    huntDurationBar.Visible = false
     huntDurationBar.Parent = ghostTimeBar
 
     local huntDurationBarUICorner = Instance.new("UICorner")
@@ -73,22 +72,14 @@ local function createGhostUI()
                 local huntDuration = game:GetService("ReplicatedStorage"):FindFirstChild("HuntDuration")
                 if huntDuration then
                     local initialDuration = huntDuration.Value
-                    huntDurationBar.Visible = true
-                    huntDurationBar.BackgroundTransparency = 1
-                    huntDurationBar:TweenSize(UDim2.new(1, 0, 1, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.5, true)
-                    huntDurationBar:TweenTransparency(0, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.5, true)
                     huntDuration.Changed:Connect(function(newValue)
                         local progress = newValue / initialDuration
-                        huntDurationBar:TweenSize(UDim2.new(progress, 0, 1, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.5, true)
+                        huntDurationBar.Size = UDim2.new(progress, 0, 1, 0)
                     end)
                 end
             else
                 ghostDetectionLabel.Text = "Ghost: None"
-                huntDurationBar:TweenTransparency(1, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.5, true)
-                huntDurationBar:TweenSize(UDim2.new(0, 0, 1, 0), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.5, true)
-                delay(0.5, function()
-                    huntDurationBar.Visible = false
-                end)
+                huntDurationBar.Size = UDim2.new(0, 0, 1, 0)
             end
         end
     end
