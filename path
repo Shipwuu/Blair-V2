@@ -3,4 +3,4 @@ workspace.Ghost
 game:GetService("Players").LocalPlayer.Zone
 5game:GetService("ReplicatedStorage").HuntDuration
 workspace.Ghost.Zone
-workspace.Ghost.Hunting
+workspace.Ghost.Huntingworkspace.Map.Zones.Room221.BloodMoonHunt
