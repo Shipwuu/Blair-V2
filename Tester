@@ -1,54 +1,115 @@
--- Check for existing ScreenGui and move it to CoreGui if duplicated
-local existingScreenGui = game.Players.LocalPlayer:WaitForChild("PlayerGui"):FindFirstChild("Shipu HUB")
-if existingScreenGui then
-    existingScreenGui.Parent = game:GetService("CoreGui")
+-- Create a new ScreenGui named Shipu Hub and destroy previous instances if any
+local player = game.Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+local userInputService = game:GetService("UserInputService")
+
+-- Function to create the Shipu Hub UI
+local function createShipuHub()
+    -- Check if there are any existing ScreenGuis named "Shipu Hub"
+    local existingShipuHub = playerGui:FindFirstChild("Shipu Hub")
+    if existingShipuHub then
+        existingShipuHub:Destroy() -- Destroy the previous instance if found
+    end
+    
+    -- Create a new ScreenGui
+    local shipuHubGui = Instance.new("ScreenGui")
+    shipuHubGui.Name = "Shipu Hub"
+    shipuHubGui.Parent = playerGui
+
+    -- Create the Main Frame
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Name = "Main Frame"
+    mainFrame.BackgroundTransparency = 0.8
+    mainFrame.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Red color
+    mainFrame.Position = UDim2.new(0, 0, 0, 0)
+    mainFrame.Size = UDim2.new(1, 0, 0, 70)
+    mainFrame.Parent = shipuHubGui
+
+    -- Create Ghost Bar Frame
+    local ghostBarFrame = Instance.new("Frame")
+    ghostBarFrame.Name = "Ghost Bar Frame"
+    ghostBarFrame.BackgroundTransparency = 0.2
+    ghostBarFrame.BackgroundColor3 = Color3.fromRGB(20, 41, 51)
+    ghostBarFrame.Position = UDim2.new(0.25, 0, 0, 0)
+    ghostBarFrame.Size = UDim2.new(0.5, 0, 0, 30)
+    ghostBarFrame.Parent = mainFrame
+
+    local ghostBarFrameUICorner = Instance.new("UICorner")
+    ghostBarFrameUICorner.CornerRadius = UDim.new(0, 8)
+    ghostBarFrameUICorner.Parent = ghostBarFrame
+
+    -- Smooth Fade In Animation for Ghost Bar Frame
+    ghostBarFrame.BackgroundTransparency = 1
+    ghostBarFrame:TweenTransparency(0.2, Enum.EasingDirection.InOut, Enum.EasingStyle.Smooth, 1, true)
+
+    -- Create Ghost Time Bar inside Ghost Bar Frame
+    local ghostTimeBar = Instance.new("Frame")
+    ghostTimeBar.Name = "Ghost Time Bar"
+    ghostTimeBar.BackgroundTransparency = 0.2
+    ghostTimeBar.BackgroundColor3 = Color3.fromRGB(75, 75, 75)
+    ghostTimeBar.Position = UDim2.new(0, 5, 0, 5)
+    ghostTimeBar.Size = UDim2.new(0.898, 38, 0, 20)
+    ghostTimeBar.Parent = ghostBarFrame
+
+    local ghostTimeBarUICorner = Instance.new("UICorner")
+    ghostTimeBarUICorner.CornerRadius = UDim.new(0, 8)
+    ghostTimeBarUICorner.Parent = ghostTimeBar
+
+    local ghostTimeBarUIStroke = Instance.new("UIStroke")
+    ghostTimeBarUIStroke.Thickness = 2
+    ghostTimeBarUIStroke.Color = Color3.fromRGB(105, 105, 105)
+    ghostTimeBarUIStroke.Parent = ghostTimeBar
+
+    -- Create Ghost Detection TextLabel inside Ghost Time Bar
+    local ghostDetectionLabel = Instance.new("TextLabel")
+    ghostDetectionLabel.Name = "Ghost Detection"
+    ghostDetectionLabel.Text = "Ghost: None"
+    ghostDetectionLabel.Font = Enum.Font.GothamBold
+    ghostDetectionLabel.TextSize = 14
+    ghostDetectionLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ghostDetectionLabel.BackgroundTransparency = 1
+    ghostDetectionLabel.Position = UDim2.new(0, 0, 0, 0)
+    ghostDetectionLabel.Size = UDim2.new(0.898, 38, 0, 20)
+    ghostDetectionLabel.Parent = ghostTimeBar
+
+    -- Function to handle transparency changes based on interaction
+    local function handleTransparency(frame)
+        frame.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                frame.BackgroundTransparency = 0.2
+                -- Display InfoFrame with information about the frame
+                local infoFrame = Instance.new("TextLabel")
+                infoFrame.Text = frame.Name .. " Frame"
+                infoFrame.Font = Enum.Font.GothamBold
+                infoFrame.TextSize = 14
+                infoFrame.TextColor3 = Color3.fromRGB(255, 255, 255)
+                infoFrame.BackgroundColor3 = Color3.fromRGB(20, 41, 51)
+                infoFrame.BackgroundTransparency = 0.2
+                infoFrame.Size = UDim2.new(0, infoFrame.TextBounds.X + 20, 0, 20)
+                infoFrame.Position = UDim2.new(0.5, -infoFrame.Size.X.Offset / 2, 0, 80)
+                local uiCorner = Instance.new("UICorner")
+                uiCorner.CornerRadius = UDim.new(0, 8)
+                uiCorner.Parent = infoFrame
+                infoFrame.Parent = shipuHubGui
+                
+                -- Remove InfoFrame after a delay
+                delay(2, function()
+                    infoFrame:Destroy()
+                end)
+            end
+        end)
+
+        frame.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                frame.BackgroundTransparency = 0.9
+            end
+        end)
+    end
+
+    -- Apply transparency behavior to all frames except Main Frame
+    handleTransparency(ghostBarFrame)
+    handleTransparency(ghostTimeBar)
 end
 
--- Create a new ScreenGui
-local screenGui = Instance.new("ScreenGui")
-screenGui.Name = "Shipu HUB"
-screenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
-
--- Create Main Frame
-local mainFrame = Instance.new("Frame")
-mainFrame.Parent = screenGui
-mainFrame.BackgroundTransparency = 0.5
-mainFrame.Size = UDim2.new(1, 0, 0.15, 0) -- Small but long frame across the top
-mainFrame.Position = UDim2.new(0, 0, 0, 0)
-mainFrame.BackgroundColor3 = Color3.new(0, 0, 0)
-
--- Add UIAspectRatioConstraint to Main Frame
-local mainFrameAspectRatio = Instance.new("UIAspectRatioConstraint")
-mainFrameAspectRatio.Parent = mainFrame
-
--- Frame 1 (Bar Frame)
-local frame1 = Instance.new("Frame")
-frame1.Parent = mainFrame
-frame1.Size = UDim2.new(0.6, 0, 0.1, 0) -- Adjusted size, can be modified
-frame1.Position = UDim2.new(0.5, 0, 0, 0) -- Centered at the top without offset
-frame1.BackgroundColor3 = Color3.fromRGB(20, 41, 51)
-
--- Add UICorner to Frame 1
-local uiCorner1 = Instance.new("UICorner")
-uiCorner1.CornerRadius = UDim.new(0, 5)
-uiCorner1.Parent = frame1
-
--- Add UIAspectRatioConstraint to Frame 1
-local frame1AspectRatio = Instance.new("UIAspectRatioConstraint")
-frame1AspectRatio.Parent = frame1
-
--- Frame 2 (Info Frame)
-local frame2 = Instance.new("Frame")
-frame2.Parent = mainFrame
-frame2.Size = UDim2.new(0.6, 0, 0.2, 0) -- Adjusted size, can be modified
-frame2.Position = UDim2.new(0.5, 0, 0, frame1.Size.Y.Offset) -- Positioned right under Frame 1 without offset
-frame2.BackgroundColor3 = Color3.fromRGB(20, 41, 51)
-
--- Add UICorner to Frame 2
-local uiCorner2 = Instance.new("UICorner")
-uiCorner2.CornerRadius = UDim.new(0, 5)
-uiCorner2.Parent = frame2
-
--- Add UIAspectRatioConstraint to Frame 2
-local frame2AspectRatio = Instance.new("UIAspectRatioConstraint")
-frame2AspectRatio.Parent = frame2
+-- Call the function to create the UI
+createShipuHub()
