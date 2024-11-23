@@ -1,92 +1,92 @@
--- Create a new ScreenGui named Ghost Bar UI
-local player = game.Players.LocalPlayer
-local playerGui = player:WaitForChild("PlayerGui")
+-- Create a new ScreenGui
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "NewScreenGui"
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
-local function createGhostUI()
-    -- Create ScreenGui
-    local ghostBarGui = Instance.new("ScreenGui")
-    ghostBarGui.Name = "Ghost Bar UI"
-    ghostBarGui.Parent = playerGui
+-- Create Ghost Bar Frame
+local GhostBarFrame = Instance.new("Frame")
+GhostBarFrame.Name = "Ghost Bar Frame"
+GhostBarFrame.BackgroundTransparency = 0
+GhostBarFrame.BackgroundColor3 = Color3.fromRGB(20, 41, 51)
+GhostBarFrame.Position = UDim2.new(0.25, 0, 0, 0)
+GhostBarFrame.Size = UDim2.new(0.5, 0, 0, 30)
+local UICorner = Instance.new("UICorner", GhostBarFrame)
+UICorner.CornerRadius = UDim.new(0.8, 0)
+GhostBarFrame.Parent = ScreenGui
 
-    -- Create Ghost Bar Frame
-    local ghostBarFrame = Instance.new("Frame")
-    ghostBarFrame.Name = "Ghost Bar Frame"
-    ghostBarFrame.BackgroundTransparency = 0
-    ghostBarFrame.BackgroundColor3 = Color3.fromRGB(20, 41, 51)
-    ghostBarFrame.Position = UDim2.new(0.25, 0, 0, 0)
-    ghostBarFrame.Size = UDim2.new(0.5, 0, 0, 30)
-    ghostBarFrame.Parent = ghostBarGui
+-- Create Ghost Time Bar Frame (child of Ghost Bar Frame)
+local GhostTimeBar = Instance.new("Frame")
+GhostTimeBar.Name = "Ghost Time Bar"
+GhostTimeBar.BackgroundTransparency = 0
+GhostTimeBar.BackgroundColor3 = Color3.fromRGB(75, 75, 75)
+GhostTimeBar.Position = UDim2.new(0, 5, 0, 5)
+GhostTimeBar.Size = UDim2.new(0.898, -10, 0, 20)
+local UICorner2 = Instance.new("UICorner", GhostTimeBar)
+UICorner2.CornerRadius = UDim.new(0.8, 0)
+local UIStroke = Instance.new("UIStroke", GhostTimeBar)
+UIStroke.Thickness = 2
+UIStroke.Color = Color3.fromRGB(105, 105, 105)
+GhostTimeBar.Parent = GhostBarFrame
 
-    local ghostBarFrameUICorner = Instance.new("UICorner")
-    ghostBarFrameUICorner.CornerRadius = UDim.new(0, 8)
-    ghostBarFrameUICorner.Parent = ghostBarFrame
+-- Create Ghost Detection TextLabel (child of Ghost Time Bar)
+local GhostDetection = Instance.new("TextLabel")
+GhostDetection.Name = "Ghost Detection"
+GhostDetection.BackgroundTransparency = 1
+GhostDetection.Text = "Ghost : None"
+GhostDetection.Font = Enum.Font.GothamBold
+GhostDetection.TextSize = 14
+GhostDetection.TextColor3 = Color3.fromRGB(255, 255, 255)
+GhostDetection.Position = UDim2.new(0, 0, 0, 0)
+GhostDetection.Size = UDim2.new(1, 0, 1, 0)
+GhostDetection.Parent = GhostTimeBar
 
-    -- Create Ghost Time Bar inside Ghost Bar Frame
-    local ghostTimeBar = Instance.new("Frame")
-    ghostTimeBar.Name = "Ghost Time Bar"
-    ghostTimeBar.BackgroundTransparency = 0
-    ghostTimeBar.BackgroundColor3 = Color3.fromRGB(75, 75, 75)
-    ghostTimeBar.Position = UDim2.new(0, 5, 0, 5)
-    ghostTimeBar.Size = UDim2.new(0.898, 38, 0, 20)
-    ghostTimeBar.Parent = ghostBarFrame
+-- Create Ghost Hunt Bar (animated bar for hunt duration)
+local HuntBar = Instance.new("Frame")
+HuntBar.Name = "Hunt Bar Duration"
+HuntBar.BackgroundTransparency = 0
+HuntBar.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+HuntBar.Size = UDim2.new(1, 0, 1, 0)
+local UICorner3 = Instance.new("UICorner", HuntBar)
+UICorner3.CornerRadius = UDim.new(0.8, 0)
+HuntBar.Parent = GhostTimeBar
+HuntBar.Visible = false
 
-    local ghostTimeBarUICorner = Instance.new("UICorner")
-    ghostTimeBarUICorner.CornerRadius = UDim.new(0, 8)
-    ghostTimeBarUICorner.Parent = ghostTimeBar
-
-    local ghostTimeBarUIStroke = Instance.new("UIStroke")
-    ghostTimeBarUIStroke.Thickness = 2
-    ghostTimeBarUIStroke.Color = Color3.fromRGB(105, 105, 105)
-    ghostTimeBarUIStroke.Parent = ghostTimeBar
-
-    -- Create Ghost Detection TextLabel inside Ghost Time Bar
-    local ghostDetectionLabel = Instance.new("TextLabel")
-    ghostDetectionLabel.Name = "Ghost Detection"
-    ghostDetectionLabel.Text = "Ghost: None"
-    ghostDetectionLabel.Font = Enum.Font.GothamBold
-    ghostDetectionLabel.TextSize = 14
-    ghostDetectionLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-    ghostDetectionLabel.BackgroundTransparency = 1
-    ghostDetectionLabel.Position = UDim2.new(0, 0, 0, 0)
-    ghostDetectionLabel.Size = UDim2.new(0.898, 38, 0, 20)
-    ghostDetectionLabel.Parent = ghostBarFrame
-
-    -- Create Hunt Bar Duration
-    local huntDurationBar = Instance.new("Frame")
-    huntDurationBar.Name = "Hunt Duration Bar"
-    huntDurationBar.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-    huntDurationBar.Size = UDim2.new(1, 0, 1, 0)
-    huntDurationBar.Parent = ghostTimeBar
-
-    local huntDurationBarUICorner = Instance.new("UICorner")
-    huntDurationBarUICorner.CornerRadius = UDim.new(0, 8)
-    huntDurationBarUICorner.Parent = huntDurationBar
-
-    -- Function to handle Ghost detection and update UI
-    local function updateGhostUI()
-        local ghost = workspace:FindFirstChild("Ghost")
-        if ghost and ghost:FindFirstChild("Hunting") then
-            local isHunting = ghost.Hunting.Value
-            if isHunting then
-                ghostDetectionLabel.Text = "Ghost: Hunting"
-                local huntDuration = game:GetService("ReplicatedStorage"):FindFirstChild("HuntDuration")
-                if huntDuration then
-                    local initialDuration = huntDuration.Value
-                    huntDuration.Changed:Connect(function(newValue)
-                        local progress = newValue / initialDuration
-                        huntDurationBar.Size = UDim2.new(progress, 0, 1, 0)
-                    end)
-                end
-            else
-                ghostDetectionLabel.Text = "Ghost: None"
-                huntDurationBar.Size = UDim2.new(0, 0, 1, 0)
-            end
+-- Script to detect Ghost and Hunt Duration
+local function updateGhostStatus()
+    local ghost = workspace:FindFirstChild("Ghost")
+    if ghost then
+        local hunting = ghost:FindFirstChild("Hunting")
+        if hunting and hunting.Value == true then
+            GhostDetection.Text = "Ghost : Hunting"
+            HuntBar.Visible = true
+            animateHuntDuration()
+        else
+            GhostDetection.Text = "Ghost : None"
+            HuntBar.Visible = false
         end
+    else
+        GhostDetection.Text = "Ghost : None"
+        HuntBar.Visible = false
     end
-
-    -- Continuously monitor Ghost status
-    game:GetService("RunService").RenderStepped:Connect(updateGhostUI)
 end
 
--- Call the function to create the UI
-createGhostUI()
+-- Function to animate Hunt Bar based on HuntDuration
+local function animateHuntDuration()
+    local huntDuration = game:GetService("ReplicatedStorage"):FindFirstChild("HuntDuration")
+    if huntDuration then
+        local duration = huntDuration.Value
+        local startTime = tick()
+        
+        spawn(function()
+            while tick() - startTime < duration do
+                local timeLeft = duration - (tick() - startTime)
+                HuntBar.Size = UDim2.new(timeLeft / duration, 0, 1, 0)
+                wait(0.1)
+            end
+            HuntBar.Size = UDim2.new(0, 0, 1, 0)
+        end)
+    end
+end
+
+-- Connect to property changes for detecting Ghost and Hunt status
+game:GetService("RunService").RenderStepped:Connect(updateGhostStatus)
