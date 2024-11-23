@@ -1,1 +1,4 @@
-ofw
+game:GetService("Players").LocalPlayer.Hiding
+workspace.Ghost
+game:GetService("Players").LocalPlayer.Zone
+5game:GetService("ReplicatedStorage").HuntDuration
