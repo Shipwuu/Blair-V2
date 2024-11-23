@@ -40,7 +40,9 @@ local function createShipuHub()
 
     -- Smooth Fade In Animation for Ghost Bar Frame
     ghostBarFrame.BackgroundTransparency = 1
-    ghostBarFrame:TweenTransparency(0.2, Enum.EasingDirection.InOut, Enum.EasingStyle.Smooth, 1, true)
+    ghostBarFrame.Visible = false
+    ghostBarFrame.Visible = true
+    ghostBarFrame:TweenPosition(ghostBarFrame.Position, Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 1, true)
 
     -- Create Ghost Time Bar inside Ghost Bar Frame
     local ghostTimeBar = Instance.new("Frame")
