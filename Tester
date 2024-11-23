@@ -47,7 +47,7 @@ local function createGhostUI()
     ghostDetectionLabel.TextSize = 14
     ghostDetectionLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
     ghostDetectionLabel.BackgroundTransparency = 1
-    ghostDetectionLabel.Position = UDim2.new(0, 0, 0, 0)
+    ghostDetectionLabel.Position = UDim2.new(0, 0, -0.5, -20)
     ghostDetectionLabel.Size = UDim2.new(0.898, 38, 0, 20)
     ghostDetectionLabel.Parent = ghostTimeBar
 
@@ -56,6 +56,7 @@ local function createGhostUI()
     huntDurationBar.Name = "Hunt Duration Bar"
     huntDurationBar.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
     huntDurationBar.Size = UDim2.new(1, 0, 1, 0)
+    huntDurationBar.Visible = false
     huntDurationBar.Parent = ghostTimeBar
 
     local huntDurationBarUICorner = Instance.new("UICorner")
@@ -73,6 +74,7 @@ local function createGhostUI()
                 if huntDuration then
                     local initialDuration = huntDuration.Value
                     huntDuration.Changed:Connect(function(newValue)
+                        huntDurationBar.Visible = true
                         local progress = newValue / initialDuration
                         huntDurationBar.Size = UDim2.new(progress, 0, 1, 0)
                     end)
