@@ -1,53 +1,30 @@
--- Create a new ScreenGui named Shipu Hub and destroy previous instances if any
+-- Create a new ScreenGui named Ghost Bar UI
 local player = game.Players.LocalPlayer
 local playerGui = player:WaitForChild("PlayerGui")
-local userInputService = game:GetService("UserInputService")
 
--- Function to create the Shipu Hub UI
-local function createShipuHub()
-    -- Check if there are any existing ScreenGuis named "Shipu Hub"
-    local existingShipuHub = playerGui:FindFirstChild("Shipu Hub")
-    if existingShipuHub then
-        existingShipuHub:Destroy() -- Destroy the previous instance if found
-    end
-    
-    -- Create a new ScreenGui
-    local shipuHubGui = Instance.new("ScreenGui")
-    shipuHubGui.Name = "Shipu Hub"
-    shipuHubGui.Parent = playerGui
-
-    -- Create the Main Frame
-    local mainFrame = Instance.new("Frame")
-    mainFrame.Name = "Main Frame"
-    mainFrame.BackgroundTransparency = 0.8
-    mainFrame.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Red color
-    mainFrame.Position = UDim2.new(0, 0, 0, 0)
-    mainFrame.Size = UDim2.new(1, 0, 0, 70)
-    mainFrame.Parent = shipuHubGui
+local function createGhostUI()
+    -- Create ScreenGui
+    local ghostBarGui = Instance.new("ScreenGui")
+    ghostBarGui.Name = "Ghost Bar UI"
+    ghostBarGui.Parent = playerGui
 
     -- Create Ghost Bar Frame
     local ghostBarFrame = Instance.new("Frame")
     ghostBarFrame.Name = "Ghost Bar Frame"
-    ghostBarFrame.BackgroundTransparency = 0.2
+    ghostBarFrame.BackgroundTransparency = 0
     ghostBarFrame.BackgroundColor3 = Color3.fromRGB(20, 41, 51)
     ghostBarFrame.Position = UDim2.new(0.25, 0, 0, 0)
     ghostBarFrame.Size = UDim2.new(0.5, 0, 0, 30)
-    ghostBarFrame.Parent = mainFrame
+    ghostBarFrame.Parent = ghostBarGui
 
     local ghostBarFrameUICorner = Instance.new("UICorner")
     ghostBarFrameUICorner.CornerRadius = UDim.new(0, 8)
     ghostBarFrameUICorner.Parent = ghostBarFrame
 
-    -- Smooth Fade In Animation for Ghost Bar Frame
-    ghostBarFrame.BackgroundTransparency = 1
-    ghostBarFrame.Visible = false
-    ghostBarFrame.Visible = true
-    ghostBarFrame:TweenPosition(ghostBarFrame.Position, Enum.EasingDirection.InOut, Enum.EasingStyle.Quad, 1, true)
-
     -- Create Ghost Time Bar inside Ghost Bar Frame
     local ghostTimeBar = Instance.new("Frame")
     ghostTimeBar.Name = "Ghost Time Bar"
-    ghostTimeBar.BackgroundTransparency = 0.2
+    ghostTimeBar.BackgroundTransparency = 0
     ghostTimeBar.BackgroundColor3 = Color3.fromRGB(75, 75, 75)
     ghostTimeBar.Position = UDim2.new(0, 5, 0, 5)
     ghostTimeBar.Size = UDim2.new(0.898, 38, 0, 20)
@@ -74,44 +51,42 @@ local function createShipuHub()
     ghostDetectionLabel.Size = UDim2.new(0.898, 38, 0, 20)
     ghostDetectionLabel.Parent = ghostTimeBar
 
-    -- Function to handle transparency changes based on interaction
-    local function handleTransparency(frame)
-        frame.InputBegan:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                frame.BackgroundTransparency = 0.2
-                -- Display InfoFrame with information about the frame
-                local infoFrame = Instance.new("TextLabel")
-                infoFrame.Text = frame.Name .. " Frame"
-                infoFrame.Font = Enum.Font.GothamBold
-                infoFrame.TextSize = 14
-                infoFrame.TextColor3 = Color3.fromRGB(255, 255, 255)
-                infoFrame.BackgroundColor3 = Color3.fromRGB(20, 41, 51)
-                infoFrame.BackgroundTransparency = 0.2
-                infoFrame.Size = UDim2.new(0, infoFrame.TextBounds.X + 20, 0, 20)
-                infoFrame.Position = UDim2.new(0.5, -infoFrame.Size.X.Offset / 2, 0, 80)
-                local uiCorner = Instance.new("UICorner")
-                uiCorner.CornerRadius = UDim.new(0, 8)
-                uiCorner.Parent = infoFrame
-                infoFrame.Parent = shipuHubGui
-                
-                -- Remove InfoFrame after a delay
-                delay(2, function()
-                    infoFrame:Destroy()
-                end)
-            end
-        end)
+    -- Create Hunt Bar Duration
+    local huntDurationBar = Instance.new("Frame")
+    huntDurationBar.Name = "Hunt Duration Bar"
+    huntDurationBar.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+    huntDurationBar.Size = UDim2.new(1, 0, 1, 0)
+    huntDurationBar.Parent = ghostTimeBar
 
-        frame.InputEnded:Connect(function(input)
-            if input.UserInputType == Enum.UserInputType.MouseButton1 then
-                frame.BackgroundTransparency = 0.9
+    local huntDurationBarUICorner = Instance.new("UICorner")
+    huntDurationBarUICorner.CornerRadius = UDim.new(0, 8)
+    huntDurationBarUICorner.Parent = huntDurationBar
+
+    -- Function to handle Ghost detection and update UI
+    local function updateGhostUI()
+        local ghost = workspace:FindFirstChild("Ghost")
+        if ghost and ghost:FindFirstChild("Hunting") then
+            local isHunting = ghost.Hunting.Value
+            if isHunting then
+                ghostDetectionLabel.Text = "Ghost: Hunting"
+                local huntDuration = game:GetService("ReplicatedStorage"):FindFirstChild("HuntDuration")
+                if huntDuration then
+                    local initialDuration = huntDuration.Value
+                    huntDuration.Changed:Connect(function(newValue)
+                        local progress = newValue / initialDuration
+                        huntDurationBar.Size = UDim2.new(progress, 0, 1, 0)
+                    end)
+                end
+            else
+                ghostDetectionLabel.Text = "Ghost: None"
+                huntDurationBar.Size = UDim2.new(0, 0, 1, 0)
             end
-        end)
+        end
     end
 
-    -- Apply transparency behavior to all frames except Main Frame
-    handleTransparency(ghostBarFrame)
-    handleTransparency(ghostTimeBar)
+    -- Continuously monitor Ghost status
+    game:GetService("RunService").RenderStepped:Connect(updateGhostUI)
 end
 
 -- Call the function to create the UI
-createShipuHub()
+createGhostUI()
