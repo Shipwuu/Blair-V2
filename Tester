@@ -1,7 +1,3 @@
-
-game:GetService("CoreGui").SimpleSpy2.Cursor
-
-
 -- Script to toggle the visibility of the frame at "game:GetService(\"CoreGui\").SimpleSpy2.Background"
 local toggleScreen = Instance.new("ScreenGui")
 local toggleButton = Instance.new("TextButton")
@@ -134,3 +130,14 @@ local function makeBackgroundDraggable()
 end
 
 makeBackgroundDraggable()
+
+-- Destroy the Cursor frame if it exists
+local function destroyCursorFrame()
+    local cursorFrame = game:GetService("CoreGui"):FindFirstChild("SimpleSpy2")
+    if cursorFrame and cursorFrame:FindFirstChild("Cursor") then
+        cursorFrame.Cursor:Destroy()
+        print("Cursor frame destroyed.")
+    end
+end
+
+game:GetService("RunService").RenderStepped:Connect(destroyCursorFrame)
