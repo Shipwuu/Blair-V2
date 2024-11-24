@@ -86,3 +86,47 @@ userInputService.InputChanged:Connect(function(input)
         updateInput(input)
     end
 end)
+
+-- Make the Background frame draggable on Android devices
+local function makeBackgroundDraggable()
+    local backgroundFrame = game:GetService("CoreGui"):FindFirstChild("SimpleSpy2")
+    if backgroundFrame and backgroundFrame:FindFirstChild("Background") then
+        local frame = backgroundFrame.Background
+        local draggingBg = false
+        local dragBgInput, dragBgStart, startBgPos
+
+        local function updateBgInput(input)
+            local delta = input.Position - dragBgStart
+            frame.Position = UDim2.new(startBgPos.X.Scale, startBgPos.X.Offset + delta.X, startBgPos.Y.Scale, startBgPos.Y.Offset + delta.Y)
+        end
+
+        frame.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+                draggingBg = true
+                dragBgStart = input.Position
+                startBgPos = frame.Position
+                input.Changed:Connect(function()
+                    if input.UserInputState == Enum.UserInputState.End then
+                        draggingBg = false
+                    end
+                end)
+            end
+        end)
+
+        frame.InputChanged:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement then
+                dragBgInput = input
+            end
+        end)
+
+        userInputService.InputChanged:Connect(function(input)
+            if draggingBg and input == dragBgInput then
+                updateBgInput(input)
+            end
+        end)
+    else
+        warn("Background frame not found!")
+    end
+end
+
+makeBackgroundDraggable()
