@@ -1,9 +1,9 @@
 -- Script to toggle the visibility of the frame at "game:GetService(\"CoreGui\").SimpleSpy2.Background"
-local toggleScreen = Instance.new("ScreenGui")
 local toggleButton = Instance.new("TextButton")
 
--- Parent the ScreenGui to the player's PlayerGui
-toggleScreen.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+-- Parent the toggle button to CoreGui
+local coreGui = game:GetService("CoreGui")
+toggleButton.Parent = coreGui
 
 -- Set up the toggle button properties
 toggleButton.Size = UDim2.new(0, 32, 0, 32)
@@ -17,11 +17,10 @@ toggleButton.Font = Enum.Font.GothamBold
 local uiCorner = Instance.new("UICorner")
 uiCorner.CornerRadius = UDim.new(0, 8)
 uiCorner.Parent = toggleButton
-toggleButton.Parent = toggleScreen
 
 -- Function to check the visibility of the Background frame
 local function updateButtonText()
-    local backgroundFrame = game:GetService("CoreGui"):FindFirstChild("SimpleSpy2")
+    local backgroundFrame = coreGui:FindFirstChild("SimpleSpy2")
     if backgroundFrame and backgroundFrame:FindFirstChild("Background") then
         local frame = backgroundFrame.Background
         if frame.Visible then
@@ -39,7 +38,7 @@ updateButtonText()
 
 -- Function to toggle the visibility of the Background frame
 local function toggleVisibility()
-    local backgroundFrame = game:GetService("CoreGui"):FindFirstChild("SimpleSpy2")
+    local backgroundFrame = coreGui:FindFirstChild("SimpleSpy2")
     if backgroundFrame and backgroundFrame:FindFirstChild("Background") then
         local frame = backgroundFrame.Background
         frame.Visible = not frame.Visible
@@ -89,7 +88,7 @@ end)
 
 -- Make the Background frame draggable on Android devices
 local function makeBackgroundDraggable()
-    local backgroundFrame = game:GetService("CoreGui"):FindFirstChild("SimpleSpy2")
+    local backgroundFrame = coreGui:FindFirstChild("SimpleSpy2")
     if backgroundFrame and backgroundFrame:FindFirstChild("Background") then
         local frame = backgroundFrame.Background
         local draggingBg = false
@@ -133,10 +132,9 @@ makeBackgroundDraggable()
 
 -- Destroy the Cursor frame if it exists
 local function destroyCursorFrame()
-    local cursorFrame = game:GetService("CoreGui"):FindFirstChild("SimpleSpy2")
+    local cursorFrame = coreGui:FindFirstChild("SimpleSpy2")
     if cursorFrame and cursorFrame:FindFirstChild("Cursor") then
         cursorFrame.Cursor:Destroy()
-        print("Cursor frame destroyed.")
     end
 end
 
