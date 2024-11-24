@@ -6,10 +6,12 @@ local toggleButton = Instance.new("TextButton")
 toggleScreen.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
 -- Set up the toggle button properties
-toggleButton.Size = UDim2.new(0, 100, 0, 50)
-toggleButton.Position = UDim2.new(0.5, -50, 0.8, -25)
+toggleButton.Size = UDim2.new(0, 32, 0, 32)
+toggleButton.Position = UDim2.new(0.5, -16, 0.8, -16)
 toggleButton.Text = ""
 toggleButton.BackgroundColor3 = Color3.fromRGB(37, 35, 38)
+toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+toggleButton.Font = Enum.Font.GothamBold
 
 -- Create UICorner for the toggle button
 local uiCorner = Instance.new("UICorner")
@@ -49,3 +51,38 @@ end
 
 -- Connect the button click to toggle the visibility of the Background frame
 toggleButton.MouseButton1Click:Connect(toggleVisibility)
+
+-- Make the button draggable on Android devices
+local userInputService = game:GetService("UserInputService")
+local dragging = false
+local dragInput, dragStart, startPos
+
+local function updateInput(input)
+    local delta = input.Position - dragStart
+    toggleButton.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+end
+
+toggleButton.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1 then
+        dragging = true
+        dragStart = input.Position
+        startPos = toggleButton.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then
+                dragging = false
+            end
+        end)
+    end
+end)
+
+toggleButton.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement then
+        dragInput = input
+    end
+end)
+
+userInputService.InputChanged:Connect(function(input)
+    if dragging and input == dragInput then
+        updateInput(input)
+    end
+end)
