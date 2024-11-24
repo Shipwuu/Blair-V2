@@ -1,31 +1,25 @@
--- Toggle script to enable or disable the visibility of a Frame in the ScreenGui "SimpleSpy2"
+-- Toggle script to enable or disable the "SimpleSpy2" ScreenGui
 local SimpleSpy2 = Instance.new("ScreenGui")
 local toggleButton = Instance.new("TextButton")
-local frame = Instance.new("Frame")
 
 -- Parent the ScreenGui to the player's PlayerGui
 SimpleSpy2.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
--- Set up the frame properties
-frame.Size = UDim2.new(0, 200, 0, 200)
-frame.Position = UDim2.new(0.5, -100, 0.5, -100)
-frame.BackgroundColor3 = Color3.new(1, 1, 1)
-frame.Parent = SimpleSpy2
-
 -- Set up the toggle button properties
 toggleButton.Size = UDim2.new(0, 100, 0, 50)
 toggleButton.Position = UDim2.new(0.5, -50, 0.8, -25)
-toggleButton.Text = "Toggle Frame"
+toggleButton.Text = "Enable"
 toggleButton.Parent = SimpleSpy2
 
--- Initial state of the frame
-local frameVisible = true
+-- Initial state of the ScreenGui
+local guiEnabled = true
 
--- Function to toggle frame visibility
-local function toggleFrame()
-    frameVisible = not frameVisible
-    frame.Visible = frameVisible
+-- Function to toggle ScreenGui enable state
+local function toggleGui()
+    guiEnabled = not guiEnabled
+    SimpleSpy2.Enabled = guiEnabled
+    toggleButton.Text = guiEnabled and "Disable" or "Enable"
 end
 
--- Connect the button click to toggle the frame
-toggleButton.MouseButton1Click:Connect(toggleFrame)
+-- Connect the button click to toggle the ScreenGui
+toggleButton.MouseButton1Click:Connect(toggleGui)
