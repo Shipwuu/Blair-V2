@@ -1,8 +1,13 @@
 -- Script to toggle the visibility of the frame at "game:GetService(\"CoreGui\").SimpleSpy2.Background"
 local coreGui = game:GetService("CoreGui")
 
+-- Create a ScreenGui to parent the toggle button
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "ToggleScreenGui"
+screenGui.Parent = coreGui
+
 -- Check for duplicate toggle buttons and destroy if found
-local existingButton = coreGui:FindFirstChild("ToggleButton")
+local existingButton = screenGui:FindFirstChild("ToggleButton")
 if existingButton then
     existingButton:Destroy()
 end
@@ -10,8 +15,8 @@ end
 local toggleButton = Instance.new("TextButton")
 toggleButton.Name = "ToggleButton"
 
--- Parent the toggle button to CoreGui
-toggleButton.Parent = coreGui
+-- Parent the toggle button to ScreenGui
+toggleButton.Parent = screenGui
 
 -- Set up the toggle button properties
 toggleButton.Size = UDim2.new(0, 32, 0, 32)
