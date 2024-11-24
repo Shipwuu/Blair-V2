@@ -1,100 +1,31 @@
--- Creating GUI Script for Ghost Detection and Hunt Duration Bar in Roblox
+-- Toggle script to enable or disable the visibility of a Frame in the ScreenGui "SimpleSpy2"
+local SimpleSpy2 = Instance.new("ScreenGui")
+local toggleButton = Instance.new("TextButton")
+local frame = Instance.new("Frame")
 
-local Players = game:GetService("Players")
-local player = Players.LocalPlayer
-local PlayerGui = player:WaitForChild("PlayerGui")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Workspace = game:GetService("Workspace")
+-- Parent the ScreenGui to the player's PlayerGui
+SimpleSpy2.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
--- Creating GUI elements
-local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "GhostBarGUI"
-ScreenGui.Parent = PlayerGui
+-- Set up the frame properties
+frame.Size = UDim2.new(0, 200, 0, 200)
+frame.Position = UDim2.new(0.5, -100, 0.5, -100)
+frame.BackgroundColor3 = Color3.new(1, 1, 1)
+frame.Parent = SimpleSpy2
 
-local GhostBarFrame = Instance.new("Frame")
-GhostBarFrame.BackgroundTransparency = 0
-GhostBarFrame.BackgroundColor3 = Color3.fromRGB(20, 41, 51)
-GhostBarFrame.Position = UDim2.new(0.25, 0, 0, 0)
-GhostBarFrame.Size = UDim2.new(0.5, 0, 0, 30)
-GhostBarFrame.Name = "GhostBarFrame"
-local UICorner1 = Instance.new("UICorner")
-UICorner1.CornerRadius = UDim.new(0.8, 0)
-UICorner1.Parent = GhostBarFrame
-GhostBarFrame.Parent = ScreenGui
+-- Set up the toggle button properties
+toggleButton.Size = UDim2.new(0, 100, 0, 50)
+toggleButton.Position = UDim2.new(0.5, -50, 0.8, -25)
+toggleButton.Text = "Toggle Frame"
+toggleButton.Parent = SimpleSpy2
 
-local GhostTimeBar = Instance.new("Frame")
-GhostTimeBar.BackgroundTransparency = 0
-GhostTimeBar.BackgroundColor3 = Color3.fromRGB(75, 75, 75)
-GhostTimeBar.Position = UDim2.new(0, 5, 0, 5)
-GhostTimeBar.Size = UDim2.new(0.898, 38, 0, 20)
-GhostTimeBar.Name = "GhostTimeBar"
-local UICorner2 = Instance.new("UICorner")
-UICorner2.CornerRadius = UDim.new(0.8, 0)
-UICorner2.Parent = GhostTimeBar
-local UIStroke = Instance.new("UIStroke")
-UIStroke.Thickness = 2
-UIStroke.Color = Color3.fromRGB(105, 105, 105)
-UIStroke.Parent = GhostTimeBar
-GhostTimeBar.Parent = GhostBarFrame
+-- Initial state of the frame
+local frameVisible = true
 
-local TextLabel = Instance.new("TextLabel")
-TextLabel.BackgroundTransparency = 1
-TextLabel.Name = "GhostDetection"
-TextLabel.Text = "Ghost: None"
-TextLabel.Font = Enum.Font.GothamBold
-TextLabel.TextSize = 14
-TextLabel.TextColor3 = Color3.new(1, 1, 1)
-TextLabel.Position = UDim2.new(0, 0, 0, 0)
-TextLabel.Size = UDim2.new(0.898, 38, 0, 20)
-TextLabel.Parent = GhostTimeBar
-
--- Function to update the Ghost Detection and Hunt Duration Bar
-local function updateGhostStatus()
-    if Workspace:FindFirstChild("Ghost") then
-        local ghost = Workspace.Ghost
-        if ghost:FindFirstChild("Hunting") and ghost.Hunting.Value == true then
-            TextLabel.Text = "Ghost: Hunting"
-            
-            -- If ghost is hunting, start animating the hunt duration bar
-            local huntDuration = ReplicatedStorage:WaitForChild("HuntDuration").Value
-            local startTime = tick()
-
-            local huntBarAnimation = Instance.new("Frame")
-            huntBarAnimation.BackgroundTransparency = 0
-            huntBarAnimation.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
-            huntBarAnimation.Size = UDim2.new(1, 0, 1, 0) -- Initially full width
-            local UICorner3 = Instance.new("UICorner")
-            UICorner3.CornerRadius = UDim.new(0.8, 0)
-            UICorner3.Parent = huntBarAnimation
-            huntBarAnimation.Parent = GhostTimeBar
-
-            -- Animation loop for the duration bar
-            local function animateBar()
-                while ghost.Hunting.Value and (tick() - startTime) < huntDuration do
-                    local elapsedTime = tick() - startTime
-                    local progress = math.max(0, 1 - (elapsedTime / huntDuration))
-                    huntBarAnimation.Size = UDim2.new(progress, 0, 1, 0)
-                    wait(0.1) -- Update bar every 0.1 seconds
-                end
-
-                -- Set to 0 when finished
-                huntBarAnimation.Size = UDim2.new(0, 0, 1, 0)
-            end
-
-            -- Run the animation
-            animateBar()
-        else
-            TextLabel.Text = "Ghost: None"
-        end
-    end
+-- Function to toggle frame visibility
+local function toggleFrame()
+    frameVisible = not frameVisible
+    frame.Visible = frameVisible
 end
 
--- Continuously listen for Ghost detection and Hunting status
-Workspace.ChildAdded:Connect(updateGhostStatus)
-Workspace.ChildRemoved:Connect(updateGhostStatus)
-if ReplicatedStorage:FindFirstChild("HuntDuration") then
-    ReplicatedStorage.HuntDuration:GetPropertyChangedSignal("Value"):Connect(updateGhostStatus)
-end
-
--- Initial update
-updateGhostStatus()
+-- Connect the button click to toggle the frame
+toggleButton.MouseButton1Click:Connect(toggleFrame)
