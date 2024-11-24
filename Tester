@@ -1,3 +1,7 @@
+
+game:GetService("CoreGui").SimpleSpy2.Cursor
+
+
 -- Script to toggle the visibility of the frame at "game:GetService(\"CoreGui\").SimpleSpy2.Background"
 local toggleScreen = Instance.new("ScreenGui")
 local toggleButton = Instance.new("TextButton")
