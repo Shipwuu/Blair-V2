@@ -146,3 +146,27 @@ AddScriptButton.MouseButton1Click:Connect(function()
         end
     end)
 end)
+
+-- Step 7: Load Saved Scripts from File
+if isfile("scripts.txt") then
+    local savedScripts = readfile("scripts.txt")
+    for scriptData in string.gmatch(savedScripts, "(.-)\n(.-)\n") do
+        local scriptName, scriptContent = scriptData:match("(.-)\n(.-)")
+        if scriptName and scriptContent then
+            -- Create New Button for Saved Script
+            local SavedScriptButton = TemplateButton:Clone()
+            SavedScriptButton.Text = scriptName
+            SavedScriptButton.Parent = MainFrame
+
+            -- Clicking on the button will execute the associated script using loadstring().
+            SavedScriptButton.MouseButton1Click:Connect(function()
+                local success, err = pcall(function()
+                    loadstring(scriptContent)()
+                end)
+                if not success then
+                    warn("Error executing script: " .. err)
+                end
+            end)
+        end
+    end
+end
