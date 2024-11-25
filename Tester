@@ -107,11 +107,25 @@ AddScriptButton.MouseButton1Click:Connect(function()
     local ConfirmButton = Instance.new("TextButton")
     ConfirmButton.Text = "Confirm"
     ConfirmButton.Size = UDim2.new(0.4, 0, 0.2, 0)
-    ConfirmButton.Position = UDim2.new(0.3, 0, 0.8, 0)
+    ConfirmButton.Position = UDim2.new(0.1, 0, 0.8, 0)
     ConfirmButton.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
     ConfirmButton.TextColor3 = Color3.new(1, 1, 1)
     ConfirmButton.Parent = InputFrame
     ConfirmButton.AutoButtonColor = false -- Disable button if not filled in
+
+    -- Cancel Button to Cancel Adding New Script
+    local CancelButton = Instance.new("TextButton")
+    CancelButton.Text = "Cancel"
+    CancelButton.Size = UDim2.new(0.4, 0, 0.2, 0)
+    CancelButton.Position = UDim2.new(0.5, 0, 0.8, 0)
+    CancelButton.BackgroundColor3 = Color3.new(0.5, 0.1, 0.1)
+    CancelButton.TextColor3 = Color3.new(1, 1, 1)
+    CancelButton.Parent = InputFrame
+
+    CancelButton.MouseButton1Click:Connect(function()
+        -- Close Input Frame
+        InputFrame:Destroy()
+    end)
 
     -- Notification for empty fields
     local NotificationLabel = Instance.new("TextLabel")
