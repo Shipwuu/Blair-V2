@@ -111,14 +111,33 @@ AddScriptButton.MouseButton1Click:Connect(function()
     ConfirmButton.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
     ConfirmButton.TextColor3 = Color3.new(1, 1, 1)
     ConfirmButton.Parent = InputFrame
+    ConfirmButton.AutoButtonColor = false -- Disable button if not filled in
 
-    ScriptNameBox:GetPropertyChangedSignal("Text"):Connect(function()
-        ConfirmButton.Active = ScriptNameBox.Text ~= "" and ScriptContentBox.Text ~= ""
-    end)
-    ScriptContentBox:GetPropertyChangedSignal("Text"):Connect(function()
-        ConfirmButton.Active = ScriptNameBox.Text ~= "" and ScriptContentBox.Text ~= ""
-    end)
-    ConfirmButton.Active = false -- Initially inactive
+    -- Notification for empty fields
+    local NotificationLabel = Instance.new("TextLabel")
+    NotificationLabel.Size = UDim2.new(0.9, 0, 0.1, 0)
+    NotificationLabel.Position = UDim2.new(0.05, 0, 0.75, 0)
+    NotificationLabel.Text = "Please fill in all fields."
+    NotificationLabel.TextColor3 = Color3.new(1, 0, 0)
+    NotificationLabel.Visible = false
+    NotificationLabel.Parent = InputFrame
+
+    local function updateConfirmButtonState()
+        if ScriptNameBox.Text == "" or ScriptContentBox.Text == "" then
+            ConfirmButton.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
+            ConfirmButton.Active = false
+            NotificationLabel.Visible = true
+        else
+            ConfirmButton.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+            ConfirmButton.Active = true
+            NotificationLabel.Visible = false
+        end
+    end
+
+    ScriptNameBox:GetPropertyChangedSignal("Text"):Connect(updateConfirmButtonState)
+    ScriptContentBox:GetPropertyChangedSignal("Text"):Connect(updateConfirmButtonState)
+    updateConfirmButtonState()
+
     ConfirmButton.MouseButton1Click:Connect(function()
         local scriptName = ScriptNameBox.Text
         local scriptContent = ScriptContentBox.Text
@@ -136,9 +155,7 @@ AddScriptButton.MouseButton1Click:Connect(function()
             if not isfile("scripts.txt") then
                 writefile("scripts.txt", "")
             end
-            appendfile("scripts.txt", "newcratescript1 " .. scriptName .. "
-" .. scriptContent .. "
-")
+            appendfile("scripts.txt", "newcratescript1 " .. scriptName .. "\n" .. scriptContent .. "\n")
 
             -- Dynamic Button Creation:
             -- Clicking on the button will execute the associated script using loadstring().
@@ -157,6 +174,7 @@ AddScriptButton.MouseButton1Click:Connect(function()
             warn("Please enter both script name and content.")
         end
     end)
+end)
 
 -- Step 7: Load Saved Scripts from File
 if isfile("scripts.txt") then
