@@ -88,13 +88,13 @@ ClearAllButton.MouseButton1Click:Connect(function()
     end
     -- Remove all script buttons from the UI
     for _, child in ipairs(MainFrame:GetChildren()) do
-        if child:IsA("TextButton") and child ~= AddScriptButton and child ~= ClearAllButton and child ~= TemplateButton then
+        if child:IsA("TextButton") and child ~= AddScriptButton and child ~= ClearAllButton and child ~= TemplateButton and child ~= DeleteButton then
             child:Destroy()
         end
     end
 end)
 
--- Step 7: Create a 'Delete' Button to Enable Deleting Individual Scripts
+-- Step 7: Create a 'Delete' Button with Toggle Functionality
 local DeleteButton = Instance.new("TextButton")
 DeleteButton.Size = UDim2.new(0, 100, 0, 40)
 DeleteButton.Position = UDim2.new(0.5, 0, 0.85, 0)
@@ -107,66 +107,84 @@ local DeleteUICorner = Instance.new("UICorner")
 DeleteUICorner.CornerRadius = UDim.new(0, 10)
 DeleteUICorner.Parent = DeleteButton
 
+local deleteMode = false
+
 DeleteButton.MouseButton1Click:Connect(function()
-    -- Turn all script buttons red for deletion mode
-    for _, child in ipairs(MainFrame:GetChildren()) do
-        if child:IsA("TextButton") and child ~= AddScriptButton and child ~= ClearAllButton and child ~= DeleteButton and child ~= TemplateButton then
-            child.BackgroundColor3 = Color3.new(1, 0, 0) -- Turn buttons red
-            child.MouseButton1Click:Connect(function()
-                -- Confirm Deletion Frame
-                local ConfirmFrame = Instance.new("Frame")
-                ConfirmFrame.Size = UDim2.new(0.3, 0, 0.2, 0)
-                ConfirmFrame.Position = UDim2.new(0.35, 0, 0.4, 0)
-                ConfirmFrame.BackgroundColor3 = Color3.new(0, 0, 0)
-                ConfirmFrame.Parent = ScreenGui
+    deleteMode = not deleteMode
+    if deleteMode then
+        DeleteButton.Text = "ON"
+        DeleteButton.BackgroundColor3 = Color3.new(0.1, 0.5, 0.1)
+        for _, child in ipairs(MainFrame:GetChildren()) do
+            if child:IsA("TextButton") and child ~= AddScriptButton and child ~= ClearAllButton and child ~= DeleteButton and child ~= TemplateButton then
+                child.BackgroundColor3 = Color3.new(1, 0, 0) -- Turn buttons red for delete mode
+                child.MouseButton1Click:Connect(function()
+                    if deleteMode then
+                        -- Confirm Deletion Frame
+                        local ConfirmFrame = Instance.new("Frame")
+                        ConfirmFrame.Size = UDim2.new(0.3, 0, 0.2, 0)
+                        ConfirmFrame.Position = UDim2.new(0.35, 0, 0.4, 0)
+                        ConfirmFrame.BackgroundColor3 = Color3.new(0, 0, 0)
+                        ConfirmFrame.Parent = ScreenGui
 
-                local ConfirmUICorner = Instance.new("UICorner")
-                ConfirmUICorner.CornerRadius = UDim.new(0, 10)
-                ConfirmUICorner.Parent = ConfirmFrame
+                        local ConfirmUICorner = Instance.new("UICorner")
+                        ConfirmUICorner.CornerRadius = UDim.new(0, 10)
+                        ConfirmUICorner.Parent = ConfirmFrame
 
-                local ConfirmLabel = Instance.new("TextLabel")
-                ConfirmLabel.Size = UDim2.new(0.9, 0, 0.4, 0)
-                ConfirmLabel.Position = UDim2.new(0.05, 0, 0.1, 0)
-                ConfirmLabel.Text = "Are You Sure You Want to Delete This?"
-                ConfirmLabel.TextColor3 = Color3.new(1, 1, 1)
-                ConfirmLabel.Parent = ConfirmFrame
+                        local ConfirmLabel = Instance.new("TextLabel")
+                        ConfirmLabel.Size = UDim2.new(0.9, 0, 0.4, 0)
+                        ConfirmLabel.Position = UDim2.new(0.05, 0, 0.1, 0)
+                        ConfirmLabel.Text = "Are You Sure You Want to Delete This?"
+                        ConfirmLabel.TextColor3 = Color3.new(1, 1, 1)
+                        ConfirmLabel.Parent = ConfirmFrame
 
-                -- Yes Button
-                local YesButton = Instance.new("TextButton")
-                YesButton.Text = "Yes"
-                YesButton.Size = UDim2.new(0.4, 0, 0.2, 0)
-                YesButton.Position = UDim2.new(0.1, 0, 0.6, 0)
-                YesButton.BackgroundColor3 = Color3.new(0.1, 0.5, 0.1)
-                YesButton.TextColor3 = Color3.new(1, 1, 1)
-                YesButton.Parent = ConfirmFrame
+                        -- Yes Button
+                        local YesButton = Instance.new("TextButton")
+                        YesButton.Text = "Yes"
+                        YesButton.Size = UDim2.new(0.4, 0, 0.2, 0)
+                        YesButton.Position = UDim2.new(0.1, 0, 0.6, 0)
+                        YesButton.BackgroundColor3 = Color3.new(0.1, 0.5, 0.1)
+                        YesButton.TextColor3 = Color3.new(1, 1, 1)
+                        YesButton.Parent = ConfirmFrame
 
-                YesButton.MouseButton1Click:Connect(function()
-                    -- Delete the selected script button
-                    child:Destroy()
-                    ConfirmFrame:Destroy()
+                        YesButton.MouseButton1Click:Connect(function()
+                            -- Delete the selected script button
+                            child:Destroy()
+                            ConfirmFrame:Destroy()
 
-                    -- Remove the script from the file
-                    if isfile("scripts.txt") then
-                        local scripts = readfile("scripts.txt")
-                        local updatedScripts = scripts:gsub("newcratescript%d+%s" .. child.Text .. "\n.-\n", "")
-                        writefile("scripts.txt", updatedScripts)
+                            -- Remove the script from the file
+                            if isfile("scripts.txt") then
+                                local scripts = readfile("scripts.txt")
+                                local updatedScripts = scripts:gsub("newcratescript%d+%s" .. child.Text .. "\n.-\n", "")
+                                writefile("scripts.txt", updatedScripts)
+                            end
+                        end)
+
+                        -- No Button
+                        local NoButton = Instance.new("TextButton")
+                        NoButton.Text = "No"
+                        NoButton.Size = UDim2.new(0.4, 0, 0.2, 0)
+                        NoButton.Position = UDim2.new(0.5, 0, 0.6, 0)
+                        NoButton.BackgroundColor3 = Color3.new(0.5, 0.1, 0.1)
+                        NoButton.TextColor3 = Color3.new(1, 1, 1)
+                        NoButton.Parent = ConfirmFrame
+
+                        NoButton.MouseButton1Click:Connect(function()
+                            -- Close the confirmation frame
+                            ConfirmFrame:Destroy()
+                        end)
                     end
                 end)
-
-                -- No Button
-                local NoButton = Instance.new("TextButton")
-                NoButton.Text = "No"
-                NoButton.Size = UDim2.new(0.4, 0, 0.2, 0)
-                NoButton.Position = UDim2.new(0.5, 0, 0.6, 0)
-                NoButton.BackgroundColor3 = Color3.new(0.5, 0.1, 0.1)
-                NoButton.TextColor3 = Color3.new(1, 1, 1)
-                NoButton.Parent = ConfirmFrame
-
-                NoButton.MouseButton1Click:Connect(function()
-                    -- Close the confirmation frame
-                    ConfirmFrame:Destroy()
-                end)
-            end)
+            end
+        end
+    else
+        DeleteButton.Text = "OFF"
+        DeleteButton.BackgroundColor3 = Color3.new(0.5, 0.1, 0.1)
+        wait(1)
+        DeleteButton.Text = "Delete"
+        for _, child in ipairs(MainFrame:GetChildren()) do
+            if child:IsA("TextButton") and child ~= AddScriptButton and child ~= ClearAllButton and child ~= DeleteButton and child ~= TemplateButton then
+                child.BackgroundColor3 = Color3.new(0, 0, 0) -- Revert button color back to normal
+            end
         end
     end
 end)
