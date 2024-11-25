@@ -9,6 +9,7 @@ local MainFrame = Instance.new("Frame")
 MainFrame.Size = UDim2.new(0.5, 0, 0.3, 0)
 MainFrame.Position = UDim2.new(0.25, 0, 0.35, 0)
 MainFrame.BackgroundColor3 = Color3.new(0, 0, 0)
+MainFrame.BackgroundTransparency = 0.8
 MainFrame.Parent = ScreenGui
 
 local MainUICorner = Instance.new("UICorner")
@@ -39,6 +40,7 @@ TemplateButton.Size = UDim2.new(0, 40, 0, 40)
 TemplateButton.BackgroundColor3 = Color3.new(0, 0, 0)
 TemplateButton.Text = "Script"
 TemplateButton.TextColor3 = Color3.new(1, 1, 1)
+TemplateButton.Visible = false -- Make template button invisible
 TemplateButton.Parent = MainFrame
 
 local TemplateUICorner = Instance.new("UICorner")
@@ -110,6 +112,13 @@ AddScriptButton.MouseButton1Click:Connect(function()
     ConfirmButton.TextColor3 = Color3.new(1, 1, 1)
     ConfirmButton.Parent = InputFrame
 
+    ScriptNameBox:GetPropertyChangedSignal("Text"):Connect(function()
+        ConfirmButton.Active = ScriptNameBox.Text ~= "" and ScriptContentBox.Text ~= ""
+    end)
+    ScriptContentBox:GetPropertyChangedSignal("Text"):Connect(function()
+        ConfirmButton.Active = ScriptNameBox.Text ~= "" and ScriptContentBox.Text ~= ""
+    end)
+    ConfirmButton.Active = false -- Initially inactive
     ConfirmButton.MouseButton1Click:Connect(function()
         local scriptName = ScriptNameBox.Text
         local scriptContent = ScriptContentBox.Text
@@ -118,6 +127,7 @@ AddScriptButton.MouseButton1Click:Connect(function()
             -- Create New Button for Script
             local NewScriptButton = TemplateButton:Clone()
             NewScriptButton.Text = scriptName
+            NewScriptButton.Visible = true
             NewScriptButton.Parent = MainFrame
 
             -- Storage Logic:
@@ -126,7 +136,9 @@ AddScriptButton.MouseButton1Click:Connect(function()
             if not isfile("scripts.txt") then
                 writefile("scripts.txt", "")
             end
-            appendfile("scripts.txt", scriptName .. "\n" .. scriptContent .. "\n")
+            appendfile("scripts.txt", "newcratescript1 " .. scriptName .. "
+" .. scriptContent .. "
+")
 
             -- Dynamic Button Creation:
             -- Clicking on the button will execute the associated script using loadstring().
@@ -145,28 +157,34 @@ AddScriptButton.MouseButton1Click:Connect(function()
             warn("Please enter both script name and content.")
         end
     end)
-end)
 
 -- Step 7: Load Saved Scripts from File
 if isfile("scripts.txt") then
-    local savedScripts = readfile("scripts.txt")
-    for scriptData in string.gmatch(savedScripts, "(.-)\n(.-)\n") do
-        local scriptName, scriptContent = scriptData:match("(.-)\n(.-)")
-        if scriptName and scriptContent then
-            -- Create New Button for Saved Script
-            local SavedScriptButton = TemplateButton:Clone()
-            SavedScriptButton.Text = scriptName
-            SavedScriptButton.Parent = MainFrame
+    local success, savedScripts = pcall(function()
+        return readfile("scripts.txt")
+    end)
+    if success and savedScripts then
+        for scriptEntry in savedScripts:gmatch("(newcratescript%d+%s.-\n.-\n)") do
+            local scriptName, scriptContent = scriptEntry:match("newcratescript%d+%s(.-)\n(.-)\n")
+            if scriptName and scriptContent then
+                -- Create New Button for Saved Script
+                local SavedScriptButton = TemplateButton:Clone()
+                SavedScriptButton.Text = scriptName
+                SavedScriptButton.Visible = true
+                SavedScriptButton.Parent = MainFrame
 
-            -- Clicking on the button will execute the associated script using loadstring().
-            SavedScriptButton.MouseButton1Click:Connect(function()
-                local success, err = pcall(function()
-                    loadstring(scriptContent)()
+                -- Clicking on the button will execute the associated script using loadstring().
+                SavedScriptButton.MouseButton1Click:Connect(function()
+                    local success, err = pcall(function()
+                        loadstring(scriptContent)()
+                    end)
+                    if not success then
+                        warn("Error executing script: " .. err)
+                    end
                 end)
-                if not success then
-                    warn("Error executing script: " .. err)
-                end
-            end)
+            end
         end
+    else
+        warn("Failed to read saved scripts.")
     end
 end
