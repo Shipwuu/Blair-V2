@@ -62,15 +62,15 @@ AddScriptUICorner.Parent = AddScriptButton
 
 -- Step 6: Create a 'Clear ALL' Button to Delete All Scripts
 local ClearAllButton = Instance.new("TextButton")
-ClearAllButton.Size = UDim2.new(0, 150, 0, 40)
-ClearAllButton.Position = UDim2.new(0.5, 0, 0.85, 0)
-ClearAllButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0) -- Red for the Clear All button
-ClearAllButton.Text = "Clear All"
-ClearAllButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ClearAllButton.Size = UDim2.new(0, 100, 0, 40)
+ClearAllButton.Position = UDim2.new(0.65, 0, 0.85, 0)
+ClearAllButton.BackgroundColor3 = Color3.new(0.7, 0, 0)
+ClearAllButton.Text = "Clear ALL"
+ClearAllButton.TextColor3 = Color3.new(1, 1, 1)
 ClearAllButton.Parent = MainFrame
 
 local ClearAllUICorner = Instance.new("UICorner")
-ClearAllUICorner.CornerRadius = UDim.new(0, 12)
+ClearAllUICorner.CornerRadius = UDim.new(0, 10)
 ClearAllUICorner.Parent = ClearAllButton
 
 -- Confirmation Frame for Clearing All Scripts
@@ -79,7 +79,7 @@ local function showClearConfirmation()
     local ConfirmFrame = Instance.new("Frame")
     ConfirmFrame.Size = UDim2.new(0.3, 0, 0.2, 0)
     ConfirmFrame.Position = UDim2.new(0.35, 0, 0.4, 0)
-    ConfirmFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    ConfirmFrame.BackgroundColor3 = Color3.new(0, 0, 0)
     ConfirmFrame.Parent = ScreenGui
 
     local ConfirmUICorner = Instance.new("UICorner")
@@ -89,8 +89,8 @@ local function showClearConfirmation()
     local ConfirmLabel = Instance.new("TextLabel")
     ConfirmLabel.Size = UDim2.new(0.9, 0, 0.4, 0)
     ConfirmLabel.Position = UDim2.new(0.05, 0, 0.1, 0)
-    ConfirmLabel.Text = "Are you sure you want to clear all scripts?"
-    ConfirmLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    ConfirmLabel.Text = "Are You Sure You Want to Clear All Scripts?"
+    ConfirmLabel.TextColor3 = Color3.new(1, 1, 1)
     ConfirmLabel.Parent = ConfirmFrame
 
     -- Yes Button
@@ -98,8 +98,8 @@ local function showClearConfirmation()
     YesButton.Text = "Yes"
     YesButton.Size = UDim2.new(0.4, 0, 0.2, 0)
     YesButton.Position = UDim2.new(0.1, 0, 0.6, 0)
-    YesButton.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
-    YesButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    YesButton.BackgroundColor3 = Color3.new(0.1, 0.5, 0.1)
+    YesButton.TextColor3 = Color3.new(1, 1, 1)
     YesButton.Parent = ConfirmFrame
 
     YesButton.MouseButton1Click:Connect(function()
@@ -109,7 +109,7 @@ local function showClearConfirmation()
         end
         -- Remove all script buttons from the UI
         for _, child in ipairs(MainFrame:GetChildren()) do
-            if child:IsA("TextButton") and child ~= AddScriptButton and child ~= ClearAllButton and child ~= TemplateButton then
+            if child:IsA("TextButton") and child ~= AddScriptButton and child ~= ClearAllButton and child ~= TemplateButton and child ~= DeleteButton then
                 child:Destroy()
             end
         end
@@ -122,8 +122,8 @@ local function showClearConfirmation()
     NoButton.Text = "No"
     NoButton.Size = UDim2.new(0.4, 0, 0.2, 0)
     NoButton.Position = UDim2.new(0.5, 0, 0.6, 0)
-    NoButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-    NoButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+    NoButton.BackgroundColor3 = Color3.new(0.5, 0.1, 0.1)
+    NoButton.TextColor3 = Color3.new(1, 1, 1)
     NoButton.Parent = ConfirmFrame
 
     NoButton.MouseButton1Click:Connect(function()
