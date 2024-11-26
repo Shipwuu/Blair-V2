@@ -191,7 +191,7 @@ ToggleUISetting.Image = "rbxthumb://type=Asset&id=81494025675609&w=420&h=420" --
 ToggleUISetting.Parent = SettingUIFrame
 
 local ToggleUISettingUICorner = Instance.new("UICorner")
-ToggleUISettingUICorner.CornerRadius = UDim.new(0.1, 0.1)
+ToggleUISettingUICorner.CornerRadius = UDim.new(10, 10)
 ToggleUISettingUICorner.Parent = ToggleUISetting
 
 -- Tweening for expanding SettingUIFrame and rotating the button
