@@ -28,7 +28,7 @@ SecondMainFrame.Size = UDim2.new(0.5, 0, 0, 48)
 SecondMainFrame.Position = UDim2.new(0, 0, 0, 0)
 SecondMainFrame.BackgroundColor3 = Color3.fromRGB(85, 255, 255)
 SecondMainFrame.BackgroundTransparency = 0.4
-SecondMainFrame.Parent = ScreenGui
+SecondMainFrame.Parent = MainFrame
 
 local SecondMainUICorner = Instance.new("UICorner")
 SecondMainUICorner.CornerRadius = UDim.new(10, 10)
