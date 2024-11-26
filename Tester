@@ -39,7 +39,7 @@ SecondMainUIGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
     ColorSequenceKeypoint.new(1, Color3.fromRGB(50, 50, 50))  -- A softer gradient
 })
-SecondMainUIGradient.Rotation = 90 -- Vertical gradient
+SecondMainUIGradient.Rotation = 0 -- Vertical gradient
 SecondMainUIGradient.Parent = SecondMainFrame
 
 -- Step 4: Layout for Script Buttons (Horizontal Layout)
@@ -126,6 +126,16 @@ if isMobileDevice() then
         end
     end)
 end
+
+-- Step 6: Continuous rotation animation for UIGradient
+local TweenService = game:GetService("TweenService")
+local rotationTween = TweenService:Create(
+    SecondMainUIGradient,
+    TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1, true),
+    {Rotation = 360}
+)
+
+rotationTween:Play()
 
 -- Step 4: Create a Template Button for Saved Scripts
 local TemplateButton = Instance.new("TextButton")
