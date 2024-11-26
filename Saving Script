@@ -195,7 +195,7 @@ ToggleUISettingUICorner.CornerRadius = UDim.new(10, 10)
 ToggleUISettingUICorner.Parent = ToggleUISetting
 
 -- Tweening for expanding SettingUIFrame and rotating the button
-local isOpen = false  -- Track the toggle state
+local isOpen = false -- Track the toggle state
 
 local function toggleUI()
     if isOpen then
@@ -203,14 +203,15 @@ local function toggleUI()
         local closeTween = TweenService:Create(
             SettingUIFrame,
             TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-            {Size = UDim2.new(0, 58, 0, 48)}
+            {Size = UDim2.new(0.2, 25, 0, 48)}
         )
         closeTween:Play()
 
+        -- Rotate the button back to 0 degrees
         local closeButtonTween = TweenService:Create(
             ToggleUISetting,
             TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-            {Rotation = 0}
+            {Rotation = 0} -- Rotate back to 0 degrees
         )
         closeButtonTween:Play()
     else
@@ -218,14 +219,15 @@ local function toggleUI()
         local openTween = TweenService:Create(
             SettingUIFrame,
             TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-            {Size = UDim2.new(0.2, 25, 0, 48)}
+            {Size = UDim2.new(0.2, 58, 0, 48)}
         )
         openTween:Play()
 
+        -- Rotate the button to 90 degrees
         local openButtonTween = TweenService:Create(
             ToggleUISetting,
             TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-            {Rotation = 90}
+            {Rotation = 90} -- Rotate to 90 degrees
         )
         openButtonTween:Play()
     end
@@ -236,4 +238,3 @@ end
 
 -- Connect the ToggleUISetting button to toggle functionality
 ToggleUISetting.MouseButton1Click:Connect(toggleUI)
-
