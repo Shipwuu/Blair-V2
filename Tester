@@ -8,7 +8,7 @@ local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "ShipuHub"
 ScreenGui.Parent = game:GetService("CoreGui")
 
--- Step 2: Update MainFrame as per your requirements
+-- Step 2: Create MainFrame
 local MainFrame = Instance.new("Frame")
 MainFrame.Size = UDim2.new(0.5, 0, 0, 48)
 MainFrame.Position = UDim2.new(0.2, 0, 0, -46)
@@ -22,13 +22,13 @@ ButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
 ButtonLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 ButtonLayout.Parent = MainFrame
 
--- Step 3: Create SecondMainFrame with draggable functionality for Android
+-- Step 3: Create SecondMainFrame and Parent it to MainFrame
 local SecondMainFrame = Instance.new("Frame")
 SecondMainFrame.Size = UDim2.new(0.5, 0, 0, 48)
 SecondMainFrame.Position = UDim2.new(0, 0, 0, 0)
 SecondMainFrame.BackgroundColor3 = Color3.fromRGB(85, 255, 255)
 SecondMainFrame.BackgroundTransparency = 0.4
-SecondMainFrame.Parent = MainFrame
+SecondMainFrame.Parent = MainFrame  -- Now parent to MainFrame
 
 local SecondMainUICorner = Instance.new("UICorner")
 SecondMainUICorner.CornerRadius = UDim.new(10, 10)
@@ -55,6 +55,31 @@ local dragToggle = nil
 local dragSpeed = 0.1
 local dragStart = nil
 local startPos = nil
+local isDragging = false
+local dragDelayTime = 1 -- Time in seconds to press and hold before dragging starts
+local holdTime = 0.5  -- Time in seconds to change the color to yellow
+local touchStartTime = nil
+
+-- Visual feedback for holding time
+local function updateFrameAppearance()
+    if touchStartTime then
+        local elapsedTime = tick() - touchStartTime
+        
+        if elapsedTime >= 1 then
+            -- 1 second hold: Change background to green, allow dragging
+            MainFrame.BackgroundColor3 = Color3.fromRGB(0, 255, 0)  -- Green
+            MainFrame.BackgroundTransparency = 0.5
+        elseif elapsedTime >= holdTime then
+            -- 0.5 second hold: Change background to yellow
+            MainFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 0)  -- Yellow
+            MainFrame.BackgroundTransparency = 0.5
+        else
+            -- Reset to original appearance if less than 0.5 second
+            MainFrame.BackgroundColor3 = Color3.fromRGB(85, 255, 255)  -- Original color
+            MainFrame.BackgroundTransparency = 1
+        end
+    end
+end
 
 -- Check if the device is mobile
 local function isMobileDevice()
@@ -64,23 +89,40 @@ end
 if isMobileDevice() then
     MainFrame.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.Touch then
-            dragToggle = true
-            dragStart = input.Position
-            startPos = MainFrame.Position
+            -- Start the touch timer when the user first touches the frame
+            touchStartTime = tick()
         end
     end)
 
     MainFrame.InputChanged:Connect(function(input)
-        if dragToggle and input.UserInputType == Enum.UserInputType.Touch then
-            local delta = input.Position - dragStart
-            -- Move only along the X-axis
-            MainFrame.Position = UDim2.new(startPos.X.Scale, delta.X, startPos.Y.Scale, startPos.Y.Offset)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            -- Update the frame's appearance based on the hold time
+            updateFrameAppearance()
+
+            -- If touch has been held long enough (1 second), unlock dragging
+            if touchStartTime and tick() - touchStartTime >= dragDelayTime then
+                if not isDragging then
+                    dragToggle = true
+                    dragStart = input.Position
+                    startPos = MainFrame.Position
+                    isDragging = true
+                end
+                -- Move only along the X-axis
+                local delta = input.Position - dragStart
+                MainFrame.Position = UDim2.new(startPos.X.Scale, delta.X, startPos.Y.Scale, startPos.Y.Offset)
+            end
         end
     end)
 
     MainFrame.InputEnded:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.Touch then
+            -- End the dragging and reset if touch ends
             dragToggle = false
+            isDragging = false
+
+            -- Reset frame transparency and color after the touch ends
+            MainFrame.BackgroundColor3 = Color3.fromRGB(85, 255, 255)  -- Original color
+            MainFrame.BackgroundTransparency = 1
         end
     end)
 end
