@@ -135,43 +135,105 @@ local rotationTween = TweenService:Create(
 
 rotationTween:Play()
 
--- Step 7: Create SettingUIFrame
-
+-- Create SettingUIFrame
 local SettingUIFrame = Instance.new("Frame")
-SettingUIFrame.Size = UDim2.new(0.2, 25, 0, 48)  -- Size
-SettingUIFrame.Position = UDim2.new(0, 0, 0, 0)  -- Position
-SettingUIFrame.BackgroundTransparency = 0.4
+SettingUIFrame.Size = UDim2.new(0, 58, 0, 48)
+SettingUIFrame.Position = UDim2.new(0, 0, 0, 0)
 SettingUIFrame.BackgroundColor3 = Color3.fromRGB(85, 255, 255)
-SettingUIFrame.Parent = MainFrame
+SettingUIFrame.BackgroundTransparency = 0.4
+SettingUIFrame.Parent = MainFrame  -- Parent to MainFrame
 
--- Adding a UICorner to give the frame rounded edges
-local SettingUICorner = Instance.new("UICorner")
-SettingUICorner.CornerRadius = UDim.new(10, 10)
-SettingUICorner.Parent = SettingUIFrame
+local SecondMainUICorner = Instance.new("UICorner")
+SecondMainUICorner.CornerRadius = UDim.new(10, 10)
+SecondMainUICorner.Parent = SettingUIFrame
 
--- Adding UIGradient to the SettingUIFrame
 local SettingUIFrameUIGradient = Instance.new("UIGradient")
 SettingUIFrameUIGradient.Color = ColorSequence.new({
     ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(50, 50, 50))  -- A softer gradient
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(50, 50, 50)) -- A softer gradient
 })
 SettingUIFrameUIGradient.Rotation = 0
 SettingUIFrameUIGradient.Parent = SettingUIFrame
 
--- Adding a Layout for Script Buttons (Horizontal Layout)
-local SettingButtonLayout = Instance.new("UIListLayout")
-SettingButtonLayout.FillDirection = Enum.FillDirection.Horizontal
-SettingButtonLayout.Padding = UDim.new(0, 5)
-SettingButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
-SettingButtonLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-SettingButtonLayout.Parent = SettingUIFrame
+-- Create HiddenFrame (for adjusting button position)
+local HiddenFrame = Instance.new("Frame")
+HiddenFrame.Size = UDim2.new(0, 5, 0, 30)
+HiddenFrame.Position = UDim2.new(0, 0, 0, 0)
+HiddenFrame.BackgroundTransparency = 1
+HiddenFrame.Parent = SettingUIFrame
 
--- Step 8: Continuous rotation animation for UIGradient of SettingUIFrame
-local rotationTweenSettingUI = TweenService:Create(
+-- Layout for Script Buttons
+local SecondButtonLayout = Instance.new("UIListLayout")
+SecondButtonLayout.FillDirection = Enum.FillDirection.Horizontal
+SecondButtonLayout.Padding = UDim.new(0, 5)
+SecondButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+SecondButtonLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+SecondButtonLayout.Parent = SettingUIFrame
+
+-- Continuous rotation animation for UIGradient
+local TweenService = game:GetService("TweenService")
+local rotationTween = TweenService:Create(
     SettingUIFrameUIGradient,
     TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1, true),
     {Rotation = 360}
 )
 
-rotationTweenSettingUI:Play()
+rotationTween:Play()
+
+-- Create the ToggleUISetting ImageButton
+local ToggleUISetting = Instance.new("ImageButton")
+ToggleUISetting.Name = "ToggleUISetting"
+ToggleUISetting.Size = UDim2.new(0, 37, 0, 37)
+ToggleUISetting.Position = UDim2.new(0, 0, 0, 0)
+ToggleUISetting.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ToggleUISetting.BackgroundTransparency = 0.8
+ToggleUISetting.Image = "rbxthumb://type=Asset&id=81494025675609&w=420&h=420" -- The arrow pointing to the right
+ToggleUISetting.Parent = SettingUIFrame
+
+local ToggleUISettingUICorner = Instance.new("UICorner")
+ToggleUISettingUICorner.CornerRadius = UDim.new(0.1, 0.1)
+ToggleUISettingUICorner.Parent = ToggleUISetting
+
+-- Tweening for expanding SettingUIFrame and rotating the button
+local isOpen = false  -- Track the toggle state
+
+local function toggleUI()
+    if isOpen then
+        -- Close the SettingUIFrame
+        local closeTween = TweenService:Create(
+            SettingUIFrame,
+            TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+            {Size = UDim2.new(0, 58, 0, 48)}
+        )
+        closeTween:Play()
+
+        local closeButtonTween = TweenService:Create(
+            ToggleUISetting,
+            TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+            {Rotation = 0}
+        )
+        closeButtonTween:Play()
+    else
+        -- Open the SettingUIFrame
+        local openTween = TweenService:Create(
+            SettingUIFrame,
+            TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+            {Size = UDim2.new(0.2, 25, 0, 48)}
+        )
+        openTween:Play()
+
+        local openButtonTween = TweenService:Create(
+            ToggleUISetting,
+            TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+            {Rotation = 90}
+        )
+        openButtonTween:Play()
+    end
+
+    -- Toggle the open state
+    isOpen = not isOpen
+end
+
+-- Connect the ToggleUISetting button to toggle functionality
+ToggleUISetting.MouseButton1Click:Connect(toggleUI)
 
