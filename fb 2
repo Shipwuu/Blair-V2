@@ -1,1 +1,15 @@
-KEY_2cf92a2c5314d267f8ba
+local ImageButton = Instance.new("ImageButton")
+ImageButton.Size = UDim2.new(0, 100, 0, 100)
+ImageButton.Position = UDim2.new(0.5, 0, 0.5, 0)
+ImageButton.Image = "rbxthumb://type=Asset&id=135210550228886&w=420&h=420"
+ImageButton.Parent = game.Players.LocalPlayer.PlayerGui.ScreenGui
+
+-- Rotate the ImageButton (including the image) continuously
+local TweenService = game:GetService("TweenService")
+local rotationTween = TweenService:Create(
+    ImageButton,
+    TweenInfo.new(3, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1, true),
+    {Rotation = 360}
+)
+
+rotationTween:Play()
