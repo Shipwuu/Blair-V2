@@ -135,14 +135,14 @@ local rotationTween = TweenService:Create(
 
 rotationTween:Play()
 
--- Step 7: Create SettingUIFrame and Parent to SecondMainFrame
+-- Step 7: Create SettingUIFrame
 
 local SettingUIFrame = Instance.new("Frame")
 SettingUIFrame.Size = UDim2.new(0.2, 25, 0, 48)  -- Size
 SettingUIFrame.Position = UDim2.new(0, 0, 0, 0)  -- Position
 SettingUIFrame.BackgroundTransparency = 0.4
 SettingUIFrame.BackgroundColor3 = Color3.fromRGB(85, 255, 255)
-SettingUIFrame.Parent = SecondMainFrame  -- Parent it to SecondMainFrame
+SettingUIFrame.Parent = MainFrame
 
 -- Adding a UICorner to give the frame rounded edges
 local SettingUICorner = Instance.new("UICorner")
@@ -174,3 +174,4 @@ local rotationTweenSettingUI = TweenService:Create(
 )
 
 rotationTweenSettingUI:Play()
+
