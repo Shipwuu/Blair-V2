@@ -1,4 +1,9 @@
 -- Step 1: Create the ScreenGui
+local existingScreenGui = game:GetService("CoreGui"):FindFirstChild("ShipuHub")
+if existingScreenGui then
+    existingScreenGui:Destroy()  -- Destroy the previous ScreenGui if it exists
+end
+
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "ShipuHub"
 ScreenGui.Parent = game:GetService("CoreGui")
