@@ -1,38 +1,89 @@
 -- Step 1: Create the ScreenGui
 local existingScreenGui = game:GetService("CoreGui"):FindFirstChild("ShipuHub")
 if existingScreenGui then
-    existingScreenGui:Destroy()  -- Destroy the previous ScreenGui if it exists
+    existingScreenGui:Destroy() -- Destroy the previous ScreenGui if it exists
 end
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "ShipuHub"
 ScreenGui.Parent = game:GetService("CoreGui")
 
--- Step 2: Create the Main Frame
+-- Step 2: Update MainFrame as per your requirements
 local MainFrame = Instance.new("Frame")
-MainFrame.Size = UDim2.new(0.5, 0, 0.3, 0)
-MainFrame.Position = UDim2.new(0.25, 0, 0.35, 0)
-MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30) -- Dark gray background
-MainFrame.BackgroundTransparency = 0.9
+MainFrame.Size = UDim2.new(0.5, 0, 0, 48)
+MainFrame.Position = UDim2.new(0.2, 0, 0, -46)
+MainFrame.BackgroundTransparency = 1
 MainFrame.Parent = ScreenGui
 
-local MainUICorner = Instance.new("UICorner")
-MainUICorner.CornerRadius = UDim.new(0, 12)
-MainUICorner.Parent = MainFrame
-
-local MainUIGradient = Instance.new("UIGradient")
-MainUIGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
-    ColorSequenceKeypoint.new(1, Color3.fromRGB(50, 50, 50)) -- A softer gradient
-})
-MainUIGradient.Rotation = 90 -- Vertical gradient
-MainUIGradient.Parent = MainFrame
-
--- Step 3: Layout for Script Buttons (Horizontal Layout)
 local ButtonLayout = Instance.new("UIListLayout")
 ButtonLayout.FillDirection = Enum.FillDirection.Horizontal
-ButtonLayout.Padding = UDim.new(0, 10)
+ButtonLayout.Padding = UDim.new(0, 9)
+ButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+ButtonLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 ButtonLayout.Parent = MainFrame
+
+-- Step 3: Create SecondMainFrame with draggable functionality for Android
+local SecondMainFrame = Instance.new("Frame")
+SecondMainFrame.Size = UDim2.new(0.5, 0, 0, 48)
+SecondMainFrame.Position = UDim2.new(0, 0, 0, 0)
+SecondMainFrame.BackgroundColor3 = Color3.fromRGB(85, 255, 255)
+SecondMainFrame.BackgroundTransparency = 0.4
+SecondMainFrame.Parent = ScreenGui
+
+local SecondMainUICorner = Instance.new("UICorner")
+SecondMainUICorner.CornerRadius = UDim.new(10, 10)
+SecondMainUICorner.Parent = SecondMainFrame
+
+local SecondMainUIGradient = Instance.new("UIGradient")
+SecondMainUIGradient.Color = ColorSequence.new({
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(50, 50, 50))  -- A softer gradient
+})
+SecondMainUIGradient.Rotation = 90 -- Vertical gradient
+SecondMainUIGradient.Parent = SecondMainFrame
+
+-- Step 4: Layout for Script Buttons (Horizontal Layout)
+local SecondButtonLayout = Instance.new("UIListLayout")
+SecondButtonLayout.FillDirection = Enum.FillDirection.Horizontal
+SecondButtonLayout.Padding = UDim.new(0, 5)
+SecondButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+SecondButtonLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+SecondButtonLayout.Parent = SecondMainFrame
+
+-- Step 5: Draggable Functionality (for Mobile/Android specific on MainFrame)
+local dragToggle = nil
+local dragSpeed = 0.1
+local dragStart = nil
+local startPos = nil
+
+-- Check if the device is mobile
+local function isMobileDevice()
+    return game:GetService("UserInputService").TouchEnabled
+end
+
+if isMobileDevice() then
+    MainFrame.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            dragToggle = true
+            dragStart = input.Position
+            startPos = MainFrame.Position
+        end
+    end)
+
+    MainFrame.InputChanged:Connect(function(input)
+        if dragToggle and input.UserInputType == Enum.UserInputType.Touch then
+            local delta = input.Position - dragStart
+            -- Move only along the X-axis
+            MainFrame.Position = UDim2.new(startPos.X.Scale, delta.X, startPos.Y.Scale, startPos.Y.Offset)
+        end
+    end)
+
+    MainFrame.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.Touch then
+            dragToggle = false
+        end
+    end)
+end
 
 -- Step 4: Create a Template Button for Saved Scripts
 local TemplateButton = Instance.new("TextButton")
@@ -41,7 +92,7 @@ TemplateButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 TemplateButton.Text = "Script"
 TemplateButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 TemplateButton.Visible = false
-TemplateButton.Parent = MainFrame
+TemplateButton.Parent = SecondMainFrame
 
 local TemplateUICorner = Instance.new("UICorner")
 TemplateUICorner.CornerRadius = UDim.new(0, 8)
@@ -54,7 +105,7 @@ AddScriptButton.Position = UDim2.new(0.75, 0, 0.85, 0)
 AddScriptButton.BackgroundColor3 = Color3.fromRGB(0, 128, 255) -- Blue for the Add button
 AddScriptButton.Text = "Add Script"
 AddScriptButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-AddScriptButton.Parent = MainFrame
+AddScriptButton.Parent = SecondMainFrame
 
 local AddScriptUICorner = Instance.new("UICorner")
 AddScriptUICorner.CornerRadius = UDim.new(0, 12)
@@ -67,7 +118,7 @@ ClearAllButton.Position = UDim2.new(0.65, 0, 0.85, 0)
 ClearAllButton.BackgroundColor3 = Color3.new(0.7, 0, 0)
 ClearAllButton.Text = "Clear ALL"
 ClearAllButton.TextColor3 = Color3.new(1, 1, 1)
-ClearAllButton.Parent = MainFrame
+ClearAllButton.Parent = SecondMainFrame
 
 local ClearAllUICorner = Instance.new("UICorner")
 ClearAllUICorner.CornerRadius = UDim.new(0, 10)
@@ -140,7 +191,7 @@ DeleteButton.Position = UDim2.new(0.5, 0, 0.85, 0)
 DeleteButton.BackgroundColor3 = Color3.new(0.5, 0.1, 0.1)
 DeleteButton.Text = "Delete"
 DeleteButton.TextColor3 = Color3.new(1, 1, 1)
-DeleteButton.Parent = MainFrame
+DeleteButton.Parent = SecondMainFrame
 
 local DeleteUICorner = Instance.new("UICorner")
 DeleteUICorner.CornerRadius = UDim.new(0, 10)
@@ -153,7 +204,7 @@ DeleteButton.MouseButton1Click:Connect(function()
     if deleteMode then
         DeleteButton.Text = "ON"
         DeleteButton.BackgroundColor3 = Color3.new(0.1, 0.5, 0.1)
-        for _, child in ipairs(MainFrame:GetChildren()) do
+        for _, child in ipairs(SecondMainFrame:GetChildren()) do
             if child:IsA("TextButton") and child ~= AddScriptButton and child ~= ClearAllButton and child ~= DeleteButton and child ~= TemplateButton then
                 child.BackgroundColor3 = Color3.new(1, 0, 0) -- Turn buttons red for delete mode
                 child.MouseButton1Click:Connect(function()
@@ -220,7 +271,7 @@ DeleteButton.MouseButton1Click:Connect(function()
         DeleteButton.BackgroundColor3 = Color3.new(0.5, 0.1, 0.1)
         wait(1)
         DeleteButton.Text = "Delete"
-        for _, child in ipairs(MainFrame:GetChildren()) do
+        for _, child in ipairs(SecondMainFrame:GetChildren()) do
             if child:IsA("TextButton") and child ~= AddScriptButton and child ~= ClearAllButton and child ~= DeleteButton and child ~= TemplateButton then
                 child.BackgroundColor3 = Color3.new(0, 0, 0) -- Revert button color back to normal
             end
@@ -321,7 +372,7 @@ AddScriptButton.MouseButton1Click:Connect(function()
             local NewScriptButton = TemplateButton:Clone()
             NewScriptButton.Text = scriptName
             NewScriptButton.Visible = true
-            NewScriptButton.Parent = MainFrame
+            NewScriptButton.Parent = SecondMainFrame
 
             -- Storage Logic:
             -- File Creation: Check if the storage file exists, if not, create it.
@@ -363,7 +414,7 @@ if isfile("scripts.txt") then
                 local SavedScriptButton = TemplateButton:Clone()
                 SavedScriptButton.Text = scriptName
                 SavedScriptButton.Visible = true
-                SavedScriptButton.Parent = MainFrame
+                SavedScriptButton.Parent = SecondMainFrame
 
                 -- Clicking on the button will execute the associated script using loadstring().
                 SavedScriptButton.MouseButton1Click:Connect(function()
