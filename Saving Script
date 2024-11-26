@@ -211,7 +211,7 @@ local function toggleUI()
         -- Fade out and change the image back to the right arrow
         local closeImageTween = TweenService:Create(
             ToggleUISetting,
-            TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+            TweenInfo.new(0.2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
             {ImageTransparency = 1}
         )
         closeImageTween:Play()
@@ -222,7 +222,7 @@ local function toggleUI()
             -- Fade in the new image
             local fadeInTween = TweenService:Create(
                 ToggleUISetting,
-                TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+                TweenInfo.new(0.2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
                 {ImageTransparency = 0}
             )
             fadeInTween:Play()
@@ -239,7 +239,7 @@ local function toggleUI()
         -- Fade out and change the image to the left arrow
         local openImageTween = TweenService:Create(
             ToggleUISetting,
-            TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+            TweenInfo.new(0.2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
             {ImageTransparency = 1}
         )
         openImageTween:Play()
@@ -250,7 +250,7 @@ local function toggleUI()
             -- Fade in the new image
             local fadeInTween = TweenService:Create(
                 ToggleUISetting,
-                TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+                TweenInfo.new(0.2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
                 {ImageTransparency = 0}
             )
             fadeInTween:Play()
