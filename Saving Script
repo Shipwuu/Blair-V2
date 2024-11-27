@@ -485,3 +485,48 @@ AddScriptButton.MouseButton1Click:Connect(function()
         print("Error: Both fields must be filled.")
     end
 end)
+
+
+
+
+
+
+-- Function to create a new script button and add it to the UI
+AddScriptButton.MouseButton1Click:Connect(function()
+    local imageID = InputIDTextBox.Text
+    local scriptContent = InputScriptTextBox.Text
+    
+    if imageID ~= "" and scriptContent ~= "" then
+        -- Create new script button
+        local newScriptButton = Instance.new("ImageButton")
+        newScriptButton.Name = "CreateNewScript" .. #SecondMainFrame:GetChildren() + 1  -- Dynamically name it
+        newScriptButton.Size = UDim2.new(0, 37, 0, 37)
+        newScriptButton.Position = UDim2.new(0, 0, 0, 0)  -- Position as needed
+        newScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        newScriptButton.BackgroundTransparency = 0.8
+        newScriptButton.Image = imageID  -- Set the ImageID input by the user
+        newScriptButton.PressedImage = "rbxthumb://type=Asset&id=129960511211863&w=420&h=420"  -- Example pressed image
+        newScriptButton.Parent = SecondMainFrame  -- Parent it to the SecondMainFrame
+
+        local buttonUICorner = Instance.new("UICorner")
+        buttonUICorner.CornerRadius = UDim.new(0.1, 0)
+        buttonUICorner.Parent = newScriptButton
+
+        -- Store the script in the file
+        if not isfile("scripts.txt") then
+            writefile("scripts.txt", "")
+        end
+        appendfile("scripts.txt", newScriptButton.Name .. "\n" .. imageID .. "\n" .. scriptContent .. "\n")
+
+        -- Set up the button click to run the script (placeholder for actual script)
+        newScriptButton.MouseButton1Click:Connect(function()
+            print("Executing script: " .. newScriptButton.Name)
+            -- Here we would run the script using loadstring() or other methods
+            -- Example: loadstring(scriptContent)() 
+        end)
+
+        -- Clear the input fields after adding the script
+        InputIDTextBox.Text = ""
+        InputScriptTextBox.Text = ""
+    end
+end)
