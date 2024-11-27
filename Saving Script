@@ -28,6 +28,7 @@ ButtonLayout.Parent = MainFrame
 
 -- Step 3: Create SecondMainFrame and Parent it to MainFrame
 local SecondMainFrame = Instance.new("Frame")
+SecondMainFrame.Name = "Script File"
 SecondMainFrame.Size = UDim2.new(0.5, 60, 0, 48)  -- Updated size
 SecondMainFrame.Position = UDim2.new(0, 0, 0, 0)  -- Updated position
 SecondMainFrame.BackgroundColor3 = Color3.fromRGB(85, 255, 255)
@@ -141,6 +142,7 @@ rotationTween:Play()
 
 -- Create SettingUIFrame
 local SettingUIFrame = Instance.new("Frame")
+SettingUIFrame.Name = "UISetting"
 SettingUIFrame.Size = UDim2.new(0, 58, 0, 48)
 SettingUIFrame.Position = UDim2.new(0, 0, 0, 0)
 SettingUIFrame.BackgroundColor3 = Color3.fromRGB(85, 255, 255)
