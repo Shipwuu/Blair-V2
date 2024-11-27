@@ -449,7 +449,7 @@ local function updateConfirmButtonState()
         AddScriptButton.BackgroundColor3 = Color3.fromRGB(128, 128, 128)  -- Disable button
         AddScriptButton.Active = false
     else
-        AddScriptButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)  -- Enable button
+        AddScriptButton.BackgroundColor3 = Color3.fromRGB(59, 139, 254)  -- Enable button
         AddScriptButton.Active = true
     end
 end
