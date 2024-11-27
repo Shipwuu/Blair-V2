@@ -264,7 +264,6 @@ end
 -- Connect the ToggleUISetting button to toggle functionality
 ToggleUISetting.MouseButton1Click:Connect(toggleUI)
 
-
 -- Create the AddScript ImageButton
 local ImageButton2 = Instance.new("ImageButton")
 ImageButton2.Name = "AddScript"
@@ -278,17 +277,23 @@ ImageButton2.Parent = SettingUIFrame
 
 -- Apply UICorner to AddScript button
 local UICorner2 = Instance.new("UICorner")
-UICorner2.CornerRadius = UDim.new(0.1, 0)
+UICorner2.CornerRadius = UDim.new(10, 10)
 UICorner2.Parent = ImageButton2
+
+-- When the AddScript button is pressed, InputFrame appears
+ImageButton2.MouseButton1Click:Connect(function()
+    InputFrame.Visible = true
+end)
 
 -- Create the InputFrame
 local InputFrame = Instance.new("Frame")
 InputFrame.Name = "InputFrame"
-InputFrame.Size = UDim2.new(0.4, 0, 0.6, 0)
-InputFrame.Position = UDim2.new(0.5, -InputFrame.Size.X.Offset / 2, 0.5, -InputFrame.Size.Y.Offset / 2)
+InputFrame.Size = UDim2.new(0.4, 0, 0.45, 0)
+InputFrame.Position = UDim2.new(0.3, 0, 0.2, 35)
 InputFrame.BackgroundColor3 = Color3.fromRGB(38, 41, 49)
-InputFrame.BackgroundTransparency = 0.4
-InputFrame.Parent = game.Players.LocalPlayer.PlayerGui.ScreenGui
+InputFrame.Visible = false
+InputFrame.BackgroundTransparency = 0.2
+InputFrame.Parent = ScreenGui
 
 -- Apply UICorner to InputFrame
 local UICornerFrame = Instance.new("UICorner")
@@ -304,14 +309,14 @@ TitleFrame.TextSize = 16
 TitleFrame.Font = Enum.Font.GothamBold
 TitleFrame.TextWrapped = true
 TitleFrame.BackgroundTransparency = 1
-TitleFrame.Size = UDim2.new(1, 0, 0, 50)
+TitleFrame.Size = UDim2.new(0.9, 35, 0, 50)
 TitleFrame.Position = UDim2.new(0, 10, 0, 10)
 TitleFrame.Parent = InputFrame
 
 -- Create InputIDFrame in InputFrame
 local InputIDFrame = Instance.new("Frame")
 InputIDFrame.Name = "InputIDFrame"
-InputIDFrame.Size = UDim2.new(1, -20, 0, 50)
+InputIDFrame.Size = UDim2.new(1, -20, 0, 60)
 InputIDFrame.Position = UDim2.new(0, 10, 0, 70)
 InputIDFrame.BackgroundColor3 = Color3.fromRGB(45, 50, 62)
 InputIDFrame.BorderColor3 = Color3.fromRGB(91, 92, 121)
@@ -335,12 +340,14 @@ InputIDLabel.Parent = InputIDFrame
 
 -- TextBox in InputIDFrame
 local InputIDTextBox = Instance.new("TextBox")
-InputIDTextBox.PlaceholderText = "Paste Here ~ Required (rbxassetid:// or rbxthumb://type=Asset&id)"
-InputIDTextBox.Size = UDim2.new(1, -20, 0, 30)
+InputIDTextBox.PlaceholderText = "Paste Here\nRequired (rbxassetid:// or rbxthumb://type=Asset&id)"
+InputIDTextBox.Size = UDim2.new(0.9, 35, 0, 30)
 InputIDTextBox.Position = UDim2.new(0, 10, 0, 25)
 InputIDTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+InputIDTextBox.BackgroundTransparency = 1
 InputIDTextBox.TextTransparency = 0.5
 InputIDTextBox.TextSize = 14
+InputIDTextBox.TextScaled = true
 InputIDTextBox.Font = Enum.Font.GothamBold
 InputIDTextBox.BackgroundColor3 = Color3.fromRGB(45, 50, 62)
 InputIDTextBox.ClearTextOnFocus = true
@@ -349,7 +356,7 @@ InputIDTextBox.Parent = InputIDFrame
 -- Create InputScript frame
 local InputScriptFrame = Instance.new("Frame")
 InputScriptFrame.Name = "InputScript"
-InputScriptFrame.Size = UDim2.new(1, -20, 0, 50)
+InputScriptFrame.Size = UDim2.new(1, -20, 0, 60)
 InputScriptFrame.Position = UDim2.new(0, 10, 0, 130)
 InputScriptFrame.BackgroundColor3 = Color3.fromRGB(45, 50, 62)
 InputScriptFrame.BorderColor3 = Color3.fromRGB(91, 92, 121)
@@ -363,7 +370,7 @@ UICornerScript.Parent = InputScriptFrame
 -- TextLabel in InputScriptFrame
 local InputScriptLabel = Instance.new("TextLabel")
 InputScriptLabel.Text = "Enter Script"
-InputScriptLabel.Size = UDim2.new(1, 0, 0, 20)
+InputScriptLabel.Size = UDim2.new(0.9, 35, 0, 20)
 InputScriptLabel.Position = UDim2.new(0, 10, 0, 5)
 InputScriptLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 InputScriptLabel.Font = Enum.Font.GothamBold
@@ -374,14 +381,16 @@ InputScriptLabel.Parent = InputScriptFrame
 -- TextBox in InputScriptFrame
 local InputScriptTextBox = Instance.new("TextBox")
 InputScriptTextBox.PlaceholderText = "Paste Here"
-InputScriptTextBox.Size = UDim2.new(1, -20, 0, 30)
+InputScriptTextBox.Size = UDim2.new(0.9, 35, 0, 30)
 InputScriptTextBox.Position = UDim2.new(0, 10, 0, 25)
 InputScriptTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+InputScriptTextBox.BackgroundTransparency = 1
 InputScriptTextBox.TextTransparency = 0.5
 InputScriptTextBox.TextSize = 14
 InputScriptTextBox.Font = Enum.Font.GothamBold
 InputScriptTextBox.BackgroundColor3 = Color3.fromRGB(45, 50, 62)
 InputScriptTextBox.ClearTextOnFocus = true
+InputScriptTextBox.TextScaled = true
 InputScriptTextBox.Parent = InputScriptFrame
 
 -- Create AddScriptButton
@@ -403,16 +412,11 @@ UICornerButton.Parent = AddScriptButton
 -- Create Close Button for InputFrame
 local CloseButton = Instance.new("ImageButton")
 CloseButton.Name = "CloseButton"
-CloseButton.Size = UDim2.new(0.046, 0, 0.046, 0)
+CloseButton.Size = UDim2.new(0, 20, 0, 20)
 CloseButton.Position = UDim2.new(1, -25, 0, 5)
 CloseButton.BackgroundTransparency = 1
 CloseButton.Image = "rbxassetid://13363121645"
 CloseButton.Parent = InputFrame
-
--- When the AddScript button is pressed, InputFrame appears
-ImageButton2.MouseButton1Click:Connect(function()
-    InputFrame.Visible = true
-end)
 
 -- When the Close button is pressed, InputFrame is hidden
 CloseButton.MouseButton1Click:Connect(function()
