@@ -445,7 +445,7 @@ local function updateConfirmButtonState()
         AddScriptButton.BackgroundColor3 = Color3.fromRGB(128, 128, 128)  -- Disable button
         AddScriptButton.Active = false
     else
-        AddScriptButton.BackgroundColor3 = Color3.fromRGB(59, 139, 254)  -- Enable button
+        AddScriptButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)  -- Enable button
         AddScriptButton.Active = true
     end
 end
@@ -462,25 +462,35 @@ AddScriptButton.MouseButton1Click:Connect(function()
     if imageID ~= "" and scriptContent ~= "" then
         -- Create a new button for the script
         local NewScriptButton = TemplateButton:Clone()  -- Assuming TemplateButton is a predefined button template
-        NewScriptButton.Text = "Script: " .. imageID
+        NewScriptButton.Text = "Script: " .. imageID  -- Optionally set the button text to something descriptive
         NewScriptButton.Visible = true
-        NewScriptButton.Parent = MainFrame  -- Add it to the MainFrame
+        NewScriptButton.Parent = SecondMainFrame
 
-        -- Save to Scripts.txt
-        appendfile("scripts.txt", "CreateNewScript" .. tostring(#MainFrame:GetChildren()) .. " " .. imageID .. "\n" .. scriptContent .. "\n")
-        
-        -- Functionality to execute the script when the new button is clicked
+        -- Apply UICorner to NewScriptButton
+        local ButtonUICorner = Instance.new("UICorner")
+        ButtonUICorner.CornerRadius = UDim.new(0.1, 0)
+        ButtonUICorner.Parent = NewScriptButton
+
+        -- Set the ImageID and PressedImage
+        NewScriptButton.Image = imageID
+        NewScriptButton.PressedImage = "rbxthumb://type=Asset&id=129960511211863&w=420&h=420"  -- Example pressed image
+
+        -- Store the script and image ID in scripts.txt
+        appendfile("scripts.txt", "CreateNewScript" .. #SecondMainFrame:GetChildren() .. " " .. imageID .. "\n" .. scriptContent .. "\n")
+
+        -- When the button is clicked, execute the stored script
         NewScriptButton.MouseButton1Click:Connect(function()
-            loadstring(scriptContent)()  -- Run the script when button is clicked
+            -- Safely load and run the script content
+            local func, err = load(scriptContent)
+            if func then
+                pcall(func)
+            else
+                print("Error loading script: " .. err)
+            end
         end)
-
-        -- Hide the InputFrame after adding the script
-        InputFrame.Visible = false
-    else
-        -- If not filled properly, show an error (optional)
-        print("Error: Both fields must be filled.")
     end
 end)
+
 
 -- Function to create a new script button and add it to the UI
 AddScriptButton.MouseButton1Click:Connect(function()
