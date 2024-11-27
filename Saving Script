@@ -1,4 +1,4 @@
-print("New535285242gsg53")
+print("New5r0481jsaf53")
 
 -- Step 1: Create the ScreenGui
 local existingScreenGui = game:GetService("CoreGui"):FindFirstChild("ShipuHub")
@@ -449,8 +449,6 @@ local TemplateUICorner = Instance.new("UICorner")
 TemplateUICorner.CornerRadius = UDim.new(0, 10)
 TemplateUICorner.Parent = TemplateButton
 
-
-
 -- When the "AddScriptButton" is clicked, save the script and ImageID to the file
 AddScriptButton.MouseButton1Click:Connect(function()
     local imageID = InputIDTextBox.Text
@@ -477,129 +475,48 @@ AddScriptButton.MouseButton1Click:Connect(function()
         -- Execute the script when the new button is clicked
         NewScriptButton.MouseButton1Click:Connect(function()
             local success, err = pcall(function()
-                loadstring(scriptContent)() -- Run the script when button is clicked
+                loadstring(scriptContent)()  -- Execute the script
             end)
             if not success then
                 warn("Error executing script: " .. err)
             end
         end)
-
-        -- Close the InputFrame
-        InputFrame.Visible = false
     else
-        warn("Please enter both Image ID and Script.")
+        warn("Please enter both ImageID and Script Content.")
     end
 end)
 
-
-
-
-
-
--- Ensure the "scripts.txt" file exists and is readable
-if not isfile("scripts.txt") then
-    writefile("scripts.txt", "")  -- Create the file if it doesn't exist
-end
-
--- Function to load scripts from the "scripts.txt" file
-local function loadScripts()
+-- Step 9: Load Saved Scripts from File
+if isfile("scripts.txt") then
     local success, savedScripts = pcall(function()
         return readfile("scripts.txt")
     end)
-
-    -- If reading the file was successful and scripts are available
     if success and savedScripts then
-        -- Split the file content into separate scripts
-        for scriptName, scriptContent in savedScripts:gmatch("newcratescript(%d+) ([^\n]+)\n([^\n]+)") do
-            -- Create the ImageButton for the script
-            local newScriptButton = Instance.new("ImageButton")
-            newScriptButton.Name = "newscript" .. scriptName
-            newScriptButton.Size = UDim2.new(0, 37, 0, 37)
-            newScriptButton.Position = UDim2.new(0, 0, 0, 0)
-            newScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-            newScriptButton.BackgroundTransparency = 0.8
-            
-            -- Set the Image ID for the button, ensure it's not nil
-            if scriptContent then
-                local imageId = scriptContent:match("rbxassetid://(%d+)")  -- Extract Image ID from content
-                if imageId then
-                    newScriptButton.Image = "rbxassetid://" .. imageId  -- Assign the Image ID
-                else
-                    newScriptButton.Image = "rbxthumb://type=Asset&id=129960511211863&w=420&h=420"  -- Fallback image if ID is invalid
-                end
-            else
-                -- Default image if the Image ID is invalid or missing
-                newScriptButton.Image = "rbxthumb://type=Asset&id=129960511211863&w=420&h=420"
-            end
-            
-            -- Add the button to the layout (SecondMainFrame)
-            newScriptButton.Parent = SecondMainFrame
+        -- Loop through the saved scripts
+        for scriptEntry in savedScripts:gmatch("(newscript)%s*(.-)%s*(.-)\n") do
+            local imageID, scriptContent = scriptEntry:match("(newscript)%s*(.-)%s*(.-)")
+            -- Create a new button for the saved script
+            local NewScriptButton = TemplateButton:Clone()
+            NewScriptButton.Image = imageID
+            NewScriptButton.Visible = true
+            NewScriptButton.Parent = SecondMainFrame
 
-            -- Apply UICorner to the button
-            local UICorner = Instance.new("UICorner")
-            UICorner.CornerRadius = UDim.new(10, 10)
-            UICorner.Parent = newScriptButton
+            -- Apply UICorner to the new button
+            local NewScriptButtonUICorner = Instance.new("UICorner")
+            NewScriptButtonUICorner.CornerRadius = UDim.new(10, 10)
+            NewScriptButtonUICorner.Parent = NewScriptButton
 
-            -- Script execution when button is clicked
-            newScriptButton.MouseButton1Click:Connect(function()
+            -- Execute the script when the new button is clicked
+            NewScriptButton.MouseButton1Click:Connect(function()
                 local success, err = pcall(function()
-                    loadstring(scriptContent)()  -- Run the script associated with the button
+                    loadstring(scriptContent)()  -- Execute the script
                 end)
                 if not success then
                     warn("Error executing script: " .. err)
                 end
             end)
         end
-    else
-        warn("Error reading scripts from file.")
     end
 end
 
--- Call the loadScripts function to load saved scripts when the game starts
-loadScripts()
-
--- Add a script when the "AddScriptButton" is clicked
-AddScriptButton.MouseButton1Click:Connect(function()
-    local imageID = InputIDTextBox.Text
-    local scriptContent = InputScriptTextBox.Text
-
-    if imageID ~= "" and scriptContent ~= "" then
-        -- Create a new button for the script
-        local newScriptButton = Instance.new("ImageButton")
-        newScriptButton.Name = "newscript" .. math.random(1, 1000)  -- Unique name for each button
-        newScriptButton.Size = UDim2.new(0, 37, 0, 37)
-        newScriptButton.Position = UDim2.new(0, 0, 0, 0)
-        newScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        newScriptButton.BackgroundTransparency = 0.8
-        newScriptButton.Image = imageID  -- Use the Image ID entered in the InputIDTextBox
-        newScriptButton.PressedImage = "rbxthumb://type=Asset&id=129960511211863&w=420&h=420" -- Pressed image
-        newScriptButton.Parent = SecondMainFrame
-
-        -- Apply UICorner to the new script button
-        local UICorner = Instance.new("UICorner")
-        UICorner.CornerRadius = UDim.new(10, 10)
-        UICorner.Parent = newScriptButton
-
-        -- Save the script and image to the file
-        if not isfile("scripts.txt") then
-            writefile("scripts.txt", "")
-        end
-        appendfile("scripts.txt", "newcratescript" .. math.random(1, 1000) .. " " .. imageID .. "\n" .. scriptContent .. "\n")
-
-        -- Script execution when the new button is clicked
-        newScriptButton.MouseButton1Click:Connect(function()
-            local success, err = pcall(function()
-                loadstring(scriptContent)()  -- Run the script
-            end)
-            if not success then
-                warn("Error executing script: " .. err)
-            end
-        end)
-
-        -- Close the InputFrame
-        InputFrame.Visible = false
-    else
-        warn("Please enter both Image ID and Script Content.")
-    end
-end)
 
