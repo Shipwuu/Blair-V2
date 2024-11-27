@@ -1,4 +1,4 @@
-print("New5r0481jsaf53")
+print("NewYOOOO")
 
 -- Step 1: Create the ScreenGui
 local existingScreenGui = game:GetService("CoreGui"):FindFirstChild("ShipuHub")
@@ -437,7 +437,7 @@ CloseButton.MouseButton1Click:Connect(function()
 end)
 
 
--- Create TemplateButton for saving scripts
+-- Create TemplateButton for saved scripts
 local TemplateButton = Instance.new("ImageButton")
 TemplateButton.Size = UDim2.new(0, 37, 0, 37)
 TemplateButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -449,7 +449,6 @@ local TemplateUICorner = Instance.new("UICorner")
 TemplateUICorner.CornerRadius = UDim.new(0, 10)
 TemplateUICorner.Parent = TemplateButton
 
--- When the "AddScriptButton" is clicked, save the script and ImageID to the file
 AddScriptButton.MouseButton1Click:Connect(function()
     local imageID = InputIDTextBox.Text
     local scriptContent = InputScriptTextBox.Text
@@ -475,27 +474,29 @@ AddScriptButton.MouseButton1Click:Connect(function()
         -- Execute the script when the new button is clicked
         NewScriptButton.MouseButton1Click:Connect(function()
             local success, err = pcall(function()
-                loadstring(scriptContent)()  -- Execute the script
+                loadstring(scriptContent)()
             end)
             if not success then
                 warn("Error executing script: " .. err)
             end
         end)
+
+        -- Close the input frame after saving
+        InputFrame.Visible = false
     else
-        warn("Please enter both ImageID and Script Content.")
+        warn("Please provide both Image ID and Script Content.")
     end
 end)
 
--- Step 9: Load Saved Scripts from File
+-- Load saved scripts from scripts.txt when the game starts
 if isfile("scripts.txt") then
-    local success, savedScripts = pcall(function()
-        return readfile("scripts.txt")
-    end)
-    if success and savedScripts then
-        -- Loop through the saved scripts
-        for scriptEntry in savedScripts:gmatch("(newscript)%s*(.-)%s*(.-)\n") do
-            local imageID, scriptContent = scriptEntry:match("(newscript)%s*(.-)%s*(.-)")
-            -- Create a new button for the saved script
+    local savedScripts = readfile("scripts.txt")
+    for scriptEntry in savedScripts:gmatch("(newscript[^\n]+)") do
+        -- Extract image ID and script content from the saved entry
+        local imageID, scriptContent = scriptEntry:match("newscript (.-)\n(.-)\n")
+        
+        if imageID and scriptContent then
+            -- Create a new button for each saved script
             local NewScriptButton = TemplateButton:Clone()
             NewScriptButton.Image = imageID
             NewScriptButton.Visible = true
@@ -503,13 +504,13 @@ if isfile("scripts.txt") then
 
             -- Apply UICorner to the new button
             local NewScriptButtonUICorner = Instance.new("UICorner")
-            NewScriptButtonUICorner.CornerRadius = UDim.new(10, 10)
+            NewScriptButtonUICorner.CornerRadius = UDim.new(0, 10)
             NewScriptButtonUICorner.Parent = NewScriptButton
 
-            -- Execute the script when the new button is clicked
+            -- Execute the saved script when the button is clicked
             NewScriptButton.MouseButton1Click:Connect(function()
                 local success, err = pcall(function()
-                    loadstring(scriptContent)()  -- Execute the script
+                    loadstring(scriptContent)()
                 end)
                 if not success then
                     warn("Error executing script: " .. err)
@@ -518,5 +519,3 @@ if isfile("scripts.txt") then
         end
     end
 end
-
-
