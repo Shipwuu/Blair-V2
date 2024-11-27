@@ -298,241 +298,36 @@ UICorner2.CornerRadius = UDim.new(10, 10)
 UICorner2.Parent = ImageButton2
 
 
--- Create the InputFrame
-local InputFrame = Instance.new("Frame")
-InputFrame.Name = "InputFrame"
-InputFrame.Size = UDim2.new(0.4, 0, 0.42, 0)
-InputFrame.Position = UDim2.new(0.3, 0, 0.2, 35)
-InputFrame.BackgroundColor3 = Color3.fromRGB(38, 41, 49)
-InputFrame.Visible = false
-InputFrame.BackgroundTransparency = 0.2
-InputFrame.Parent = ScreenGui
-
--- Apply UICorner to InputFrame
-local UICornerFrame = Instance.new("UICorner")
-UICornerFrame.CornerRadius = UDim.new(0.05, 0)
-UICornerFrame.Parent = InputFrame
-
--- Create TitleFrame in InputFrame
-local TitleFrame = Instance.new("TextLabel")
-TitleFrame.Name = "TitleFrame"
-TitleFrame.Text = "Enter Details\nComplete all the rules and use ImageID to upload your script."
-TitleFrame.TextColor3 = Color3.fromRGB(255, 255, 255)
-TitleFrame.TextSize = 16
-TitleFrame.Font = Enum.Font.GothamBold
-TitleFrame.TextWrapped = true
-TitleFrame.BackgroundTransparency = 1
-TitleFrame.Size = UDim2.new(0.9, 35, 0, 50)
-TitleFrame.Position = UDim2.new(0, 10, 0, 10)
-TitleFrame.Parent = InputFrame
-
--- Create InputIDFrame in InputFrame
-local InputIDFrame = Instance.new("Frame")
-InputIDFrame.Name = "InputIDFrame"
-InputIDFrame.Size = UDim2.new(1, -20, 0, 60)
-InputIDFrame.Position = UDim2.new(0, 10, 0, 70)
-InputIDFrame.BackgroundColor3 = Color3.fromRGB(45, 50, 62)
-InputIDFrame.BorderColor3 = Color3.fromRGB(91, 92, 121)
-InputIDFrame.Parent = InputFrame
-
--- Apply UICorner to InputIDFrame
-local UICornerID = Instance.new("UICorner")
-UICornerID.CornerRadius = UDim.new(0.2, 0)
-UICornerID.Parent = InputIDFrame
-
--- TextLabel in InputIDFrame
-local InputIDLabel = Instance.new("TextLabel")
-InputIDLabel.Text = "Enter ImageID"
-InputIDLabel.Size = UDim2.new(0.9, 35, 0, 20)
-InputIDLabel.Position = UDim2.new(0, 10, 0, 5)
-InputIDLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-InputIDLabel.Font = Enum.Font.GothamBold
-InputIDLabel.TextSize = 14
-InputIDLabel.BackgroundTransparency = 1
-InputIDLabel.Parent = InputIDFrame
-
--- TextBox in InputIDFrame
-local InputIDTextBox = Instance.new("TextBox")
-InputIDTextBox.PlaceholderText = "Paste Here\nRequired (rbxassetid:// or rbxthumb://type=Asset&id)"
-InputIDTextBox.Text = "Paste Here\nRequired (rbxassetid:// or rbxthumb://type=Asset&id)"
-InputIDTextBox.Size = UDim2.new(0.9, 35, 0, 30)
-InputIDTextBox.Position = UDim2.new(0, 10, 0, 25)
-InputIDTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-InputIDTextBox.BackgroundTransparency = 1
-InputIDTextBox.TextTransparency = 0.5
-InputIDTextBox.TextSize = 14
-InputIDTextBox.TextScaled = true
-InputIDTextBox.Font = Enum.Font.GothamBold
-InputIDTextBox.BackgroundColor3 = Color3.fromRGB(45, 50, 62)
-InputIDTextBox.ClearTextOnFocus = true
-InputIDTextBox.Parent = InputIDFrame
-
--- Create InputScript frame
-local InputScriptFrame = Instance.new("Frame")
-InputScriptFrame.Name = "InputScript"
-InputScriptFrame.Size = UDim2.new(1, -20, 0, 60)
-InputScriptFrame.Position = UDim2.new(0, 10, 0, 140)
-InputScriptFrame.BackgroundColor3 = Color3.fromRGB(45, 50, 62)
-InputScriptFrame.BorderColor3 = Color3.fromRGB(91, 92, 121)
-InputScriptFrame.Parent = InputFrame
-
--- Apply UICorner to InputScriptFrame
-local UICornerScript = Instance.new("UICorner")
-UICornerScript.CornerRadius = UDim.new(0.2, 0)
-UICornerScript.Parent = InputScriptFrame
-
--- TextLabel in InputScriptFrame
-local InputScriptLabel = Instance.new("TextLabel")
-InputScriptLabel.Text = "Enter Script"
-InputScriptLabel.Size = UDim2.new(0.9, 35, 0, 20)
-InputScriptLabel.Position = UDim2.new(0, 10, 0, 5)
-InputScriptLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-InputScriptLabel.Font = Enum.Font.GothamBold
-InputScriptLabel.TextSize = 14
-InputScriptLabel.BackgroundTransparency = 1
-InputScriptLabel.Parent = InputScriptFrame
-
--- TextBox in InputScriptFrame
-local InputScriptTextBox = Instance.new("TextBox")
-InputScriptTextBox.PlaceholderText = "Paste Here"
-InputScriptTextBox.Text = "Paste Here"
-InputScriptTextBox.Size = UDim2.new(0.9, 35, 0, 30)
-InputScriptTextBox.Position = UDim2.new(0, 10, 0, 25)
-InputScriptTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
-InputScriptTextBox.BackgroundTransparency = 1
-InputScriptTextBox.TextTransparency = 0.5
-InputScriptTextBox.TextSize = 14
-InputScriptTextBox.Font = Enum.Font.GothamBold
-InputScriptTextBox.BackgroundColor3 = Color3.fromRGB(45, 50, 62)
-InputScriptTextBox.ClearTextOnFocus = true
-InputScriptTextBox.TextScaled = true
-InputScriptTextBox.Parent = InputScriptFrame
-
--- Create AddScriptButton
-local AddScriptButton = Instance.new("TextButton")
-AddScriptButton.Name = "AddScriptButton"
-AddScriptButton.Size = UDim2.new(1, -20, 0, 40)
-AddScriptButton.Position = UDim2.new(0, 10, 0, 210)
-AddScriptButton.BackgroundColor3 = Color3.fromRGB(59, 139, 254)
-AddScriptButton.TextColor3 = Color3.fromRGB(255, 255, 255)
-AddScriptButton.Text = "Add Script"
-AddScriptButton.TextSize = 14
-AddScriptButton.Font = Enum.Font.GothamBold
-AddScriptButton.Parent = InputFrame
-
--- Apply UICorner to AddScriptButton
-local UICornerButton = Instance.new("UICorner")
-UICornerButton.CornerRadius = UDim.new(0.2, 0)
-UICornerButton.Parent = AddScriptButton
-
--- Create Close Button for InputFrame
-local CloseButton = Instance.new("ImageButton")
-CloseButton.Name = "CloseButton"
-CloseButton.Size = UDim2.new(0, 20, 0, 20)
-CloseButton.Position = UDim2.new(0.9, 20, 0, 15)
-CloseButton.BackgroundTransparency = 1
-CloseButton.Image = "rbxassetid://13363121645"
-CloseButton.Parent = InputFrame
-
--- When the AddScript button is pressed, InputFrame appears
-ImageButton2.MouseButton1Click:Connect(function()
-    InputFrame.Visible = true
-end)
-
--- When the Close button is pressed, InputFrame is hidden
-CloseButton.MouseButton1Click:Connect(function()
-    InputFrame.Visible = false
-end)
-
--- Ensure TemplateButton is defined
-local TemplateButton = Instance.new("ImageButton")
-TemplateButton.Name = "TemplateScriptButton"
-TemplateButton.Size = UDim2.new(0, 37, 0, 37)
-TemplateButton.Position = UDim2.new(0, 0, 0, 0)
-TemplateButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-TemplateButton.BackgroundTransparency = 0.8
-TemplateButton.Image = "rbxthumb://type=Asset&id=135210550228886&w=420&h=420" -- Placeholder Image
-TemplateButton.PressedImage = "rbxthumb://type=Asset&id=129960511211863&w=420&h=420" -- Pressed image
-
--- Ensure this template is available globally (i.e., can be cloned when a new script is added)
-
--- Step 1: Update the Confirm Button State
-local function updateConfirmButtonState()
-    if InputIDTextBox.Text == "" or InputScriptTextBox.Text == "" then
-        AddScriptButton.BackgroundColor3 = Color3.fromRGB(128, 128, 128)  -- Disable button
-        AddScriptButton.Active = false
-    else
-        AddScriptButton.BackgroundColor3 = Color3.fromRGB(0, 255, 0)  -- Enable button
-        AddScriptButton.Active = true
-    end
-end
-
--- Listen for changes in the Input Fields
-InputIDTextBox:GetPropertyChangedSignal("Text"):Connect(updateConfirmButtonState)
-InputScriptTextBox:GetPropertyChangedSignal("Text"):Connect(updateConfirmButtonState)
-updateConfirmButtonState()  -- Initial check
-
--- Step 2: When the AddScriptButton is clicked, add the script to the UI and save to file
 AddScriptButton.MouseButton1Click:Connect(function()
     local imageID = InputIDTextBox.Text
     local scriptContent = InputScriptTextBox.Text
 
     if imageID ~= "" and scriptContent ~= "" then
-        -- Create New Button for Script
+        -- Clone the template button
         local NewScriptButton = TemplateButton:Clone()
-        NewScriptButton.Text = "New Script"  -- You can change this to the ScriptName
+        NewScriptButton.Image = imageID  -- Set the ImageID as entered
         NewScriptButton.Visible = true
-        NewScriptButton.Parent = SecondMainFrame  -- Adjusted UI frame for new buttons
+        NewScriptButton.Parent = SecondMainFrame  -- Parent to the correct frame
 
-        -- Storage Logic: Write the script and its associated ImageID to scripts.txt
-        if not isfile("scripts.txt") then
-            writefile("scripts.txt", "")  -- Ensure file exists
-        end
-        appendfile("scripts.txt", "newcratescript1 " .. imageID .. "\n" .. scriptContent .. "\n")
-
-        -- When NewScriptButton is clicked, execute the associated script
+        -- Set up the button click to execute the script
         NewScriptButton.MouseButton1Click:Connect(function()
             local success, err = pcall(function()
-                loadstring(scriptContent)()  -- Execute the script dynamically
+                loadstring(scriptContent)()  -- Execute the script
             end)
             if not success then
                 warn("Error executing script: " .. err)
             end
         end)
 
-        -- Close Input Frame after adding the script
+        -- Save to the script file
+        if not isfile("scripts.txt") then
+            writefile("scripts.txt", "")
+        end
+        appendfile("scripts.txt", "newcratescript1 " .. imageID .. "\n" .. scriptContent .. "\n")
+
+        -- Optionally, close the InputFrame
         InputFrame.Visible = false
     else
-        warn("Please enter both ImageID and script content.")
+        warn("Please enter both Image ID and Script Content.")
     end
 end)
-
--- Step 3: Load saved scripts from scripts.txt
-if isfile("scripts.txt") then
-    local success, savedScripts = pcall(function()
-        return readfile("scripts.txt")
-    end)
-    if success and savedScripts then
-        -- Read each script from the saved file
-        for scriptEntry in savedScripts:gmatch("(newcratescript1.+)\n") do
-            local scriptName, scriptContent = scriptEntry:match("newcratescript1 (.-)\n(.-)")
-            if scriptName and scriptContent then
-                -- Create the button for the saved script
-                local LoadedScriptButton = TemplateButton:Clone()
-                LoadedScriptButton.Text = scriptName
-                LoadedScriptButton.Visible = true
-                LoadedScriptButton.Parent = SecondMainFrame  -- Add to the UI
-
-                -- When the loaded script button is clicked, execute the saved script
-                LoadedScriptButton.MouseButton1Click:Connect(function()
-                    local success, err = pcall(function()
-                        loadstring(scriptContent)()  -- Execute the loaded script
-                    end)
-                    if not success then
-                        warn("Error executing script: " .. err)
-                    end
-                end)
-            end
-        end
-    end
-end
