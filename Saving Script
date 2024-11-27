@@ -1,4 +1,4 @@
-print("New2")
+print("New3")
 
 -- Step 1: Create the ScreenGui
 local existingScreenGui = game:GetService("CoreGui"):FindFirstChild("ShipuHub")
@@ -444,9 +444,18 @@ CloseButton.MouseButton1Click:Connect(function()
     InputFrame.Visible = false
 end)
 
--- Assuming you're still using the InputFrame as defined above
+-- Template for Script Button (used when adding new scripts)
+local TemplateButton = Instance.new("ImageButton")
+TemplateButton.Name = "ScriptTemplate"
+TemplateButton.Size = UDim2.new(0, 37, 0, 37)
+TemplateButton.Position = UDim2.new(0, 0, 0, 0)
+TemplateButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+TemplateButton.BackgroundTransparency = 0.8
+TemplateButton.Image = "rbxthumb://type=Asset&id=81494025675609&w=420&h=420" -- Default image
+TemplateButton.PressedImage = "rbxthumb://type=Asset&id=129960511211863&w=420&h=420" -- Pressed image
+TemplateButton.Parent = nil  -- This template is not shown by default
 
--- Check if the "scripts.txt" file exists, if not create it
+-- Storage file logic (scripts.txt)
 if not isfile("scripts.txt") then
     writefile("scripts.txt", "")
 end
@@ -473,33 +482,23 @@ AddScriptButton.MouseButton1Click:Connect(function()
 
     if imageID ~= "" and scriptContent ~= "" then
         -- Create a new button for the script
-        local NewScriptButton = TemplateButton:Clone()  -- Assuming TemplateButton is a predefined button template
-        NewScriptButton.Name = "CreateNewScript"  -- Temporary name, can be dynamically generated based on number
-        NewScriptButton.Image = imageID  -- Set the image ID for the button
+        local NewScriptButton = TemplateButton:Clone()  -- Clone the TemplateButton
+        NewScriptButton.Text = scriptContent  -- Set the button's text to the script content
+        NewScriptButton.Image = imageID  -- Set the button's image to the ImageID
         NewScriptButton.Visible = true
-        NewScriptButton.Parent = SecondMainFrame  -- Add the button to the frame
+        NewScriptButton.Parent = SecondMainFrame  -- Add the new button to the main frame
 
-        -- Apply UICorner to the new button
-        local NewScriptButtonUICorner = Instance.new("UICorner")
-        NewScriptButtonUICorner.CornerRadius = UDim.new(0.1, 0)
-        NewScriptButtonUICorner.Parent = NewScriptButton
+        -- Save the script to the scripts.txt file
+        appendfile("scripts.txt", imageID .. "\n" .. scriptContent .. "\n")
 
-        -- Save the script content and ImageID to the scripts.txt file
-        if not isfile("scripts.txt") then
-            writefile("scripts.txt", "")
-        end
-        appendfile("scripts.txt", "newcratescript " .. imageID .. "\n" .. scriptContent .. "\n")
-
-        -- When the new button is clicked, execute the script content
+        -- When the new button is clicked, run the script
         NewScriptButton.MouseButton1Click:Connect(function()
-            local scriptFunc, err = load("return " .. scriptContent)  -- Safely load the script content
-            if scriptFunc then
-                local success, result = pcall(scriptFunc)  -- Execute the loaded script safely
-                if not success then
-                    warn("Script execution failed: " .. result)
-                end
+            -- Execute the script (directly run the scriptContent)
+            local func, err = loadstring(scriptContent)
+            if func then
+                func()  -- Execute the loaded function (script)
             else
-                warn("Error loading script: " .. err)
+                warn("Error in script: " .. err)
             end
         end)
     end
