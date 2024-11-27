@@ -184,7 +184,7 @@ HiddenFrame.Parent = SettingUIFrame
 local ToggleUISetting = Instance.new("ImageButton")
 ToggleUISetting.Name = "ToggleUISetting"
 ToggleUISetting.Size = UDim2.new(0, 37, 0, 37)
-ToggleUISetting.Position = UDim2.new(0, 0, 0, 0)
+ToggleUISetting.Position = UDim2.new(0, 0, 0, HiddenFrame.Size.Y.Offset)  -- Position based on HiddenFrame height
 ToggleUISetting.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 ToggleUISetting.BackgroundTransparency = 0.8
 ToggleUISetting.Image = "rbxthumb://type=Asset&id=81494025675609&w=420&h=420" -- The arrow pointing to the right
@@ -272,7 +272,7 @@ ToggleUISetting.MouseButton1Click:Connect(toggleUI)
 local ImageButton2 = Instance.new("ImageButton")
 ImageButton2.Name = "AddScript"
 ImageButton2.Size = UDim2.new(0, 37, 0, 37)
-ImageButton2.Position = UDim2.new(0, 0, 0, 37)  -- Positioned after ToggleUISetting
+ImageButton2.Position = UDim2.new(0, 0, 0, ToggleUISetting.Position.Y.Offset + ToggleUISetting.Size.Y.Offset)  -- Positioned after ToggleUISetting
 ImageButton2.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 ImageButton2.BackgroundTransparency = 0.8
 ImageButton2.Image = "rbxthumb://type=Asset&id=110719997714211&w=420&h=420" -- Default image
