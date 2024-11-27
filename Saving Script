@@ -439,17 +439,7 @@ end)
 
 
 
--- Create TemplateButton for saving scripts
-local TemplateButton = Instance.new("ImageButton")
-TemplateButton.Size = UDim2.new(0, 37, 0, 37)
-TemplateButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-TemplateButton.BackgroundTransparency = 0.8
-TemplateButton.Visible = false
-TemplateButton.Parent = SecondMainFrame
 
-local TemplateUICorner = Instance.new("UICorner")
-TemplateUICorner.CornerRadius = UDim.new(0, 10)
-TemplateUICorner.Parent = TemplateButton
 
 -- When the "AddScriptButton" is clicked, save the script and ImageID to the file
 AddScriptButton.MouseButton1Click:Connect(function()
