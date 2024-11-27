@@ -271,10 +271,6 @@ end
 -- Connect the ToggleUISetting button to toggle functionality
 ToggleUISetting.MouseButton1Click:Connect(toggleUI)
 
-
-
-
-
 -- Create the AddScript ImageButton
 local ImageButton2 = Instance.new("ImageButton")
 ImageButton2.Name = "AddScript"
@@ -486,11 +482,6 @@ AddScriptButton.MouseButton1Click:Connect(function()
     end
 end)
 
-
-
-
-
-
 -- Function to create a new script button and add it to the UI
 AddScriptButton.MouseButton1Click:Connect(function()
     local imageID = InputIDTextBox.Text
@@ -509,7 +500,7 @@ AddScriptButton.MouseButton1Click:Connect(function()
         newScriptButton.Parent = SecondMainFrame  -- Parent it to the SecondMainFrame
 
         local buttonUICorner = Instance.new("UICorner")
-        buttonUICorner.CornerRadius = UDim.new(0.1, 0)
+        buttonUICorner.CornerRadius = UDim.new(10, 10)
         buttonUICorner.Parent = newScriptButton
 
         -- Store the script in the file
@@ -520,7 +511,6 @@ AddScriptButton.MouseButton1Click:Connect(function()
 
         -- Set up the button click to run the script (placeholder for actual script)
         newScriptButton.MouseButton1Click:Connect(function()
-            print("Executing script: " .. newScriptButton.Name)
             -- Here we would run the script using loadstring() or other methods
             -- Example: loadstring(scriptContent)() 
         end)
