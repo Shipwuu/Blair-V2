@@ -15,6 +15,10 @@ MainFrame.Position = UDim2.new(0.6, 0, 0, -46)  -- Updated position
 MainFrame.BackgroundTransparency = 1
 MainFrame.Parent = ScreenGui
 
+local SecondMainUICorner = Instance.new("UICorner")
+SecondMainUICorner.CornerRadius = UDim.new(10, 10)
+SecondMainUICorner.Parent = MainFrame
+
 local ButtonLayout = Instance.new("UIListLayout")
 ButtonLayout.FillDirection = Enum.FillDirection.Horizontal
 ButtonLayout.Padding = UDim.new(0, 9)
@@ -67,11 +71,11 @@ local function updateFrameAppearance()
         if elapsedTime >= 1 then
             -- 1 second hold: Change background to green, allow dragging
             MainFrame.BackgroundColor3 = Color3.fromRGB(0, 255, 0)  -- Green
-            MainFrame.BackgroundTransparency = 0.5
+            MainFrame.BackgroundTransparency = 0.9
         elseif elapsedTime >= holdTime then
             -- 0.5 second hold: Change background to yellow
             MainFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 0)  -- Yellow
-            MainFrame.BackgroundTransparency = 0.5
+            MainFrame.BackgroundTransparency = 0.9
         else
             -- Reset to original appearance if less than 0.5 second
             MainFrame.BackgroundColor3 = Color3.fromRGB(85, 255, 255)  -- Original color
@@ -159,7 +163,7 @@ SettingUIFrameUIGradient.Parent = SettingUIFrame
 local SecondButtonLayout = Instance.new("UIListLayout")
 SecondButtonLayout.FillDirection = Enum.FillDirection.Horizontal
 SecondButtonLayout.Padding = UDim.new(0, 5)
-SecondButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Left
+SecondButtonLayout.HorizontalAlignment = Enum.HorizontalAlignment.Right
 SecondButtonLayout.VerticalAlignment = Enum.VerticalAlignment.Center
 SecondButtonLayout.Parent = SettingUIFrame
 
@@ -175,6 +179,7 @@ rotationTween:Play()
 
 -- Create HiddenFrame (for adjusting button position)
 local HiddenFrame = Instance.new("Frame")
+HiddenFrame.Name = "ZFrame"
 HiddenFrame.Size = UDim2.new(0, 5, 0, 30)
 HiddenFrame.Position = UDim2.new(0, 0, 0, 0)
 HiddenFrame.BackgroundTransparency = 1
@@ -341,6 +346,7 @@ InputIDLabel.Parent = InputIDFrame
 -- TextBox in InputIDFrame
 local InputIDTextBox = Instance.new("TextBox")
 InputIDTextBox.PlaceholderText = "Paste Here\nRequired (rbxassetid:// or rbxthumb://type=Asset&id)"
+InputIDTextBox.Text = "Paste Here\nRequired (rbxassetid:// or rbxthumb://type=Asset&id)"
 InputIDTextBox.Size = UDim2.new(0.9, 35, 0, 30)
 InputIDTextBox.Position = UDim2.new(0, 10, 0, 25)
 InputIDTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -381,6 +387,7 @@ InputScriptLabel.Parent = InputScriptFrame
 -- TextBox in InputScriptFrame
 local InputScriptTextBox = Instance.new("TextBox")
 InputScriptTextBox.PlaceholderText = "Paste Here"
+InputScriptTextBox.Text = "Paste Here"
 InputScriptTextBox.Size = UDim2.new(0.9, 35, 0, 30)
 InputScriptTextBox.Position = UDim2.new(0, 10, 0, 25)
 InputScriptTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -399,6 +406,7 @@ AddScriptButton.Name = "AddScriptButton"
 AddScriptButton.Size = UDim2.new(1, -20, 0, 40)
 AddScriptButton.Position = UDim2.new(0, 10, 0, 210)
 AddScriptButton.BackgroundColor3 = Color3.fromRGB(59, 139, 254)
+AddScriptButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 AddScriptButton.Text = "Add Script"
 AddScriptButton.TextSize = 14
 AddScriptButton.Font = Enum.Font.GothamBold
@@ -427,4 +435,3 @@ end)
 CloseButton.MouseButton1Click:Connect(function()
     InputFrame.Visible = false
 end)
-
