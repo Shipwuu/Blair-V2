@@ -155,13 +155,6 @@ SettingUIFrameUIGradient.Color = ColorSequence.new({
 SettingUIFrameUIGradient.Rotation = 0
 SettingUIFrameUIGradient.Parent = SettingUIFrame
 
--- Create HiddenFrame (for adjusting button position)
-local HiddenFrame = Instance.new("Frame")
-HiddenFrame.Size = UDim2.new(0, 5, 0, 30)
-HiddenFrame.Position = UDim2.new(0, 0, 0, 0)
-HiddenFrame.BackgroundTransparency = 1
-HiddenFrame.Parent = SettingUIFrame
-
 -- Layout for Script Buttons
 local SecondButtonLayout = Instance.new("UIListLayout")
 SecondButtonLayout.FillDirection = Enum.FillDirection.Horizontal
@@ -180,6 +173,12 @@ local rotationTween = TweenService:Create(
 
 rotationTween:Play()
 
+-- Create HiddenFrame (for adjusting button position)
+local HiddenFrame = Instance.new("Frame")
+HiddenFrame.Size = UDim2.new(0, 5, 0, 30)
+HiddenFrame.Position = UDim2.new(0, 0, 0, 0)
+HiddenFrame.BackgroundTransparency = 1
+HiddenFrame.Parent = SettingUIFrame
 
 -- Create the ToggleUISetting ImageButton
 local ToggleUISetting = Instance.new("ImageButton")
