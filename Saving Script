@@ -1,5 +1,3 @@
-print("New6")
-
 -- Step 1: Create the ScreenGui
 local existingScreenGui = game:GetService("CoreGui"):FindFirstChild("ShipuHub")
 if existingScreenGui then
@@ -189,14 +187,6 @@ HiddenFrame.Position = UDim2.new(0, 0, 0, 0)
 HiddenFrame.BackgroundTransparency = 1
 HiddenFrame.Parent = SettingUIFrame
 
--- Create HiddenFrame (for adjusting button position)
-local HiddenFrame = Instance.new("Frame")
-HiddenFrame.Name = "ZFrame"
-HiddenFrame.Size = UDim2.new(0, 5, 0, 30)
-HiddenFrame.Position = UDim2.new(0, 0, 0, 0)
-HiddenFrame.BackgroundTransparency = 1
-HiddenFrame.Parent = SecondMainFrame
-
 -- Create the ToggleUISetting ImageButton
 local ToggleUISetting = Instance.new("ImageButton")
 ToggleUISetting.Name = "ToggleUISetting"
@@ -280,6 +270,27 @@ end
 
 -- Connect the ToggleUISetting button to toggle functionality
 ToggleUISetting.MouseButton1Click:Connect(toggleUI)
+
+
+
+
+
+-- Create the AddScript ImageButton
+local ImageButton2 = Instance.new("ImageButton")
+ImageButton2.Name = "AddScript"
+ImageButton2.Size = UDim2.new(0, 37, 0, 37)
+ImageButton2.Position = UDim2.new(0, 0, 0, ToggleUISetting.Position.Y.Offset + ToggleUISetting.Size.Y.Offset)  -- Positioned after ToggleUISetting
+ImageButton2.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ImageButton2.BackgroundTransparency = 0.8
+ImageButton2.Image = "rbxthumb://type=Asset&id=110719997714211&w=420&h=420" -- Default image
+ImageButton2.PressedImage = "rbxthumb://type=Asset&id=129960511211863&w=420&h=420" -- Pressed image
+ImageButton2.Parent = SettingUIFrame
+
+-- Apply UICorner to AddScript button
+local UICorner2 = Instance.new("UICorner")
+UICorner2.CornerRadius = UDim.new(10, 10)
+UICorner2.Parent = ImageButton2
+
 
 -- Create the InputFrame
 local InputFrame = Instance.new("Frame")
@@ -425,101 +436,4 @@ end)
 -- When the Close button is pressed, InputFrame is hidden
 CloseButton.MouseButton1Click:Connect(function()
     InputFrame.Visible = false
-end)
-
--- Check if the "scripts.txt" file exists, if not create it
-if not isfile("scripts.txt") then
-    writefile("scripts.txt", "")
-end
-
--- Function to update the Confirm Button state (if both fields are filled)
-local function updateConfirmButtonState()
-    if InputIDTextBox.Text == "" or InputScriptTextBox.Text == "" then
-        AddScriptButton.BackgroundColor3 = Color3.fromRGB(128, 128, 128)  -- Disable button
-        AddScriptButton.Active = false
-    else
-        AddScriptButton.BackgroundColor3 = Color3.fromRGB(59, 139, 254)  -- Enable button
-        AddScriptButton.Active = true
-    end
-end
-
-InputIDTextBox:GetPropertyChangedSignal("Text"):Connect(updateConfirmButtonState)
-InputScriptTextBox:GetPropertyChangedSignal("Text"):Connect(updateConfirmButtonState)
-updateConfirmButtonState()  -- Check initially if inputs are valid
-
--- When the "AddScriptButton" is clicked, save the script and ImageID to the file
-AddScriptButton.MouseButton1Click:Connect(function()
-    local imageID = InputIDTextBox.Text
-    local scriptContent = InputScriptTextBox.Text
-
-    if imageID ~= "" and scriptContent ~= "" then
-        -- Create a new button for the script
-        local NewScriptButton = TemplateButton:Clone()  -- Assuming TemplateButton is a predefined button template
-        NewScriptButton.Text = "Script: " .. imageID  -- Optionally set the button text to something descriptive
-        NewScriptButton.Visible = true
-        NewScriptButton.Parent = SecondMainFrame
-
-        -- Apply UICorner to NewScriptButton
-        local ButtonUICorner = Instance.new("UICorner")
-        ButtonUICorner.CornerRadius = UDim.new(0.1, 0)
-        ButtonUICorner.Parent = NewScriptButton
-
-        -- Set the ImageID and PressedImage
-        NewScriptButton.Image = imageID
-        NewScriptButton.PressedImage = "rbxthumb://type=Asset&id=129960511211863&w=420&h=420"  -- Example pressed image
-
-        -- Store the script and image ID in scripts.txt
-        appendfile("scripts.txt", "CreateNewScript" .. #SecondMainFrame:GetChildren() .. " " .. imageID .. "\n" .. scriptContent .. "\n")
-
-        -- When the button is clicked, execute the stored script
-        NewScriptButton.MouseButton1Click:Connect(function()
-            -- Safely load and run the script content
-            local func, err = load(scriptContent)
-            if func then
-                pcall(func)
-            else
-                print("Error loading script: " .. err)
-            end
-        end)
-    end
-end)
-
-
--- Function to create a new script button and add it to the UI
-AddScriptButton.MouseButton1Click:Connect(function()
-    local imageID = InputIDTextBox.Text
-    local scriptContent = InputScriptTextBox.Text
-    
-    if imageID ~= "" and scriptContent ~= "" then
-        -- Create new script button
-        local newScriptButton = Instance.new("ImageButton")
-        newScriptButton.Name = "CreateNewScript" .. #SecondMainFrame:GetChildren() + 1  -- Dynamically name it
-        newScriptButton.Size = UDim2.new(0, 37, 0, 37)
-        newScriptButton.Position = UDim2.new(0, 0, 0, 0)  -- Position as needed
-        newScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        newScriptButton.BackgroundTransparency = 0.8
-        newScriptButton.Image = imageID  -- Set the ImageID input by the user
-        newScriptButton.PressedImage = "rbxthumb://type=Asset&id=129960511211863&w=420&h=420"  -- Example pressed image
-        newScriptButton.Parent = SecondMainFrame  -- Parent it to the SecondMainFrame
-
-        local buttonUICorner = Instance.new("UICorner")
-        buttonUICorner.CornerRadius = UDim.new(10, 10)
-        buttonUICorner.Parent = newScriptButton
-
-        -- Store the script in the file
-        if not isfile("scripts.txt") then
-            writefile("scripts.txt", "")
-        end
-        appendfile("scripts.txt", newScriptButton.Name .. "\n" .. imageID .. "\n" .. scriptContent .. "\n")
-
-        -- Set up the button click to run the script (placeholder for actual script)
-        newScriptButton.MouseButton1Click:Connect(function()
-            -- Here we would run the script using loadstring() or other methods
-            -- Example: loadstring(scriptContent)() 
-        end)
-
-        -- Clear the input fields after adding the script
-        InputIDTextBox.Text = ""
-        InputScriptTextBox.Text = ""
-    end
 end)
