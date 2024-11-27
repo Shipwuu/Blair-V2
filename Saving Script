@@ -273,10 +273,6 @@ end
 -- Connect the ToggleUISetting button to toggle functionality
 ToggleUISetting.MouseButton1Click:Connect(toggleUI)
 
-
-
-
-
 -- Create the AddScript ImageButton
 local ImageButton2 = Instance.new("ImageButton")
 ImageButton2.Name = "AddScript"
@@ -474,7 +470,7 @@ AddScriptButton.MouseButton1Click:Connect(function()
         NewScriptButton.BackgroundTransparency = 0.8
         NewScriptButton.Image = imageID  -- Use the ImageID from the input
         NewScriptButton.PressedImage = "rbxthumb://type=Asset&id=129960511211863&w=420&h=420"  -- Pressed image
-        NewScriptButton.Parent = MainFrame
+        NewScriptButton.Parent = SecondMainFrame
 
         -- Apply UICorner to the new button
         local UICorner = Instance.new("UICorner")
@@ -514,7 +510,7 @@ if isfile("scripts.txt") then
         NewScriptButton.BackgroundTransparency = 0.8
         NewScriptButton.Image = imageID
         NewScriptButton.PressedImage = "rbxthumb://type=Asset&id=129960511211863&w=420&h=420"
-        NewScriptButton.Parent = MainFrame
+        NewScriptButton.Parent = SecondMainFrame
 
         local UICorner = Instance.new("UICorner")
         UICorner.CornerRadius = UDim.new(10, 10)
