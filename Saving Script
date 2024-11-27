@@ -181,6 +181,92 @@ local rotationTween = TweenService:Create(
 rotationTween:Play()
 
 
+-- Create the ToggleUISetting ImageButton
+local ToggleUISetting = Instance.new("ImageButton")
+ToggleUISetting.Name = "ToggleUISetting"
+ToggleUISetting.Size = UDim2.new(0, 37, 0, 37)
+ToggleUISetting.Position = UDim2.new(0, 0, 0, 0)
+ToggleUISetting.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+ToggleUISetting.BackgroundTransparency = 0.8
+ToggleUISetting.Image = "rbxthumb://type=Asset&id=81494025675609&w=420&h=420" -- The arrow pointing to the right
+ToggleUISetting.Parent = SettingUIFrame
+
+local ToggleUISettingUICorner = Instance.new("UICorner")
+ToggleUISettingUICorner.CornerRadius = UDim.new(10, 10)
+ToggleUISettingUICorner.Parent = ToggleUISetting
+
+-- Tweening for expanding SettingUIFrame and changing image with fade-in and fade-out
+local isOpen = false -- Track the toggle state
+local TweenService = game:GetService("TweenService")
+
+local function toggleUI()
+    if isOpen then
+        -- Close the SettingUIFrame
+        local closeTween = TweenService:Create(
+            SettingUIFrame,
+            TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+            {Size = UDim2.new(0, 58, 0, 48)}
+        )
+        closeTween:Play()
+
+        -- Fade out and change the image back to the right arrow
+        local closeImageTween = TweenService:Create(
+            ToggleUISetting,
+            TweenInfo.new(0.2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+            {ImageTransparency = 1}
+        )
+        closeImageTween:Play()
+        
+        -- Wait for the fade-out to finish, then change the image
+        closeImageTween.Completed:Connect(function()
+            ToggleUISetting.Image = "rbxthumb://type=Asset&id=81494025675609&w=420&h=420" -- Arrow pointing to the right
+            -- Fade in the new image
+            local fadeInTween = TweenService:Create(
+                ToggleUISetting,
+                TweenInfo.new(0.2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+                {ImageTransparency = 0}
+            )
+            fadeInTween:Play()
+        end)
+    else
+        -- Open the SettingUIFrame
+        local openTween = TweenService:Create(
+            SettingUIFrame,
+            TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+            {Size = UDim2.new(0.2, 25, 0, 48)}
+        )
+        openTween:Play()
+
+        -- Fade out and change the image to the left arrow
+        local openImageTween = TweenService:Create(
+            ToggleUISetting,
+            TweenInfo.new(0.2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+            {ImageTransparency = 1}
+        )
+        openImageTween:Play()
+
+        -- Wait for the fade-out to finish, then change the image
+        openImageTween.Completed:Connect(function()
+            ToggleUISetting.Image = "rbxthumb://type=Asset&id=117802441000023&w=420&h=420" -- Arrow pointing to the left
+            -- Fade in the new image
+            local fadeInTween = TweenService:Create(
+                ToggleUISetting,
+                TweenInfo.new(0.2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
+                {ImageTransparency = 0}
+            )
+            fadeInTween:Play()
+        end)
+    end
+
+    -- Toggle the open state
+    isOpen = not isOpen
+end
+
+-- Connect the ToggleUISetting button to toggle functionality
+ToggleUISetting.MouseButton1Click:Connect(toggleUI)
+
+
+
 
 
 -- Create the AddScript ImageButton
@@ -342,93 +428,4 @@ end)
 CloseButton.MouseButton1Click:Connect(function()
     InputFrame.Visible = false
 end)
-
-
-
-
-
-
--- Create the ToggleUISetting ImageButton
-local ToggleUISetting = Instance.new("ImageButton")
-ToggleUISetting.Name = "ToggleUISetting"
-ToggleUISetting.Size = UDim2.new(0, 37, 0, 37)
-ToggleUISetting.Position = UDim2.new(0, 0, 0, 0)
-ToggleUISetting.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-ToggleUISetting.BackgroundTransparency = 0.8
-ToggleUISetting.Image = "rbxthumb://type=Asset&id=81494025675609&w=420&h=420" -- The arrow pointing to the right
-ToggleUISetting.Parent = SettingUIFrame
-
-local ToggleUISettingUICorner = Instance.new("UICorner")
-ToggleUISettingUICorner.CornerRadius = UDim.new(10, 10)
-ToggleUISettingUICorner.Parent = ToggleUISetting
-
--- Tweening for expanding SettingUIFrame and changing image with fade-in and fade-out
-local isOpen = false -- Track the toggle state
-local TweenService = game:GetService("TweenService")
-
-local function toggleUI()
-    if isOpen then
-        -- Close the SettingUIFrame
-        local closeTween = TweenService:Create(
-            SettingUIFrame,
-            TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-            {Size = UDim2.new(0, 58, 0, 48)}
-        )
-        closeTween:Play()
-
-        -- Fade out and change the image back to the right arrow
-        local closeImageTween = TweenService:Create(
-            ToggleUISetting,
-            TweenInfo.new(0.2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-            {ImageTransparency = 1}
-        )
-        closeImageTween:Play()
-        
-        -- Wait for the fade-out to finish, then change the image
-        closeImageTween.Completed:Connect(function()
-            ToggleUISetting.Image = "rbxthumb://type=Asset&id=81494025675609&w=420&h=420" -- Arrow pointing to the right
-            -- Fade in the new image
-            local fadeInTween = TweenService:Create(
-                ToggleUISetting,
-                TweenInfo.new(0.2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-                {ImageTransparency = 0}
-            )
-            fadeInTween:Play()
-        end)
-    else
-        -- Open the SettingUIFrame
-        local openTween = TweenService:Create(
-            SettingUIFrame,
-            TweenInfo.new(0.5, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-            {Size = UDim2.new(0.2, 25, 0, 48)}
-        )
-        openTween:Play()
-
-        -- Fade out and change the image to the left arrow
-        local openImageTween = TweenService:Create(
-            ToggleUISetting,
-            TweenInfo.new(0.2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-            {ImageTransparency = 1}
-        )
-        openImageTween:Play()
-
-        -- Wait for the fade-out to finish, then change the image
-        openImageTween.Completed:Connect(function()
-            ToggleUISetting.Image = "rbxthumb://type=Asset&id=117802441000023&w=420&h=420" -- Arrow pointing to the left
-            -- Fade in the new image
-            local fadeInTween = TweenService:Create(
-                ToggleUISetting,
-                TweenInfo.new(0.2, Enum.EasingStyle.Exponential, Enum.EasingDirection.Out),
-                {ImageTransparency = 0}
-            )
-            fadeInTween:Play()
-        end)
-    end
-
-    -- Toggle the open state
-    isOpen = not isOpen
-end
-
--- Connect the ToggleUISetting button to toggle functionality
-ToggleUISetting.MouseButton1Click:Connect(toggleUI)
 
