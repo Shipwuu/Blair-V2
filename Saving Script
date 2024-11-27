@@ -1,4 +1,4 @@
-print("New5352853")
+print("New535285242gsg53")
 
 -- Step 1: Create the ScreenGui
 local existingScreenGui = game:GetService("CoreGui"):FindFirstChild("ShipuHub")
@@ -437,7 +437,17 @@ CloseButton.MouseButton1Click:Connect(function()
 end)
 
 
+-- Create TemplateButton for saving scripts
+local TemplateButton = Instance.new("ImageButton")
+TemplateButton.Size = UDim2.new(0, 37, 0, 37)
+TemplateButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+TemplateButton.BackgroundTransparency = 0.8
+TemplateButton.Visible = false
+TemplateButton.Parent = SecondMainFrame
 
+local TemplateUICorner = Instance.new("UICorner")
+TemplateUICorner.CornerRadius = UDim.new(0, 10)
+TemplateUICorner.Parent = TemplateButton
 
 
 
