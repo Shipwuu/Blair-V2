@@ -1,4 +1,4 @@
-print("NewYOOOO55555")
+print("New99999")
 
 -- Step 1: Create the ScreenGui
 local existingScreenGui = game:GetService("CoreGui"):FindFirstChild("ShipuHub")
@@ -188,6 +188,14 @@ HiddenFrame.Size = UDim2.new(0, 5, 0, 30)
 HiddenFrame.Position = UDim2.new(0, 0, 0, 0)
 HiddenFrame.BackgroundTransparency = 1
 HiddenFrame.Parent = SettingUIFrame
+
+-- Create HiddenFrame (for adjusting button position)
+local HiddenFrame = Instance.new("Frame")
+HiddenFrame.Name = "AFrame"
+HiddenFrame.Size = UDim2.new(0, 5, 0, 30)
+HiddenFrame.Position = UDim2.new(0, 0, 0, 0)
+HiddenFrame.BackgroundTransparency = 1
+HiddenFrame.Parent = SecondMainFrame
 
 -- Create the ToggleUISetting ImageButton
 local ToggleUISetting = Instance.new("ImageButton")
