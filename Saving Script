@@ -518,9 +518,9 @@ AddScriptButton.MouseButton1Click:Connect(function()
             makefolder("Shipu_Script")
         end
 
-        -- Save the ImageID and script content to a new txt file in the Shipu_Script folder
+        -- Save the ImageID as a comment and the script content to a new txt file in the Shipu_Script folder
         local scriptFilePath = "Shipu_Script/" .. scriptName .. ".txt"
-        writefile(scriptFilePath, imageID .. "\n" .. scriptContent)
+        writefile(scriptFilePath, "-- " .. imageID .. "\n" .. scriptContent)
 
         -- Execute the script when the new button is clicked
         NewScriptButton.MouseButton1Click:Connect(function()
@@ -529,7 +529,7 @@ AddScriptButton.MouseButton1Click:Connect(function()
             end)
             if not success then
                 warn("Error executing script: " .. err)
-            end
+            end)
         end)
     else
         warn("Please provide a Name, Image ID, and script content.")
@@ -549,8 +549,9 @@ local function loadScripts()
             if fileName:match(".txt$") then
                 local fileContent = readfile(fileName)
 
-                -- Use pattern to extract ImageID and Script content
-                local imageID, scriptContent = fileContent:match("([^\n]+)\n([^\n]+)\n?(.*)")
+                -- Extract ImageID and Script Content using the "-- " comment format
+                local imageID = fileContent:match("-- (.-)\n")
+                local scriptContent = fileContent:match("\n(.*)")
 
                 -- Check if the imageID and scriptContent were successfully extracted
                 if imageID and scriptContent then
@@ -575,7 +576,7 @@ local function loadScripts()
                         end)
                         if not success then
                             warn("Error executing saved script: " .. err)
-                        end
+                        end)
                     end)
 
                     scriptCount = scriptCount + 1
@@ -590,7 +591,3 @@ end
 loadScripts()
 
 print("Success")
-
-
-print("Success")
-
