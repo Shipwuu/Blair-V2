@@ -518,18 +518,19 @@ AddScriptButton.MouseButton1Click:Connect(function()
             makefolder("Shipu_Script")
         end
 
-        -- Save the ImageID as a comment and the script content to a new txt file in the Shipu_Script folder
+        -- Save the ImageID as a comment and script content
         local scriptFilePath = "Shipu_Script/" .. scriptName .. ".txt"
-        writefile(scriptFilePath, "-- " .. imageID .. "\n" .. scriptContent)
+        local contentToSave = "-- " .. imageID .. "\n" .. scriptContent
+        writefile(scriptFilePath, contentToSave)
 
         -- Execute the script when the new button is clicked
         NewScriptButton.MouseButton1Click:Connect(function()
             local success, err = pcall(function()
-                loadstring(scriptContent)()
+                loadstring(scriptContent)()  -- Running the script content
             end)
             if not success then
                 warn("Error executing script: " .. err)
-            end)
+            end
         end)
     else
         warn("Please provide a Name, Image ID, and script content.")
@@ -540,22 +541,16 @@ end)
 local function loadScripts()
     local scriptCount = 0
     if isfolder("Shipu_Script") then
-        -- Get all files in the "Shipu_Script" folder
-        local files = listfiles("Shipu_Script")
-
-        -- Iterate over each file
-        for _, fileName in pairs(files) do
-            -- Check if the file is a .txt file
+        for _, fileName in pairs(listfiles("Shipu_Script")) do
             if fileName:match(".txt$") then
                 local fileContent = readfile(fileName)
 
-                -- Extract ImageID and Script Content using the "-- " comment format
-                local imageID = fileContent:match("-- (.-)\n")
-                local scriptContent = fileContent:match("\n(.*)")
+                -- Skip the first line (ImageID comment), extract script content
+                local scriptContent = fileContent:match("\n(.*)")  -- Remove the first line
 
-                -- Check if the imageID and scriptContent were successfully extracted
-                if imageID and scriptContent then
+                if scriptContent then
                     -- Create a new button for each script
+                    local imageID = fileContent:match("-- (.+)\n")  -- Extract ImageID from the comment
                     local NewScriptButton = Instance.new("ImageButton")
                     NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
                     NewScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
@@ -572,11 +567,11 @@ local function loadScripts()
                     -- Reconnect the MouseButton1Click event to execute the saved script
                     NewScriptButton.MouseButton1Click:Connect(function()
                         local success, err = pcall(function()
-                            loadstring(scriptContent)()
+                            loadstring(scriptContent)()  -- Run the script content
                         end)
                         if not success then
                             warn("Error executing saved script: " .. err)
-                        end)
+                        end
                     end)
 
                     scriptCount = scriptCount + 1
