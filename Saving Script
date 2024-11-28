@@ -493,7 +493,6 @@ end)
 
 
 
--- Button to save a new script
 AddScriptButton.MouseButton1Click:Connect(function()
     local imageID = InputIDTextBox.Text
     local scriptContent = InputScriptTextBox.Text
@@ -521,7 +520,7 @@ AddScriptButton.MouseButton1Click:Connect(function()
 
         -- Save the ImageID and script content to a new txt file in the Shipu_Script folder
         local scriptFilePath = "Shipu_Script/" .. scriptName .. ".txt"
-        writefile(scriptFilePath, "--imageID--\n" .. imageID .. "\n--scriptContent--\n" .. scriptContent)
+        writefile(scriptFilePath, imageID .. "\n" .. scriptContent)
 
         -- Execute the script when the new button is clicked
         NewScriptButton.MouseButton1Click:Connect(function()
@@ -541,13 +540,19 @@ end)
 local function loadScripts()
     local scriptCount = 0
     if isfolder("Shipu_Script") then
-        for _, fileName in pairs(listfiles("Shipu_Script")) do
+        -- Get all files in the "Shipu_Script" folder
+        local files = listfiles("Shipu_Script")
+
+        -- Iterate over each file
+        for _, fileName in pairs(files) do
+            -- Check if the file is a .txt file
             if fileName:match(".txt$") then
                 local fileContent = readfile(fileName)
 
-                -- Extract ImageID and script content using the custom delimiters
-                local imageID, scriptContent = fileContent:match("--imageID--\n([^\n]+)\n--scriptContent--\n([^\n]+)")
+                -- Use pattern to extract ImageID and Script content
+                local imageID, scriptContent = fileContent:match("([^\n]+)\n([^\n]+)\n?(.*)")
 
+                -- Check if the imageID and scriptContent were successfully extracted
                 if imageID and scriptContent then
                     -- Create a new button for each script
                     local NewScriptButton = Instance.new("ImageButton")
@@ -583,6 +588,9 @@ end
 
 -- Call the function to load scripts when the UI initializes
 loadScripts()
+
+print("Success")
+
 
 print("Success")
 
