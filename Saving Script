@@ -1,4 +1,4 @@
-print("New99999")
+print("Load Script "ShipuHub"")
 
 -- Step 1: Create the ScreenGui
 local existingScreenGui = game:GetService("CoreGui"):FindFirstChild("ShipuHub")
@@ -518,9 +518,9 @@ AddScriptButton.MouseButton1Click:Connect(function()
             makefolder("Shipu_Script")
         end
 
-        -- Save script content to a new txt file in the Shipu_Script folder
+        -- Save the ImageID and script content to a new txt file in the Shipu_Script folder
         local scriptFilePath = "Shipu_Script/" .. scriptName .. ".txt"
-        writefile(scriptFilePath, scriptContent)
+        writefile(scriptFilePath, imageID .. "\n" .. scriptContent)
 
         -- Execute the script when the new button is clicked
         NewScriptButton.MouseButton1Click:Connect(function()
@@ -542,35 +542,36 @@ local function loadScripts()
     if isfolder("Shipu_Script") then
         for _, fileName in pairs(listfiles("Shipu_Script")) do
             if fileName:match(".txt$") then
-                local scriptContent = readfile(fileName)
-                local scriptName = fileName:match("([^/\\]+)%.txt$")
-                local imageID = "rbxassetid://123456789"  -- Example, could be customized or extracted
+                local fileContent = readfile(fileName)
+                local imageID, scriptContent = fileContent:match("([^\n]+)\n([^\n]+)\n?(.*)")  -- Read ImageID and script content
 
-                -- Create a new button for each script
-                local NewScriptButton = Instance.new("ImageButton")
-                NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
-                NewScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-                NewScriptButton.BackgroundTransparency = 0.8
-                NewScriptButton.Image = imageID
-                NewScriptButton.Visible = true
-                NewScriptButton.Parent = SecondMainFrame
+                if imageID and scriptContent then
+                    -- Create a new button for each script
+                    local NewScriptButton = Instance.new("ImageButton")
+                    NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
+                    NewScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+                    NewScriptButton.BackgroundTransparency = 0.8
+                    NewScriptButton.Image = imageID
+                    NewScriptButton.Visible = true
+                    NewScriptButton.Parent = SecondMainFrame
 
-                -- Apply UICorner to the new button
-                local NewScriptButtonUICorner = Instance.new("UICorner")
-                NewScriptButtonUICorner.CornerRadius = UDim.new(10, 10)
-                NewScriptButtonUICorner.Parent = NewScriptButton
+                    -- Apply UICorner to the new button
+                    local NewScriptButtonUICorner = Instance.new("UICorner")
+                    NewScriptButtonUICorner.CornerRadius = UDim.new(10, 10)
+                    NewScriptButtonUICorner.Parent = NewScriptButton
 
-                -- Reconnect the MouseButton1Click event to execute the saved script
-                NewScriptButton.MouseButton1Click:Connect(function()
-                    local success, err = pcall(function()
-                        loadstring(scriptContent)()
+                    -- Reconnect the MouseButton1Click event to execute the saved script
+                    NewScriptButton.MouseButton1Click:Connect(function()
+                        local success, err = pcall(function()
+                            loadstring(scriptContent)()
+                        end)
+                        if not success then
+                            warn("Error executing saved script: " .. err)
+                        end
                     end)
-                    if not success then
-                        warn("Error executing saved script: " .. err)
-                    end
-                end)
 
-                scriptCount = scriptCount + 1
+                    scriptCount = scriptCount + 1
+                end
             end
         end
     end
