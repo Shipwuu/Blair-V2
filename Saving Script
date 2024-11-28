@@ -496,8 +496,9 @@ end)
 AddScriptButton.MouseButton1Click:Connect(function()
     local imageID = InputIDTextBox.Text
     local scriptContent = InputScriptTextBox.Text
+    local scriptName = InputNameBox.Text  -- Assuming you want a custom file name
 
-    if imageID ~= "" and scriptContent ~= "" then
+    if imageID ~= "" and scriptContent ~= "" and scriptName ~= "" then
         -- Create a new button for the script
         local NewScriptButton = Instance.new("ImageButton")
         NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
@@ -512,11 +513,14 @@ AddScriptButton.MouseButton1Click:Connect(function()
         NewScriptButtonUICorner.CornerRadius = UDim.new(10, 10)
         NewScriptButtonUICorner.Parent = NewScriptButton
 
-        -- Save script content to scripts.txt (or create it if it doesn't exist)
-        if not isfile("scripts.txt") then
-            writefile("scripts.txt", "")
+        -- Ensure "Shipu_Script" folder exists
+        if not isfolder("Shipu_Script") then
+            makefolder("Shipu_Script")
         end
-        appendfile("scripts.txt", imageID .. "\n" .. scriptContent .. "\n")
+
+        -- Save script content to a new txt file in the Shipu_Script folder
+        local scriptFilePath = "Shipu_Script/" .. scriptName .. ".txt"
+        writefile(scriptFilePath, scriptContent)
 
         -- Execute the script when the new button is clicked
         NewScriptButton.MouseButton1Click:Connect(function()
@@ -528,44 +532,52 @@ AddScriptButton.MouseButton1Click:Connect(function()
             end
         end)
     else
-        warn("Please provide both an Image ID and a script content.")
+        warn("Please provide a Name, Image ID, and script content.")
     end
 end)
 
-
--- Load Scripts from scripts.txt
-if isfile("scripts.txt") then
-    local savedScripts = readfile("scripts.txt")
-
-    -- Iterate through each saved script entry
+-- Load Scripts from Shipu_Script folder
+local function loadScripts()
     local scriptCount = 0
-    for imageID, scriptContent in savedScripts:gmatch("([^\n]+)\n([^\n]+)\n") do
-        scriptCount = scriptCount + 1
+    if isfolder("Shipu_Script") then
+        for _, fileName in pairs(listfiles("Shipu_Script")) do
+            if fileName:match(".txt$") then
+                local scriptContent = readfile(fileName)
+                local scriptName = fileName:match("([^/\\]+)%.txt$")
+                local imageID = "rbxassetid://123456789"  -- Example, could be customized or extracted
 
-        -- Create a new button for each script
-        local NewScriptButton = Instance.new("ImageButton")
-        NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
-        NewScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-        NewScriptButton.BackgroundTransparency = 0.8
-        NewScriptButton.Image = imageID
-        NewScriptButton.Visible = true
-        NewScriptButton.Parent = SecondMainFrame
+                -- Create a new button for each script
+                local NewScriptButton = Instance.new("ImageButton")
+                NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
+                NewScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+                NewScriptButton.BackgroundTransparency = 0.8
+                NewScriptButton.Image = imageID
+                NewScriptButton.Visible = true
+                NewScriptButton.Parent = SecondMainFrame
 
-        -- Apply UICorner to the new button
-        local NewScriptButtonUICorner = Instance.new("UICorner")
-        NewScriptButtonUICorner.CornerRadius = UDim.new(10, 10)
-        NewScriptButtonUICorner.Parent = NewScriptButton
+                -- Apply UICorner to the new button
+                local NewScriptButtonUICorner = Instance.new("UICorner")
+                NewScriptButtonUICorner.CornerRadius = UDim.new(10, 10)
+                NewScriptButtonUICorner.Parent = NewScriptButton
 
-        -- Reconnect the MouseButton1Click event to execute the saved script
-        NewScriptButton.MouseButton1Click:Connect(function()
-            local success, err = pcall(function()
-                loadstring(scriptContent)()
-            end)
-            if not success then
-                warn("Error executing saved script: " .. err)
+                -- Reconnect the MouseButton1Click event to execute the saved script
+                NewScriptButton.MouseButton1Click:Connect(function()
+                    local success, err = pcall(function()
+                        loadstring(scriptContent)()
+                    end)
+                    if not success then
+                        warn("Error executing saved script: " .. err)
+                    end
+                end)
+
+                scriptCount = scriptCount + 1
             end
-        end)
+        end
     end
+    print("Loaded " .. scriptCount .. " scripts.")
 end
 
-print("succses")
+-- Call the function to load scripts when the UI initializes
+loadScripts()
+
+print("Success")
