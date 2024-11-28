@@ -494,16 +494,17 @@ end)
 
 
 AddScriptButton.MouseButton1Click:Connect(function()
-    local imageID = InputIDTextBox.Text
+    local buttonText = InputIDTextBox.Text  -- The text for the button
     local scriptContent = InputScriptTextBox.Text
-    local scriptName = InputNameBox.Text  -- Custom file name
+    local scriptName = InputNameBox.Text  -- Assuming you want a custom file name
 
-    if imageID ~= "" and scriptContent ~= "" and scriptName ~= "" then
-        -- Create a new button for the script
-        local NewScriptButton = Instance.new("ImageButton")
-        NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
+    if buttonText ~= "" and scriptContent ~= "" and scriptName ~= "" then
+        -- Create a new TextButton for the script
+        local NewScriptButton = Instance.new("TextButton")
+        NewScriptButton.Size = UDim2.new(0, 150, 0, 40)
         NewScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
         NewScriptButton.BackgroundTransparency = 0.8
+        NewScriptButton.Text = buttonText
         NewScriptButton.Visible = true
         NewScriptButton.Parent = SecondMainFrame
 
@@ -517,22 +518,21 @@ AddScriptButton.MouseButton1Click:Connect(function()
             makefolder("Shipu_Script")
         end
 
-        -- Save the ImageID line first, followed by the script content in the .txt file
+        -- Save the button text and script content to a new txt file in the Shipu_Script folder
         local scriptFilePath = "Shipu_Script/" .. scriptName .. ".txt"
-        local scriptData = "NewScriptButton.Image = \"" .. imageID .. "\"\n" .. scriptContent  -- Insert ImageID line into script
-        writefile(scriptFilePath, scriptData)
+        writefile(scriptFilePath, buttonText .. "\n" .. scriptContent)
 
         -- Execute the script when the new button is clicked
         NewScriptButton.MouseButton1Click:Connect(function()
             local success, err = pcall(function()
-                loadstring(scriptContent)()  -- Running the script content
+                loadstring(scriptContent)()
             end)
             if not success then
                 warn("Error executing script: " .. err)
             end
         end)
     else
-        warn("Please provide a Name, Image ID, and script content.")
+        warn("Please provide a Name, Button Text, and script content.")
     end
 end)
 
@@ -542,17 +542,16 @@ local function loadScripts()
     if isfolder("Shipu_Script") then
         for _, fileName in pairs(listfiles("Shipu_Script")) do
             if fileName:match(".txt$") then
-                -- Read the file content (ImageID and script content)
                 local fileContent = readfile(fileName)
-                local imageID, scriptContent = fileContent:match("NewScriptButton.Image = \"([^\"]+)\"\n([^\n]+)\n?(.*)")  -- Read ImageID and script content
+                local buttonText, scriptContent = fileContent:match("([^\n]+)\n([^\n]+)\n?(.*)")  -- Read Button Text and script content
 
-                if imageID and scriptContent then
-                    -- Create a new button for each script
-                    local NewScriptButton = Instance.new("ImageButton")
-                    NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
+                if buttonText and scriptContent then
+                    -- Create a new TextButton for each script
+                    local NewScriptButton = Instance.new("TextButton")
+                    NewScriptButton.Size = UDim2.new(0, 150, 0, 40)
                     NewScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
                     NewScriptButton.BackgroundTransparency = 0.8
-                    NewScriptButton.Image = imageID  -- Set the ImageID
+                    NewScriptButton.Text = buttonText
                     NewScriptButton.Visible = true
                     NewScriptButton.Parent = SecondMainFrame
 
@@ -564,7 +563,7 @@ local function loadScripts()
                     -- Reconnect the MouseButton1Click event to execute the saved script
                     NewScriptButton.MouseButton1Click:Connect(function()
                         local success, err = pcall(function()
-                            loadstring(scriptContent)()  -- Running the script content
+                            loadstring(scriptContent)()
                         end)
                         if not success then
                             warn("Error executing saved script: " .. err)
@@ -583,4 +582,3 @@ end
 loadScripts()
 
 print("Success")
-
