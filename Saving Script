@@ -301,8 +301,8 @@ UICorner2.Parent = ImageButton2
 -- Create the InputFrame
 local InputFrame = Instance.new("Frame")
 InputFrame.Name = "InputFrame"
-InputFrame.Size = UDim2.new(0.4, 0, 0.42, 0)
-InputFrame.Position = UDim2.new(0.3, 0, 0.2, 35)
+InputFrame.Size = UDim2.new(0.4, 0, 0.49, 0)
+InputFrame.Position = UDim2.new(0.3, 0, 0.2, 0)
 InputFrame.BackgroundColor3 = Color3.fromRGB(38, 41, 49)
 InputFrame.Visible = false
 InputFrame.BackgroundTransparency = 0.2
@@ -326,11 +326,54 @@ TitleFrame.Size = UDim2.new(0.9, 35, 0, 50)
 TitleFrame.Position = UDim2.new(0, 10, 0, 10)
 TitleFrame.Parent = InputFrame
 
+
+-- Create InputNameFrame in InputFrame
+local InputNameFrame = Instance.new("Frame")
+InputNameFrame.Name = "InputNameFrame"
+InputNameFrame.Size = UDim2.new(1, -20, 0, 60)
+InputNameFrame.Position = UDim2.new(0, 10, 0, 60)
+InputNameFrame.BackgroundColor3 = Color3.fromRGB(45, 50, 62)
+InputNameFrame.BorderColor3 = Color3.fromRGB(91, 92, 121)
+InputNameFrame.Parent = InputFrame
+
+-- Apply UICorner to InputNameFrame
+local UICornerName = Instance.new("UICorner")
+UICornerName.CornerRadius = UDim.new(0.2, 0)
+UICornerName.Parent = InputNameFrame
+
+-- TextLabel in InputNameFrame
+local InputNameLabel = Instance.new("TextLabel")
+InputNameLabel.Text = "Enter Script Name"
+InputNameLabel.Size = UDim2.new(0.9, 35, 0, 20)
+InputNameLabel.Position = UDim2.new(0, 10, 0, 5)
+InputNameLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+InputNameLabel.Font = Enum.Font.GothamBold
+InputNameLabel.TextSize = 14
+InputNameLabel.BackgroundTransparency = 1
+InputNameLabel.Parent = InputNameFrame
+
+-- TextBox in InputNameBox
+local InputNameBox = Instance.new("TextBox")
+InputNameBox.PlaceholderText = "Paste Name Script"
+InputNameBox.Text = "Paste Name Script"
+InputNameBox.Size = UDim2.new(0.9, 35, 0, 30)
+InputNameBox.Position = UDim2.new(0, 10, 0, 25)
+InputNameBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+InputNameBox.BackgroundTransparency = 1
+InputNameBox.TextTransparency = 0.5
+InputNameBox.TextSize = 14
+InputNameBox.TextScaled = true
+InputNameBox.Font = Enum.Font.GothamBold
+InputNameBox.BackgroundColor3 = Color3.fromRGB(45, 50, 62)
+InputNameBox.ClearTextOnFocus = true
+InputNameBox.Parent = InputNameFrame
+
+
 -- Create InputIDFrame in InputFrame
 local InputIDFrame = Instance.new("Frame")
 InputIDFrame.Name = "InputIDFrame"
 InputIDFrame.Size = UDim2.new(1, -20, 0, 60)
-InputIDFrame.Position = UDim2.new(0, 10, 0, 70)
+InputIDFrame.Position = UDim2.new(0, 10, 0, 125)
 InputIDFrame.BackgroundColor3 = Color3.fromRGB(45, 50, 62)
 InputIDFrame.BorderColor3 = Color3.fromRGB(91, 92, 121)
 InputIDFrame.Parent = InputFrame
@@ -371,7 +414,7 @@ InputIDTextBox.Parent = InputIDFrame
 local InputScriptFrame = Instance.new("Frame")
 InputScriptFrame.Name = "InputScript"
 InputScriptFrame.Size = UDim2.new(1, -20, 0, 60)
-InputScriptFrame.Position = UDim2.new(0, 10, 0, 140)
+InputScriptFrame.Position = UDim2.new(0, 10, 0, 190)
 InputScriptFrame.BackgroundColor3 = Color3.fromRGB(45, 50, 62)
 InputScriptFrame.BorderColor3 = Color3.fromRGB(91, 92, 121)
 InputScriptFrame.Parent = InputFrame
@@ -394,8 +437,8 @@ InputScriptLabel.Parent = InputScriptFrame
 
 -- TextBox in InputScriptFrame
 local InputScriptTextBox = Instance.new("TextBox")
-InputScriptTextBox.PlaceholderText = "Paste Here"
-InputScriptTextBox.Text = "Paste Here"
+InputScriptTextBox.PlaceholderText = "Paste Script Here"
+InputScriptTextBox.Text = "Paste Script Here"
 InputScriptTextBox.Size = UDim2.new(0.9, 35, 0, 30)
 InputScriptTextBox.Position = UDim2.new(0, 10, 0, 25)
 InputScriptTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -412,7 +455,7 @@ InputScriptTextBox.Parent = InputScriptFrame
 local AddScriptButton = Instance.new("TextButton")
 AddScriptButton.Name = "AddScriptButton"
 AddScriptButton.Size = UDim2.new(1, -20, 0, 40)
-AddScriptButton.Position = UDim2.new(0, 10, 0, 210)
+AddScriptButton.Position = UDim2.new(0, 10, 0, 260)
 AddScriptButton.BackgroundColor3 = Color3.fromRGB(59, 139, 254)
 AddScriptButton.TextColor3 = Color3.fromRGB(255, 255, 255)
 AddScriptButton.Text = "Add Script"
