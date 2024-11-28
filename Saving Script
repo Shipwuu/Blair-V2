@@ -496,7 +496,7 @@ end)
 AddScriptButton.MouseButton1Click:Connect(function()
     local imageID = InputIDTextBox.Text
     local scriptContent = InputScriptTextBox.Text
-    local scriptName = InputNameBox.Text  -- Assuming you want a custom file name
+    local scriptName = InputNameBox.Text  -- Custom file name
 
     if imageID ~= "" and scriptContent ~= "" and scriptName ~= "" then
         -- Create a new button for the script
@@ -518,10 +518,13 @@ AddScriptButton.MouseButton1Click:Connect(function()
             makefolder("Shipu_Script")
         end
 
-        -- Save the ImageID as a comment and script content
+        -- Save the script content to the script file
         local scriptFilePath = "Shipu_Script/" .. scriptName .. ".txt"
-        local contentToSave = "-- " .. imageID .. "\n" .. scriptContent
-        writefile(scriptFilePath, contentToSave)
+        writefile(scriptFilePath, scriptContent)
+
+        -- Save the ImageID to a separate metadata file
+        local metadataFilePath = "Shipu_Script/" .. scriptName .. "_metadata.txt"
+        writefile(metadataFilePath, imageID)
 
         -- Execute the script when the new button is clicked
         NewScriptButton.MouseButton1Click:Connect(function()
@@ -543,39 +546,41 @@ local function loadScripts()
     if isfolder("Shipu_Script") then
         for _, fileName in pairs(listfiles("Shipu_Script")) do
             if fileName:match(".txt$") then
-                local fileContent = readfile(fileName)
+                -- Get script name (without the extension)
+                local scriptName = fileName:match("(.+).txt")
 
-                -- Skip the first line (ImageID comment), extract script content
-                local scriptContent = fileContent:match("\n(.*)")  -- Remove the first line
+                -- Load script content
+                local scriptContent = readfile(fileName)
 
-                if scriptContent then
-                    -- Create a new button for each script
-                    local imageID = fileContent:match("-- (.+)\n")  -- Extract ImageID from the comment
-                    local NewScriptButton = Instance.new("ImageButton")
-                    NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
-                    NewScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-                    NewScriptButton.BackgroundTransparency = 0.8
-                    NewScriptButton.Image = imageID
-                    NewScriptButton.Visible = true
-                    NewScriptButton.Parent = SecondMainFrame
+                -- Load ImageID from the metadata file
+                local metadataFilePath = "Shipu_Script/" .. scriptName .. "_metadata.txt"
+                local imageID = isfile(metadataFilePath) and readfile(metadataFilePath) or ""
 
-                    -- Apply UICorner to the new button
-                    local NewScriptButtonUICorner = Instance.new("UICorner")
-                    NewScriptButtonUICorner.CornerRadius = UDim.new(10, 10)
-                    NewScriptButtonUICorner.Parent = NewScriptButton
+                -- Create a new button for each script
+                local NewScriptButton = Instance.new("ImageButton")
+                NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
+                NewScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+                NewScriptButton.BackgroundTransparency = 0.8
+                NewScriptButton.Image = imageID
+                NewScriptButton.Visible = true
+                NewScriptButton.Parent = SecondMainFrame
 
-                    -- Reconnect the MouseButton1Click event to execute the saved script
-                    NewScriptButton.MouseButton1Click:Connect(function()
-                        local success, err = pcall(function()
-                            loadstring(scriptContent)()  -- Run the script content
-                        end)
-                        if not success then
-                            warn("Error executing saved script: " .. err)
-                        end
+                -- Apply UICorner to the new button
+                local NewScriptButtonUICorner = Instance.new("UICorner")
+                NewScriptButtonUICorner.CornerRadius = UDim.new(10, 10)
+                NewScriptButtonUICorner.Parent = NewScriptButton
+
+                -- Reconnect the MouseButton1Click event to execute the saved script
+                NewScriptButton.MouseButton1Click:Connect(function()
+                    local success, err = pcall(function()
+                        loadstring(scriptContent)()  -- Running the script content
                     end)
+                    if not success then
+                        warn("Error executing saved script: " .. err)
+                    end
+                end)
 
-                    scriptCount = scriptCount + 1
-                end
+                scriptCount = scriptCount + 1
             end
         end
     end
