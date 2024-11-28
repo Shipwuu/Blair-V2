@@ -504,7 +504,6 @@ AddScriptButton.MouseButton1Click:Connect(function()
         NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
         NewScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
         NewScriptButton.BackgroundTransparency = 0.8
-        NewScriptButton.Image = imageID
         NewScriptButton.Visible = true
         NewScriptButton.Parent = SecondMainFrame
 
@@ -518,9 +517,10 @@ AddScriptButton.MouseButton1Click:Connect(function()
             makefolder("Shipu_Script")
         end
 
-        -- Save both ImageID and script content to the .txt file
+        -- Save the ImageID line first, followed by the script content in the .txt file
         local scriptFilePath = "Shipu_Script/" .. scriptName .. ".txt"
-        writefile(scriptFilePath, imageID .. "\n" .. scriptContent)
+        local scriptData = "NewScriptButton.Image = \"" .. imageID .. "\"\n" .. scriptContent  -- Insert ImageID line into script
+        writefile(scriptFilePath, scriptData)
 
         -- Execute the script when the new button is clicked
         NewScriptButton.MouseButton1Click:Connect(function()
@@ -544,7 +544,7 @@ local function loadScripts()
             if fileName:match(".txt$") then
                 -- Read the file content (ImageID and script content)
                 local fileContent = readfile(fileName)
-                local imageID, scriptContent = fileContent:match("([^\n]+)\n([^\n]+)\n?(.*)")  -- Split by newlines
+                local imageID, scriptContent = fileContent:match("NewScriptButton.Image = \"([^\"]+)\"\n([^\n]+)\n?(.*)")  -- Read ImageID and script content
 
                 if imageID and scriptContent then
                     -- Create a new button for each script
@@ -552,7 +552,7 @@ local function loadScripts()
                     NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
                     NewScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
                     NewScriptButton.BackgroundTransparency = 0.8
-                    NewScriptButton.Image = imageID
+                    NewScriptButton.Image = imageID  -- Set the ImageID
                     NewScriptButton.Visible = true
                     NewScriptButton.Parent = SecondMainFrame
 
