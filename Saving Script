@@ -507,14 +507,23 @@ local function loadFilesAsButtons()
             -- Check if the file is a .txt file
             if fileName:match(".txt$") then
                 local fileContent = readfile(fileName)
+                local imageID = ""  -- Default to empty image ID
+
+                -- If the file content has an imageID part (which we saved earlier), extract it
+                local imageIDStart = fileContent:find("--imageID--")
+                if imageIDStart then
+                    local imageIDEnd = fileContent:find("--scriptContent--")
+                    if imageIDEnd then
+                        imageID = fileContent:sub(imageIDStart + 11, imageIDEnd - 2)  -- Extract image ID
+                    end
+                end
 
                 -- Create a button for each file
-                local NewScriptButton = Instance.new("TextButton")
-                NewScriptButton.Size = UDim2.new(0, 200, 0, 40)
+                local NewScriptButton = Instance.new("ImageButton")
+                NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
                 NewScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
                 NewScriptButton.BackgroundTransparency = 0.8
-                NewScriptButton.Text = "Script: " .. fileName:match("([^/\\]+)$") -- Use the file name for button text
-                NewScriptButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+                NewScriptButton.Image = imageID  -- Set image to the saved imageID (or empty if not available)
                 NewScriptButton.Visible = true
                 NewScriptButton.Parent = SecondMainFrame
 
@@ -525,15 +534,13 @@ local function loadFilesAsButtons()
 
                 -- Reconnect the MouseButton1Click event
                 NewScriptButton.MouseButton1Click:Connect(function()
-                    -- If the file content is a valid Lua script, execute it
+                    -- Try to execute the script content from the file
                     local success, err = pcall(function()
-                        -- Check if the content is a valid Lua script
-                        local func, compileErr = loadstring(fileContent)
-                        if func then
-                            func()  -- Execute the script
+                        local scriptContent = fileContent:match("--scriptContent--\n(.-)$")  -- Extract script content
+                        if scriptContent then
+                            loadstring(scriptContent)()  -- Execute the script
                         else
-                            -- If the content is not a valid Lua script, just show it in a message
-                            print("Content of " .. fileName .. ": " .. fileContent)
+                            warn("No valid script content found in " .. fileName)
                         end
                     end)
 
@@ -574,7 +581,7 @@ AddScriptButton.MouseButton1Click:Connect(function()
         if imageID ~= "" then
             contentToSave = "--imageID--\n" .. imageID .. "\n--scriptContent--\n" .. scriptContent
         else
-            contentToSave = scriptContent  -- If there's no imageID, just save the text content
+            contentToSave = "--scriptContent--\n" .. scriptContent  -- If no imageID, just save the script content
         end
 
         -- Save content to the file
@@ -594,4 +601,3 @@ end)
 loadFilesAsButtons()
 
 print("Success")
-
