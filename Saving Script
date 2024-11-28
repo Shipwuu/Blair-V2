@@ -493,6 +493,61 @@ end)
 
 
 
+-- Function to load all scripts from the "Shipu_Script" folder
+local function loadScripts()
+    local scriptCount = 0
+
+    -- Check if the "Shipu_Script" folder exists
+    if isfolder("Shipu_Script") then
+        -- Get all files in the "Shipu_Script" folder
+        local files = listfiles("Shipu_Script")
+
+        -- Iterate over each file in the folder
+        for _, fileName in pairs(files) do
+            -- Check if the file is a .txt file
+            if fileName:match(".txt$") then
+                local fileContent = readfile(fileName)
+
+                -- Extract ImageID and script content using custom delimiters
+                local imageID, scriptContent = fileContent:match("--imageID--\n([^\n]+)\n--scriptContent--\n([^\n]+)\n?(.*)")
+
+                if imageID and scriptContent then
+                    -- Create a new button for each script
+                    local NewScriptButton = Instance.new("ImageButton")
+                    NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
+                    NewScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+                    NewScriptButton.BackgroundTransparency = 0.8
+                    NewScriptButton.Image = imageID
+                    NewScriptButton.Visible = true
+                    NewScriptButton.Parent = SecondMainFrame
+
+                    -- Apply UICorner to the new button
+                    local NewScriptButtonUICorner = Instance.new("UICorner")
+                    NewScriptButtonUICorner.CornerRadius = UDim.new(10, 10)
+                    NewScriptButtonUICorner.Parent = NewScriptButton
+
+                    -- Reconnect the MouseButton1Click event to execute the saved script
+                    NewScriptButton.MouseButton1Click:Connect(function()
+                        local success, err = pcall(function()
+                            loadstring(scriptContent)()
+                        end)
+                        if not success then
+                            warn("Error executing saved script: " .. err)
+                        end
+                    end)
+
+                    scriptCount = scriptCount + 1
+                end
+            end
+        end
+    else
+        warn("Shipu_Script folder does not exist!")
+    end
+
+    print("Loaded " .. scriptCount .. " scripts.")
+end
+
+-- Function to save new scripts
 AddScriptButton.MouseButton1Click:Connect(function()
     local imageID = InputIDTextBox.Text
     local scriptContent = InputScriptTextBox.Text
@@ -536,51 +591,8 @@ AddScriptButton.MouseButton1Click:Connect(function()
     end
 end)
 
--- Load Scripts from Shipu_Script folder
-local function loadScripts()
-    local scriptCount = 0
-    if isfolder("Shipu_Script") then
-        for _, fileName in pairs(listfiles("Shipu_Script")) do
-            if fileName:match(".txt$") then
-                local fileContent = readfile(fileName)
-
-                -- Extract ImageID and script content using the custom delimiters
-                local imageID, scriptContent = fileContent:match("--imageID--\n([^\n]+)\n--scriptContent--\n([^\n]+)\n?(.*)")
-
-                if imageID and scriptContent then
-                    -- Create a new button for each script
-                    local NewScriptButton = Instance.new("ImageButton")
-                    NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
-                    NewScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-                    NewScriptButton.BackgroundTransparency = 0.8
-                    NewScriptButton.Image = imageID
-                    NewScriptButton.Visible = true
-                    NewScriptButton.Parent = SecondMainFrame
-
-                    -- Apply UICorner to the new button
-                    local NewScriptButtonUICorner = Instance.new("UICorner")
-                    NewScriptButtonUICorner.CornerRadius = UDim.new(10, 10)
-                    NewScriptButtonUICorner.Parent = NewScriptButton
-
-                    -- Reconnect the MouseButton1Click event to execute the saved script
-                    NewScriptButton.MouseButton1Click:Connect(function()
-                        local success, err = pcall(function()
-                            loadstring(scriptContent)()
-                        end)
-                        if not success then
-                            warn("Error executing saved script: " .. err)
-                        end
-                    end)
-
-                    scriptCount = scriptCount + 1
-                end
-            end
-        end
-    end
-    print("Loaded " .. scriptCount .. " scripts.")
-end
-
 -- Call the function to load scripts when the UI initializes
 loadScripts()
 
 print("Success")
+
