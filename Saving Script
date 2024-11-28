@@ -473,7 +473,7 @@ AddScriptButton.MouseButton1Click:Connect(function()
         if not isfile("scripts.txt") then
             writefile("scripts.txt", "")
         end
-        appendfile("scripts.txt", imageID .. "\n"( .. scriptContent .. )"\n")
+        appendfile("scripts.txt", imageID .. "\n" .. scriptContent .. "\n")
 
         -- Execute the script when the new button is clicked
         NewScriptButton.MouseButton1Click:Connect(function()
