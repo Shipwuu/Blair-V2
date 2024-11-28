@@ -518,13 +518,9 @@ AddScriptButton.MouseButton1Click:Connect(function()
             makefolder("Shipu_Script")
         end
 
-        -- Save the script content to the script file
+        -- Save both ImageID and script content to the .txt file
         local scriptFilePath = "Shipu_Script/" .. scriptName .. ".txt"
-        writefile(scriptFilePath, scriptContent)
-
-        -- Save the ImageID to a separate metadata file
-        local metadataFilePath = "Shipu_Script/" .. scriptName .. "_metadata.txt"
-        writefile(metadataFilePath, imageID)
+        writefile(scriptFilePath, imageID .. "\n" .. scriptContent)
 
         -- Execute the script when the new button is clicked
         NewScriptButton.MouseButton1Click:Connect(function()
@@ -546,41 +542,37 @@ local function loadScripts()
     if isfolder("Shipu_Script") then
         for _, fileName in pairs(listfiles("Shipu_Script")) do
             if fileName:match(".txt$") then
-                -- Get script name (without the extension)
-                local scriptName = fileName:match("(.+).txt")
+                -- Read the file content (ImageID and script content)
+                local fileContent = readfile(fileName)
+                local imageID, scriptContent = fileContent:match("([^\n]+)\n([^\n]+)\n?(.*)")  -- Split by newlines
 
-                -- Load script content
-                local scriptContent = readfile(fileName)
+                if imageID and scriptContent then
+                    -- Create a new button for each script
+                    local NewScriptButton = Instance.new("ImageButton")
+                    NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
+                    NewScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+                    NewScriptButton.BackgroundTransparency = 0.8
+                    NewScriptButton.Image = imageID
+                    NewScriptButton.Visible = true
+                    NewScriptButton.Parent = SecondMainFrame
 
-                -- Load ImageID from the metadata file
-                local metadataFilePath = "Shipu_Script/" .. scriptName .. "_metadata.txt"
-                local imageID = isfile(metadataFilePath) and readfile(metadataFilePath) or ""
+                    -- Apply UICorner to the new button
+                    local NewScriptButtonUICorner = Instance.new("UICorner")
+                    NewScriptButtonUICorner.CornerRadius = UDim.new(10, 10)
+                    NewScriptButtonUICorner.Parent = NewScriptButton
 
-                -- Create a new button for each script
-                local NewScriptButton = Instance.new("ImageButton")
-                NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
-                NewScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-                NewScriptButton.BackgroundTransparency = 0.8
-                NewScriptButton.Image = imageID
-                NewScriptButton.Visible = true
-                NewScriptButton.Parent = SecondMainFrame
-
-                -- Apply UICorner to the new button
-                local NewScriptButtonUICorner = Instance.new("UICorner")
-                NewScriptButtonUICorner.CornerRadius = UDim.new(10, 10)
-                NewScriptButtonUICorner.Parent = NewScriptButton
-
-                -- Reconnect the MouseButton1Click event to execute the saved script
-                NewScriptButton.MouseButton1Click:Connect(function()
-                    local success, err = pcall(function()
-                        loadstring(scriptContent)()  -- Running the script content
+                    -- Reconnect the MouseButton1Click event to execute the saved script
+                    NewScriptButton.MouseButton1Click:Connect(function()
+                        local success, err = pcall(function()
+                            loadstring(scriptContent)()  -- Running the script content
+                        end)
+                        if not success then
+                            warn("Error executing saved script: " .. err)
+                        end
                     end)
-                    if not success then
-                        warn("Error executing saved script: " .. err)
-                    end
-                end)
 
-                scriptCount = scriptCount + 1
+                    scriptCount = scriptCount + 1
+                end
             end
         end
     end
@@ -591,3 +583,4 @@ end
 loadScripts()
 
 print("Success")
+
