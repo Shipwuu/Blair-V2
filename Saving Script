@@ -1,4 +1,4 @@
-print("Load Script "ShipuHub"")
+print("Load Script ShipuHub")
 
 -- Step 1: Create the ScreenGui
 local existingScreenGui = game:GetService("CoreGui"):FindFirstChild("ShipuHub")
@@ -520,7 +520,7 @@ AddScriptButton.MouseButton1Click:Connect(function()
 
         -- Save the ImageID and script content to a new txt file in the Shipu_Script folder
         local scriptFilePath = "Shipu_Script/" .. scriptName .. ".txt"
-        writefile(scriptFilePath, imageID .. "\n" .. scriptContent)
+        writefile(scriptFilePath, "--imageID--\n" .. imageID .. "\n--scriptContent--\n" .. scriptContent)
 
         -- Execute the script when the new button is clicked
         NewScriptButton.MouseButton1Click:Connect(function()
@@ -543,7 +543,9 @@ local function loadScripts()
         for _, fileName in pairs(listfiles("Shipu_Script")) do
             if fileName:match(".txt$") then
                 local fileContent = readfile(fileName)
-                local imageID, scriptContent = fileContent:match("([^\n]+)\n([^\n]+)\n?(.*)")  -- Read ImageID and script content
+
+                -- Extract ImageID and script content using the custom delimiters
+                local imageID, scriptContent = fileContent:match("--imageID--\n([^\n]+)\n--scriptContent--\n([^\n]+)\n?(.*)")
 
                 if imageID and scriptContent then
                     -- Create a new button for each script
