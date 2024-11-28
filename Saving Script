@@ -493,105 +493,96 @@ end)
 
 
 
--- Function to load all files from the "Shipu_Script" folder and create buttons
-local function loadFilesAsButtons()
-    local buttonCount = 0
-
-    -- Check if the "Shipu_Script" folder exists
-    if isfolder("Shipu_Script") then
-        -- Get all files in the "Shipu_Script" folder
-        local files = listfiles("Shipu_Script")
-
-        -- Iterate over each file in the folder
-        for _, fileName in pairs(files) do
-            -- Check if the file is a .txt file
-            if fileName:match(".txt$") then
-                local fileContent = readfile(fileName)
-                local imageID = ""  -- Default to empty image ID
-                local scriptContent = ""
-
-                -- Split the file content into imageID and script content
-                local imageIDStart = fileContent:find("--imageID--")
-                if imageIDStart then
-                    local imageIDEnd = fileContent:find("--scriptContent--")
-                    if imageIDEnd then
-                        imageID = fileContent:sub(imageIDStart + 11, imageIDEnd - 2)  -- Extract image ID
-                        scriptContent = fileContent:sub(imageIDEnd + 16)  -- Extract the script content after the "--scriptContent--"
-                    end
-                else
-                    scriptContent = fileContent -- If no imageID, just treat the content as a script
-                end
-
-                -- Create a button for each file
-                local NewScriptButton = Instance.new("ImageButton")
-                NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
-                NewScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-                NewScriptButton.BackgroundTransparency = 0.8
-                NewScriptButton.Image = imageID  -- Set image to the saved imageID (or empty if not available)
-                NewScriptButton.Visible = true
-                NewScriptButton.Parent = SecondMainFrame
-
-                -- Apply UICorner to the new button
-                local NewScriptButtonUICorner = Instance.new("UICorner")
-                NewScriptButtonUICorner.CornerRadius = UDim.new(10, 10)
-                NewScriptButtonUICorner.Parent = NewScriptButton
-
-                -- Reconnect the MouseButton1Click event to execute the script
-                NewScriptButton.MouseButton1Click:Connect(function()
-                    -- Try to execute the script content from the file
-                    local success, err = pcall(function()
-                        loadstring(scriptContent)()  -- Execute the script
-                    end)
-
-                    -- If an error occurs during execution, we just ignore it (no warning)
-                    -- You can manage this yourself if needed
-                end)
-
-                buttonCount = buttonCount + 1
-            end
-        end
-    end
-
-    print("Loaded " .. buttonCount .. " buttons for files.")
-end
-
--- Function to save new scripts or text files
+-- Button to save a new script
 AddScriptButton.MouseButton1Click:Connect(function()
-    local scriptName = InputNameBox.Text  -- Assuming you want a custom file name
     local imageID = InputIDTextBox.Text
     local scriptContent = InputScriptTextBox.Text
+    local scriptName = InputNameBox.Text  -- Assuming you want a custom file name
 
-    if scriptName ~= "" and (imageID ~= "" or scriptContent ~= "") then
+    if imageID ~= "" and scriptContent ~= "" and scriptName ~= "" then
+        -- Create a new button for the script
+        local NewScriptButton = Instance.new("ImageButton")
+        NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
+        NewScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+        NewScriptButton.BackgroundTransparency = 0.8
+        NewScriptButton.Image = imageID
+        NewScriptButton.Visible = true
+        NewScriptButton.Parent = SecondMainFrame
+
+        -- Apply UICorner to the new button
+        local NewScriptButtonUICorner = Instance.new("UICorner")
+        NewScriptButtonUICorner.CornerRadius = UDim.new(10, 10)
+        NewScriptButtonUICorner.Parent = NewScriptButton
+
         -- Ensure "Shipu_Script" folder exists
         if not isfolder("Shipu_Script") then
             makefolder("Shipu_Script")
         end
 
-        -- Create file path for the new script
+        -- Save the ImageID and script content to a new txt file in the Shipu_Script folder
         local scriptFilePath = "Shipu_Script/" .. scriptName .. ".txt"
+        writefile(scriptFilePath, "--imageID--\n" .. imageID .. "\n--scriptContent--\n" .. scriptContent)
 
-        -- Create content to save, either just text or script
-        local contentToSave = ""
-
-        if imageID ~= "" then
-            contentToSave = "--imageID--\n" .. imageID .. "\n--scriptContent--\n" .. scriptContent
-        else
-            contentToSave = "--scriptContent--\n" .. scriptContent  -- If no imageID, just save the script content
-        end
-
-        -- Save content to the file
-        writefile(scriptFilePath, contentToSave)
-
-        -- Show success message
-        print("Script saved as " .. scriptFilePath)
-
-        -- After saving, reload the files to update UI
-        loadFilesAsButtons()
+        -- Execute the script when the new button is clicked
+        NewScriptButton.MouseButton1Click:Connect(function()
+            local success, err = pcall(function()
+                loadstring(scriptContent)()
+            end)
+            if not success then
+                warn("Error executing script: " .. err)
+            end
+        end)
+    else
+        warn("Please provide a Name, Image ID, and script content.")
     end
 end)
 
--- Load all files and generate buttons when the UI initializes
-loadFilesAsButtons()
+-- Load Scripts from Shipu_Script folder
+local function loadScripts()
+    local scriptCount = 0
+    if isfolder("Shipu_Script") then
+        for _, fileName in pairs(listfiles("Shipu_Script")) do
+            if fileName:match(".txt$") then
+                local fileContent = readfile(fileName)
+
+                -- Extract ImageID and script content using the custom delimiters
+                local imageID, scriptContent = fileContent:match("--imageID--\n([^\n]+)\n--scriptContent--\n([^\n]+)")
+
+                if imageID and scriptContent then
+                    -- Create a new button for each script
+                    local NewScriptButton = Instance.new("ImageButton")
+                    NewScriptButton.Size = UDim2.new(0, 37, 0, 37)
+                    NewScriptButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+                    NewScriptButton.BackgroundTransparency = 0.8
+                    NewScriptButton.Image = imageID
+                    NewScriptButton.Visible = true
+                    NewScriptButton.Parent = SecondMainFrame
+
+                    -- Apply UICorner to the new button
+                    local NewScriptButtonUICorner = Instance.new("UICorner")
+                    NewScriptButtonUICorner.CornerRadius = UDim.new(10, 10)
+                    NewScriptButtonUICorner.Parent = NewScriptButton
+
+                    -- Reconnect the MouseButton1Click event to execute the saved script
+                    NewScriptButton.MouseButton1Click:Connect(function()
+                        local success, err = pcall(function()
+                            loadstring(scriptContent)()
+                        end)
+                        if not success then
+                            warn("Error executing saved script: " .. err)
+                        end
+                    end)
+
+                    scriptCount = scriptCount + 1
+                end
+            end
+        end
+    end
+    print("Loaded " .. scriptCount .. " scripts.")
+end
+
+-- Call the function to load scripts when the UI initializes
+loadScripts()
 
 print("Success")
 
