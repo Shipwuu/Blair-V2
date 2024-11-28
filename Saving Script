@@ -1,4 +1,4 @@
-print("New99999")
+print("New666666")
 
 -- Step 1: Create the ScreenGui
 local existingScreenGui = game:GetService("CoreGui"):FindFirstChild("ShipuHub")
@@ -466,7 +466,7 @@ AddScriptButton.MouseButton1Click:Connect(function()
 
         -- Apply UICorner to the new button
         local NewScriptButtonUICorner = Instance.new("UICorner")
-        NewScriptButtonUICorner.CornerRadius = UDim.new(0, 10)
+        NewScriptButtonUICorner.CornerRadius = UDim.new(10, 10)
         NewScriptButtonUICorner.Parent = NewScriptButton
 
         -- Save script content to scripts.txt (or create it if it doesn't exist)
@@ -478,7 +478,7 @@ AddScriptButton.MouseButton1Click:Connect(function()
         -- Execute the script when the new button is clicked
         NewScriptButton.MouseButton1Click:Connect(function()
             local success, err = pcall(function()
-                loadstring(scriptContent)()
+                loadstring .. scriptContent ..()
             end)
             if not success then
                 warn("Error executing script: " .. err)
@@ -510,13 +510,13 @@ if isfile("scripts.txt") then
 
         -- Apply UICorner to the new button
         local NewScriptButtonUICorner = Instance.new("UICorner")
-        NewScriptButtonUICorner.CornerRadius = UDim.new(0, 10)
+        NewScriptButtonUICorner.CornerRadius = UDim.new(10, 10)
         NewScriptButtonUICorner.Parent = NewScriptButton
 
         -- Reconnect the MouseButton1Click event to execute the saved script
         NewScriptButton.MouseButton1Click:Connect(function()
             local success, err = pcall(function()
-                loadstring(scriptContent)()
+                loadstring .. scriptContent ..()
             end)
             if not success then
                 warn("Error executing saved script: " .. err)
