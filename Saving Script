@@ -508,14 +508,18 @@ local function loadFilesAsButtons()
             if fileName:match(".txt$") then
                 local fileContent = readfile(fileName)
                 local imageID = ""  -- Default to empty image ID
+                local scriptContent = ""
 
-                -- If the file content has an imageID part (which we saved earlier), extract it
+                -- Split the file content into imageID and script content
                 local imageIDStart = fileContent:find("--imageID--")
                 if imageIDStart then
                     local imageIDEnd = fileContent:find("--scriptContent--")
                     if imageIDEnd then
                         imageID = fileContent:sub(imageIDStart + 11, imageIDEnd - 2)  -- Extract image ID
+                        scriptContent = fileContent:sub(imageIDEnd + 16)  -- Extract the script content after the "--scriptContent--"
                     end
+                else
+                    scriptContent = fileContent -- If no imageID, just treat the content as a script
                 end
 
                 -- Create a button for each file
@@ -532,29 +536,20 @@ local function loadFilesAsButtons()
                 NewScriptButtonUICorner.CornerRadius = UDim.new(10, 10)
                 NewScriptButtonUICorner.Parent = NewScriptButton
 
-                -- Reconnect the MouseButton1Click event
+                -- Reconnect the MouseButton1Click event to execute the script
                 NewScriptButton.MouseButton1Click:Connect(function()
                     -- Try to execute the script content from the file
                     local success, err = pcall(function()
-                        local scriptContent = fileContent:match("--scriptContent--\n(.-)$")  -- Extract script content
-                        if scriptContent then
-                            loadstring(scriptContent)()  -- Execute the script
-                        else
-                            warn("No valid script content found in " .. fileName)
-                        end
+                        loadstring(scriptContent)()  -- Execute the script
                     end)
 
-                    -- If an error occurs during execution
-                    if not success then
-                        warn("Error executing script from " .. fileName .. ": " .. err)
-                    end
+                    -- If an error occurs during execution, we just ignore it (no warning)
+                    -- You can manage this yourself if needed
                 end)
 
                 buttonCount = buttonCount + 1
             end
         end
-    else
-        warn("Shipu_Script folder does not exist!")
     end
 
     print("Loaded " .. buttonCount .. " buttons for files.")
@@ -572,7 +567,7 @@ AddScriptButton.MouseButton1Click:Connect(function()
             makefolder("Shipu_Script")
         end
 
-        -- Create a file path for the new script
+        -- Create file path for the new script
         local scriptFilePath = "Shipu_Script/" .. scriptName .. ".txt"
 
         -- Create content to save, either just text or script
@@ -592,8 +587,6 @@ AddScriptButton.MouseButton1Click:Connect(function()
 
         -- After saving, reload the files to update UI
         loadFilesAsButtons()
-    else
-        warn("Please provide a valid name, Image ID (optional), and script content.")
     end
 end)
 
@@ -601,3 +594,4 @@ end)
 loadFilesAsButtons()
 
 print("Success")
+
