@@ -478,7 +478,7 @@ AddScriptButton.MouseButton1Click:Connect(function()
         -- Execute the script when the new button is clicked
         NewScriptButton.MouseButton1Click:Connect(function()
             local success, err = pcall(function()
-                loadstring .. scriptContent ..()
+                loadstring .. scriptContent()
             end)
             if not success then
                 warn("Error executing script: " .. err)
@@ -516,7 +516,7 @@ if isfile("scripts.txt") then
         -- Reconnect the MouseButton1Click event to execute the saved script
         NewScriptButton.MouseButton1Click:Connect(function()
             local success, err = pcall(function()
-                loadstring .. scriptContent ..()
+                loadstring .. scriptContent()
             end)
             if not success then
                 warn("Error executing saved script: " .. err)
