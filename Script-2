@@ -290,7 +290,7 @@ local function continuousTrack()
                 {name = "Ouija Board", path = game:GetService("Workspace"):FindFirstChild("Ouija Board"), color = Color3.fromRGB(0, 128, 0)},
                 {name = "Summoning Circle", path = game:GetService("Workspace"):FindFirstChild("SummoningCircle"), color = Color3.fromRGB(255, 140, 0)},
                 {name = "Tarot Cards", path = game:GetService("Workspace").Map.Items:FindFirstChild("Tarot Cards"), color = Color3.fromRGB(128, 0, 128)},
-                {name = "Voodoo Doll", path = game:GetService("Workspace"):FindFirstChild("VoodooDoll"), color = Color3.fromRGB(255, 255, 0)}
+                {name = "Voodoo Doll", path = game:GetService("Workspace"):FindFirstChild("BooBooDoll"), color = Color3.fromRGB(255, 255, 0)}
             }
 
             for _, item in pairs(crusedItems) do
