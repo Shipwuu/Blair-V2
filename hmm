@@ -7,6 +7,7 @@ rbxassetid://8486683243
 rbxthumb://type=Asset&id=75307452820537&w=420&h=420
 
 workspace.Map.Zones.Outside._____Temperature
+game.ReplicatedStorage.Remotes.BloodMoonEvent:FireServer()
 
 75307452820537 -- Bell 
 86091808944429 -- Menu
