@@ -244,6 +244,8 @@ end)
 -- ImageButton 4
 local workspace = game:GetService("Workspace")
 local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+
 local LocalPlayer = Players.LocalPlayer
 
 -- Detect if the TouchInterest exists
@@ -255,17 +257,41 @@ if touchInterestPath then
         if outside and outside:FindFirstChild("TouchInterest") then
             local touchInterest = outside.TouchInterest
 
-            -- Create the button as per the original code
-            local imageButton1 = createShortcutButton(frame, "ShortcutButton4", UDim2.new(0.5, 5, 0, 10), "rbxthumb://type=Asset&id=71625940511015&w=420&h=420")
+            -- Create the button (Mobile support)
+            local imageButton1 = createShortcutButton(
+                frame,
+                "ShortcutButton4",
+                UDim2.new(0.5, 5, 0, 10),
+                "rbxthumb://type=Asset&id=71625940511015&w=420&h=420"
+            )
 
-            -- Add functionality to ImageButton 1
+            -- Function to trigger touch
+            local function triggerTouch()
+                local char = LocalPlayer.Character
+                if char and char:FindFirstChild("HumanoidRootPart") then
+                    firetouchinterest(char.HumanoidRootPart, outside, 0)
+                    firetouchinterest(char.HumanoidRootPart, outside, 1)
+                end
+            end
+
+            -- Mobile button
             imageButton1.MouseButton1Click:Connect(function()
-                print("Button 1 clicked")
-
-                -- Fire the TouchInterest event
-                firetouchinterest(LocalPlayer.Character.HumanoidRootPart, outside, 0)
-                firetouchinterest(LocalPlayer.Character.HumanoidRootPart, outside, 1)
+                print("Button clicked (Mobile)")
+                triggerTouch()
             end)
+
+            -- PC Keybind (Press X)
+            UserInputService.InputBegan:Connect(function(input, gameProcessed)
+                if gameProcessed then return end
+
+                if input.UserInputType == Enum.UserInputType.Keyboard then
+                    if input.KeyCode == Enum.KeyCode.X then
+                        print("X key pressed (PC)")
+                        triggerTouch()
+                    end
+                end
+            end)
+
         else
             print("TouchInterest not found in Outside.")
         end
@@ -275,7 +301,6 @@ if touchInterestPath then
 else
     print("Map not found in workspace.")
 end
-
 
 
 -- ImageButton 5
