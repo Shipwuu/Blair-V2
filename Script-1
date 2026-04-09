@@ -44,7 +44,7 @@ end)
 local Lighting = game:GetService("Lighting")
 
 local function setFullBrightness()
-    Lighting.Brightness = 2
+    Lighting.Brightness = 1
     Lighting.ClockTime = 14
     Lighting.FogEnd = 100000
     Lighting.GlobalShadows = false
